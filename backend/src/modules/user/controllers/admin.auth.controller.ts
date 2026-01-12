@@ -19,7 +19,6 @@ export class AdminController implements IAdminController {
 
     async loginAdminController(req: Request, res: Response): Promise<void> {
         try {
-            
             const dto: LoginRequestDto = LoginUserSchema.parse(req.body)
             const {userData, accessToken, refreshToken} = await this.adminLoginUseCase.execute(dto)
             setAccessTokenCookie(res, accessToken);
