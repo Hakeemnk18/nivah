@@ -2,6 +2,7 @@ import type { AuthUser, LoginPayload, LoginResponse } from "../type/auth.type";
 import api from '../../../api/axios.instance'
 
 import type { ApiResponse } from "../../../shared/types/api.types";
+import { raw } from "../../../api/raw.api";
 
 export const loginApi = async ({
   data,
@@ -16,7 +17,7 @@ export const loginApi = async ({
 };
 
 export const getCurrentUserApi = async (): Promise<AuthUser | null> => {
-  const response = await api.post<LoginResponse>("/auth/me");
+  const response = await raw.post<LoginResponse>("/auth/me");
   return response.data.data?.user ?? null;
 };
 

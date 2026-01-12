@@ -8,7 +8,7 @@ const router = Router()
 const adminController = container.resolve(AdminController);
 
 router.post('/login', 
-    reteLimiter,
+    
     (req,res)=> adminController.loginAdminController(req, res)
 )
 

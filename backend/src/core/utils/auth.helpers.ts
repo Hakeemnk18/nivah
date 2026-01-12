@@ -18,7 +18,7 @@ export const setAccessTokenCookie = (res: Response, token: string) => {
 export const setRefreshTokenCookie = (res: Response, token: string) => {
   res.cookie("refresh_token", token, {
     ...cookieOptions,
-    maxAge: 2 * 60 * 1000, 
+    maxAge: 3 * 60 * 1000, 
   });
 };
 
