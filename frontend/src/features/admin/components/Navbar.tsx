@@ -1,7 +1,23 @@
 import { useState } from "react";
+import { logout } from "../../../shared/utils/logout";
+import { useLogout } from "../../auth/hooks/useLogout";
+import toast from "react-hot-toast";
+import {  useNavigate } from "react-router-dom";
 
 const AdminNavbar: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const { mutateAsync } = useLogout()
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+  try {
+    await mutateAsync();   // kill session
+  } finally {
+    logout();            
+    toast("logout successfully") 
+    navigate("/admin/login", { replace: true });
+  }
+};
 
   return (
     <header className="w-full bg-white border-b border-gray-200">
@@ -14,9 +30,9 @@ const AdminNavbar: React.FC = () => {
 
         {/* Right: Desktop menu */}
         <nav className="hidden md:flex items-center gap-6 text-sm text-gray-700">
-          <button className="hover:text-black">Notifications</button>
+          <button className="hover:text-black">About</button>
           <button className="hover:text-black">Profile</button>
-          <button className="text-red-600 hover:text-red-700">
+          <button className="text-red-600 hover:text-red-700" onClick={handleLogout}>
             Logout
           </button>
         </nav>

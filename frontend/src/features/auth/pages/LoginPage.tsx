@@ -16,7 +16,7 @@ const LoginPage = ({ role }: LoginPageProps) => {
   const from = location.state?.from || "/";
 
   const [showPassword, setShowPassword] = useState(false);
-//   const { mutateAsync: loginMutate } = useLogin();
+  const { mutateAsync: loginMutate } = useLogin();
 //   const { mutateAsync: forgotPasswordMutate } = useForgotPassword();
 
   const [isForgotPsd, setIsForgotPsd] = useState(false);
@@ -49,7 +49,7 @@ const LoginPage = ({ role }: LoginPageProps) => {
     }
 
     try {
-      //await loginMutate({ data: formData, role });
+      await loginMutate({ data: formData, role });
 
       if (role === "admin") {
         navigate("/admin/dashboard");

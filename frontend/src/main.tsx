@@ -3,14 +3,20 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import allRoutes from './routes/Index.tsx'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { setQueryClient } from './shared/utils/logout.ts'
 
+const queryClient = new QueryClient();
 
 const appRouter = createBrowserRouter(allRoutes)
 const root = createRoot(document.getElementById('root')!)
 
+setQueryClient(queryClient);
 
 root.render(
   <StrictMode>
-    <RouterProvider router={appRouter} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={appRouter} />
+    </QueryClientProvider>
   </StrictMode>
 )
