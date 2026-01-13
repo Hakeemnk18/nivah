@@ -7,6 +7,6 @@ export const setQueryClient = (client: QueryClient) => {
 };
 
 export const logout = () => {
-  console.log("logout called")
-  queryClientRef?.clear();
+  queryClientRef?.removeQueries({ queryKey: ["auth-user"] });
+  window.location.reload()
 };

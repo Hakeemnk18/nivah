@@ -26,44 +26,81 @@ axiosInstance.interceptors.response.use(
   (res) => res,
   async (err) => {
     const originalRequest = err.config;
-
-    if (err.response?.status === 403) {
-      return Promise.reject(err);
-    }
-
     if (err.response?.status === 401 && !originalRequest._retry) {
-      console.log("401 error ");
       originalRequest._retry = true;
 
-      const retryPromise = new Promise((resolve, reject) => {
-        failedQueue.push({ resolve, reject });
-      }).then(() => {
-        return axiosInstance(originalRequest);
-      }).catch((refreshErr) => {
-        return Promise.reject(refreshErr);
-      });
-
       if (isRefreshing) {
-        return retryPromise;
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then(() => {
+            return axiosInstance(originalRequest);
+          })
+          .catch((refreshErr) => {
+            return Promise.reject(refreshErr);
+          });
       }
+
       isRefreshing = true
 
       try {
         await raw.post("/auth/refresh", {}, { withCredentials: true });
-        isRefreshing = false;
+        isRefreshing = false
         processQueue(null);
         return axiosInstance(originalRequest);
       } catch (refreshErr) {
-        console.log("refresh token expired ");
-        isRefreshing = false;
+        isRefreshing = false
         processQueue(refreshErr, null);
         logout();
         return Promise.reject(refreshErr);
       }
     }
-
-    return Promise.reject(err);
+    throw err;
   }
 );
+
+// axiosInstance.interceptors.response.use(
+//   (res) => res,
+//   async (err) => {
+//     const originalRequest = err.config;
+
+//     if (err.response?.status === 403) {
+//       return Promise.reject(err);
+//     }
+
+//     if (err.response?.status === 401 && !originalRequest._retry) {
+//       console.log("401 error ");
+//       originalRequest._retry = true;
+
+//       const retryPromise = new Promise((resolve, reject) => {
+//         failedQueue.push({ resolve, reject });
+//       }).then(() => {
+//         return axiosInstance(originalRequest);
+//       }).catch((refreshErr) => {
+//         return Promise.reject(refreshErr);
+//       });
+
+//       if (isRefreshing) {
+//         return retryPromise;
+//       }
+//       isRefreshing = true
+
+//       try {
+//         await raw.post("/auth/refresh", {}, { withCredentials: true });
+//         isRefreshing = false;
+//         processQueue(null);
+//         return axiosInstance(originalRequest);
+//       } catch (refreshErr) {
+//         console.log("refresh token expired ");
+//         isRefreshing = false;
+//         processQueue(refreshErr, null);
+//         logout();
+//         return Promise.reject(refreshErr);
+//       }
+//     }
+
+//     return Promise.reject(err);
+//   }
+// );
 
 export default axiosInstance;

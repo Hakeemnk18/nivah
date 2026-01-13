@@ -5,7 +5,7 @@ import adminRoutes from "./AdminRoute";
 import AdminLayout from "../shared/layouts/AdminLayoutes";
 import AdminBootstrap from "../features/admin/components/AdminBootstrap";
 import { Children } from "react";
-import adminPublicRoutes from "./AdminPublicRoute";
+
 
 const allRoutes = [
   {
@@ -18,17 +18,9 @@ const allRoutes = [
       },
       {
         path: "admin",
-        
+        element: <AdminLayout />,
         children: [
-          ...adminPublicRoutes,
-          {
-            element: (
-              <AdminBootstrap>
-                <AdminLayout />
-              </AdminBootstrap>
-            ),
-            children: [...adminRoutes],
-          },
+          ...adminRoutes
         ],
       },
     ],

@@ -1,18 +1,19 @@
 import { Navigate } from "react-router-dom";
-import { useAuthUser } from "../../auth/hooks/useAuthUser";
+import type { AuthUser } from "../../auth/type/auth.type";
+import { useQueryClient } from "@tanstack/react-query";
+
 
 const AdminBootstrap = ({ children }: { children: React.ReactNode }) => {
-  console.log("admin bootstrap called")
-  const { data: user, isLoading, isError } = useAuthUser();
+  
+  console.log("bootstrap called")
+  const queryClient = useQueryClient();
+  const user = queryClient.getQueryData<AuthUser>(["auth-user"]);
 
-  if (isLoading) return <h1>Loading.....</h1>;
-
-  if (isError || !user || user.role !== "admin") {
-    console.log("no admin exist")
-  return <Navigate to="/admin/login" replace />;
-}
+  if (!user || user.role !== "admin") {
+    return <Navigate to="/admin/login" replace />;
+  }
 
   return <>{children}</>;
 };
 
-export default AdminBootstrap
+export default AdminBootstrap;
