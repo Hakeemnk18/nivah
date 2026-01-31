@@ -1,0 +1,44 @@
+.user-theme {
+  --bg: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --accent: #caa24d;
+  --card: #f9fafb;
+}
+
+.user-theme.dark {
+  --bg: #0b0b0b;
+  --text: #f9fafb;
+  --muted: #9ca3af;
+  --accent: #d4af37;
+  --card: #141414;
+}
+
+
+.gold-shimmer {
+  background: linear-gradient(
+    120deg,
+    #b8962e 0%,
+    #f5d77a 20%,
+    #fff1b8 40%,
+    #f5d77a 60%,
+    #b8962e 80%
+  );
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  animation: goldShimmer 4s linear infinite;
+}
+
+@keyframes goldShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
