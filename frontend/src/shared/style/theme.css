@@ -1,5 +1,6 @@
 .user-theme {
   --bg: #ffffff;
+  --bg-secondary: #f3f4f6;
   --text: #111827;
   --muted: #6b7280;
   --accent: #caa24d;
@@ -8,10 +9,21 @@
 
 .user-theme.dark {
   --bg: #0b0b0b;
+  --bg-secondary: #161616;
   --text: #f9fafb;
   --muted: #9ca3af;
   --accent: #d4af37;
   --card: #141414;
+}
+
+.user-theme {
+  --footer-bg: #121212;          /* warm charcoal */
+  --footer-border: rgba(255,255,255,0.08);
+}
+
+.user-theme.dark {
+  --footer-bg: #0e0e0e;          /* slightly deeper */
+  --footer-border: rgba(255,255,255,0.08);
 }
 
 

@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import '../style/theme.css'
+import Footer from "../components/Footer";
 
 
 export default function UserLayout() {
@@ -10,6 +11,7 @@ export default function UserLayout() {
       <main className="w-full">
         <Outlet />
       </main>
+      <Footer />
     </div>
   );
 }
