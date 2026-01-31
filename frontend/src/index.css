@@ -5,3 +5,8 @@
   background-color: var(--bg);
   color: var(--text);
 }
+
+body {
+  margin: 0;
+  padding: 0;
+}

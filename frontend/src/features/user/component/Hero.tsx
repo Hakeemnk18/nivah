@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 export default function Hero() {
   return (
      <section className="relative w-full h-[60vh] md:h-[85vh] overflow-hidden">
+        
       <img
         src="/images/hero-ring.png"
         alt="Elegant gold ring"
@@ -11,7 +12,7 @@ export default function Hero() {
 
       <div className="absolute inset-0 bg-black/40" />
 
-      <div className="relative z-10 mx-auto max-w-7xl h-full px-6 flex items-center">
+      <div className="relative z-10 mx-auto max-w-7xl h-full px-6 flex items-end pb-12 md:pb-20">
         <motion.div
           className="max-w-xl"
           initial={{ opacity: 0, y: 30 }}

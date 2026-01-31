@@ -1,11 +1,12 @@
-import { ShoppingCart, Menu } from "lucide-react";
+import { ShoppingCart, Menu, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import Logo from "./Logo";
 import { useEffect, useState } from "react";
-
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
@@ -17,36 +18,86 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? "backdrop-blur bg-[var(--bg)] border-b" : "bg-transparent"
-      }`}
-      style={{
-        borderColor: scrolled ? "var(--card)" : "transparent",
-        color: "var(--text)",
-      }}
-    >
-      <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
-        <button className="md:hidden text-white">
-          <Menu size={22} />
-        </button>
+    <>
+      <nav
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+          scrolled ? "backdrop-blur bg-black/30" : "bg-transparent"
+        }`}
+        style={{
+          borderColor: scrolled ? "var(--card)" : "transparent",
+          color: "var(--text)",
+        }}
+      >
+        <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
+          {/* Mobile menu button */}
+          <button
+            className="md:hidden text-white"
+            onClick={() => setIsOpen((v) => !v)}
+            aria-label="Toggle menu"
+          >
+            <Menu size={22} />
+          </button>
 
-        <div className="md:flex-1 flex justify-center md:justify-start">
-          <Logo />
+          <div className="md:flex-1 flex justify-center md:justify-start">
+            <Logo />
+          </div>
+
+          {/* Desktop nav */}
+          <ul
+            className={`hidden md:flex gap-8 text-sm font-medium ${
+              scrolled ? "text-[var(--text)]" : "text-white"
+            }`}
+          >
+            <li>Home</li>
+            <li>Shop</li>
+            <li>About</li>
+          </ul>
+
+          <div
+            className={`flex items-center gap-4 md:flex-1 md:justify-end ${
+              scrolled ? "text-[var(--text)]" : "text-white"
+            }`}
+          >
+            <ShoppingCart size={20} />
+            <ThemeToggle />
+          </div>
         </div>
+      </nav>
 
-        <ul className="hidden md:flex gap-8 text-sm font-medium text-white">
-          <li>Home</li>
-          <li>Shop</li>
-          <li>About</li>
-        </ul>
-
-        <div className="flex items-center gap-4 md:flex-1 md:justify-end text-white">
-          
-          <ShoppingCart size={20} />
-          <ThemeToggle />
-        </div>
-      </div>
-    </nav>
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -40 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="
+              fixed top-[0px] left-0 right-0 z-60
+              bg-[var(--footer-bg)]
+              border-t border-white/10
+              md:hidden
+            "
+          >
+            <div className="flex justify-star px-4 pt-4">
+              <button onClick={() => setIsOpen(false)} aria-label="Close menu">
+                <X size={22} className="text-white" />
+              </button>
+            </div>
+            <ul className="flex flex-col gap-6 px-6 py-8 text-sm text-white">
+              {["Home", "Shop", "About"].map((item) => (
+                <li
+                  key={item}
+                  className="tracking-wide hover:text-[var(--accent)] transition"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
