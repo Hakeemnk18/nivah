@@ -1,4 +1,4 @@
-import type { SectionTitleProps } from "../type/section.title";
+import type { SectionTitleProps } from "../types/ui.types"; 
 
 export default function SectionTitle({
   label,

@@ -41,4 +41,37 @@ export const ResponseMessages = {
   RESET_LINK_EXPIRED: "Your password reset link has expired",
   RESET_REQUEST_SUCCESS: "Password reset link sent successfully to your email",
   RESET_TOKEN_ALREADY_SENT: "A password reset link has already been sent. Please check your email or try again later.",
+
+  // Creation / Update
+  CATEGORY_CREATE_FAILED: "Failed to create category",
+  CATEGORY_UPDATE_FAILED: "Failed to update category",
+  CATEGORY_DELETE_FAILED: "Failed to delete category",
+
+  // Validation
+  CATEGORY_NAME_REQUIRED: "Category name is required",
+  CATEGORY_NAME_ALREADY_EXISTS: "Category with this name already exists",
+  INVALID_PARENT_CATEGORY: "Invalid parent category",
+  PARENT_CATEGORY_NOT_FOUND: "Parent category not found",
+  CANNOT_SET_SELF_AS_PARENT: "Category cannot be its own parent",
+  CIRCULAR_CATEGORY_REFERENCE: "Circular category reference detected",
+
+  // Status
+  CATEGORY_ALREADY_INACTIVE: "Category already inactive",
+  CATEGORY_ALREADY_ACTIVE: "Category already active",
+  CATEGORY_DEACTIVATION_FAILED: "Failed to deactivate category",
+  CATEGORY_ACTIVATION_FAILED: "Failed to activate category",
+
+  // Fetching
+  CATEGORY_NOT_FOUND: "Category not found",
+  CATEGORY_LIST_FETCH_FAILED: "Failed to fetch categories",
+
+  // Constraints
+  CATEGORY_HAS_SUBCATEGORIES: "Category has subcategories and cannot be deleted",
+  CATEGORY_HAS_PRODUCTS: "Category is assigned to products and cannot be deleted",
+
+  // Success
+  CATEGORY_CREATED_SUCCESS: "Category created successfully",
+  CATEGORY_UPDATED_SUCCESS: "Category updated successfully",
+  CATEGORY_DELETED_SUCCESS: "Category deleted successfully",
+  CATEGORY_STATUS_UPDATED_SUCCESS: "Category status updated successfully",
 }
