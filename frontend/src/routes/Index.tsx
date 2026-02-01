@@ -3,14 +3,17 @@ import App from "../App";
 import UserLayout from "../shared/layouts/UserLayoutes";
 import adminRoutes from "./AdminRoute";
 import AdminLayout from "../shared/layouts/AdminLayoutes";
-import AdminBootstrap from "../features/admin/components/AdminBootstrap";
-import { Children } from "react";
-
+import { ErrorBoundary } from "../shared/components/ErrorBoundary";
+import NotFound from "../shared/components/NotFound";
 
 const allRoutes = [
   {
     path: "/",
-    element: <App />,
+    element: (
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    ),
     children: [
       {
         element: <UserLayout />,
@@ -19,9 +22,11 @@ const allRoutes = [
       {
         path: "admin",
         element: <AdminLayout />,
-        children: [
-          ...adminRoutes
-        ],
+        children: [...adminRoutes],
+      },
+      {
+        path: "*",
+        element: <NotFound />,
       },
     ],
   },

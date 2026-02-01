@@ -4,6 +4,7 @@ import app from "./core/app.js";
 import { connectDB } from "./config/db.js";
 import type { Application } from 'express';
 import registerUserModule from "./modules/user/user.module.js";
+import registerCategoryModule from "./modules/category/category.module.js";
 
 
 
@@ -22,6 +23,7 @@ const startServer = async () => {
         const expressApp: Application = app;
 
         registerUserModule(expressApp);
+        registerCategoryModule(expressApp)
         
 
 
