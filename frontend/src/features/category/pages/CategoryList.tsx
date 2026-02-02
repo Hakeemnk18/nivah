@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { FaEdit, FaTrash, FaUnlock, FaEye } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaEdit, FaTrash, FaUnlock } from "react-icons/fa";
 
 import TableSearch from "../../admin/components/table/Search";
 import AddButton from "../../admin/components/table/AddButton";
@@ -8,6 +8,12 @@ import Pagination from "../../admin/components/table/Pagination";
 
 import { useAdminCategories } from "../hooks/use.admin.categories";
 import TableFilter from "../../admin/components/table/Filter";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import AdminBreadcrumb from "../../admin/components/AdminBreadCrumb";
+import { useBlockCategory } from "../hooks/useBlockCategory";
+import { useUnblockCategory } from "../hooks/useUnblockCategory";
+import { handleApiError } from "../../../shared/utils/handle.api.error";
+import toast from "react-hot-toast";
 
 const sortOptions = [
   { label: "Newest", value: "newest" },
@@ -15,11 +21,27 @@ const sortOptions = [
 ];
 
 const CategoryTable = () => {
+  const [searchParams] = useSearchParams();
+  let parentId = searchParams.get("parentId");
+  if (!parentId) parentId = null;
+
+  const navigate = useNavigate();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
   const [showSort, setShowSort] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
+  const { mutateAsync: blockCategoryMutate, isPending: isBlocking } =
+    useBlockCategory();
+  const { mutateAsync: unblockCategoryMutate, isPending: isUnblocking } =
+    useUnblockCategory();
+  const crumbs = parentId
+    ? [
+        { label: "Categories", to: "/admin/categoryManagement" },
+        { label: "Subcategories" },
+      ]
+    : [{ label: "Categories" }];
 
   const [filters, setFilters] = useState<{
     isActive: string;
@@ -39,35 +61,67 @@ const CategoryTable = () => {
     },
   ];
 
-  const { data, isLoading, isFetching, isError, error, refetch } =
-    useAdminCategories(currentPage, search, sort, filters);
+  const { data, isLoading, isFetching, isError, refetch } = useAdminCategories(
+    parentId,
+    currentPage,
+    search,
+    sort,
+    filters,
+  );
 
   const categories = data?.data ?? [];
   const totalPages = data?.totalPages ?? 0;
   const showFetching = isFetching && !isLoading;
+
+  /* ----- set params when parentId changes */
+  useEffect(() => {
+    setCurrentPage(1);
+    setSearch("");
+    setSort("");
+    setFilters({
+      isActive: "",
+    });
+  }, [parentId]);
+
+  /* ----- close filter/sort on change ----- */
+  useEffect(() => {
+    setShowFilter(false);
+    setShowSort(false);
+  }, [filters, sort, currentPage]);
+
   /* ---------- handlers ---------- */
   const handleEdit = (id: string) => {
-    console.log("edit", id);
+    navigate(`/admin/editCategory?categoryId=${id}`);
   };
 
-  const handleBlock = (id: string) => {
-    console.log("block", id);
+  const handleBlock = async (id: string) => {
+    try {
+      await blockCategoryMutate(id);
+      toast.success("Category blocked successfully");
+    } catch (error) {
+      handleApiError(error);
+    }
   };
 
-  const handleUnblock = (id: string) => {
-    console.log("unblock", id);
-  };
-
-  const handleViewSub = (id: string) => {
-    console.log("view sub", id);
+  const handleUnblock = async (id: string) => {
+    try {
+      await unblockCategoryMutate(id);
+      toast.success("Category unblocked successfully");
+    } catch (error) {
+      handleApiError(error);
+    }
   };
 
   const handleAdd = () => {
-    console.log("add category");
+    navigate("/admin/createCategory");
   };
 
   return (
-    <div className="pt-32 pb-20">
+    <div className="pb-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-0">
+        <AdminBreadcrumb crumbs={crumbs} />
+      </div>
+
       <div className="bg-[#1d1e33]  p-6 rounded-xl text-white w-full max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
@@ -121,10 +175,21 @@ const CategoryTable = () => {
           <table className="w-full text-sm min-w-[600px]">
             <thead>
               <tr className="text-left text-gray-400 border-b border-[#2c2e4a]">
-                <th className="py-3">Name</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th className="text-right">Actions</th>
+                {/* Name */}
+                <th className="py-3 w-[160px] sm:w-[200px] md:w-[220px]">
+                  Name
+                </th>
+
+                {/* Description */}
+                <th className="min-w-[200px]">Description</th>
+
+                {/* Status */}
+                <th className="w-[90px] sm:w-[110px] md:w-[120px]">Status</th>
+
+                {/* Actions */}
+                <th className="text-center sm:text-right w-[80px] sm:w-[120px] md:w-[160px]">
+                  <span className="hidden sm:inline">Actions</span>
+                </th>
               </tr>
             </thead>
 
@@ -159,6 +224,7 @@ const CategoryTable = () => {
                     key={item.id}
                     className="border-t border-[#2c2e4a] hover:bg-[#232447]"
                   >
+                    
                     <td className="py-3 font-medium">{item.name}</td>
                     <td className="text-gray-300">{item.description || "-"}</td>
                     <td>
@@ -173,7 +239,7 @@ const CategoryTable = () => {
                       </span>
                     </td>
 
-                    <td className="flex justify-end gap-4 py-3">
+                    <td className="flex justify-end  py-3 sm:justify-end gap-3 sm:gap-4 min-w-[80px] sm:min-w-[160px]">
                       <button
                         onClick={() => handleEdit(item.id)}
                         className="cursor-pointer"
@@ -183,26 +249,33 @@ const CategoryTable = () => {
 
                       {item.isActive ? (
                         <button
+                          disabled={isBlocking || isUnblocking}
                           onClick={() => handleBlock(item.id)}
-                          className="cursor-pointer"
+                          className="cursor-pointer w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center"
                         >
                           <FaTrash className="text-red-400" />
                         </button>
                       ) : (
                         <button
+                          disabled={isBlocking || isUnblocking}
                           onClick={() => handleUnblock(item.id)}
-                          className="cursor-pointer"
+                          className="cursor-pointer w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center"
                         >
                           <FaUnlock className="text-yellow-400" />
                         </button>
                       )}
-
-                      <button
-                        onClick={() => handleViewSub(item.id)}
-                        className="px-2 py-1 text-xs rounded text-green-300 bg-[#1f3b2a] hover:bg-[#254836] transition cursor-pointer"
-                      >
-                        Subcategories
-                      </button>
+                      {parentId === null && (
+                        <button
+                          onClick={() => {
+                            navigate(
+                              `/admin/subCategoryManagement?parentId=${item.id}`,
+                            );
+                          }}
+                          className="px-2 py-1 text-xs rounded text-green-300 bg-[#1f3b2a] hover:bg-[#254836] transition cursor-pointer"
+                        >
+                          Subcategories
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))
