@@ -17,6 +17,10 @@ const CategoryTable = lazy(
   () => import("../features/category/pages/CategoryList")
 );
 
+const CreateCategoryPage = lazy(
+  () => import("../features/category/pages/CreateCategoryForm")
+);
+
 /* ---------- fallback loader ---------- */
 const Loader = () => (
   <div className="flex flex-col items-center justify-center h-screen bg-[#181a2a] gap-3">
@@ -53,6 +57,33 @@ const adminRoutes = [
        
           <CategoryTable />
         
+      </Suspense>
+    ),
+  },
+  {
+    path: "subCategoryManagement",
+    element: (
+      <Suspense fallback={<Loader />}>
+       
+          <CategoryTable />
+        
+      </Suspense>
+    ),
+  },
+  
+  {
+    path: "createCategory",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <CreateCategoryPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "editCategory",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <CreateCategoryPage />
       </Suspense>
     ),
   },

@@ -3,6 +3,7 @@ import { getAllCategoriesForAdminApi } from "../api/category.api";
 import type { AdminCategoryQueryKey, GetCategoryListResponse } from "../type/category.type";
 
 export const useAdminCategories = (
+  parentId: string | null,
   currentPage: number,
   search: string,
   sort: string,
@@ -10,16 +11,17 @@ export const useAdminCategories = (
 ) => {
   const queryKey: AdminCategoryQueryKey = [
     "admin-categories",
-    { currentPage, search, sort, filters },
+    { currentPage, search, sort, filters, parentId },
   ];
 
   const queryFn = () =>
-    getAllCategoriesForAdminApi({
+    getAllCategoriesForAdminApi(
+      {
       page: currentPage,
       search,
       sort,
       ...filters
-    });
+    }, parentId);
 
   return useQuery<
     GetCategoryListResponse, 

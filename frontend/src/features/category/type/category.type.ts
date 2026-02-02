@@ -26,5 +26,6 @@ export type AdminCategoryQueryKey = [
     search: string;
     sort: string;
     filters: Record<string, any>
+    parentId: string | null;
   }
 ];
