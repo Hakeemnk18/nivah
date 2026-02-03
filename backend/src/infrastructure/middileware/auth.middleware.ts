@@ -24,13 +24,13 @@ export class Authenticate implements IAuthenticate{
 
     
     if (!accessToken) {
-      console.log("no access token")
+      //console.log("no access token")
        res
         .status(HttpStatusCode.UNAUTHORIZED)
         .json({ message: ResponseMessages.UNAUTHORIZED });
         return
     }
-    console.log("valid access token")
+    //console.log("valid access token")
 
     try {
       

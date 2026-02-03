@@ -147,14 +147,37 @@ export class CategoryController implements ICategoryController {
        
       const dto = GetAllQuerySchema.parse(parseReq(req,["isActive"]));
         
+         
       const { data, total } =
-        await this._getAllCategoryUseCase.execute(dto);
+        await this._getAllCategoryUseCase.execute(dto, null);
 
       res.status(HttpStatusCode.OK).json({
         success: true,
         message: ResponseMessages.SUCCESS,
         data,
-        totalPages: total,
+        totalPages: Math.ceil(total / dto.limit),
+      });
+    } catch (error) {
+      console.log("Error in get categories for admin:", error);
+      handleError(res, error);
+    }
+  }
+
+  async getAllSubCategoryForAdmin(req: Request, res: Response): Promise<void> {
+    try {
+       const { parentId } = req.params;
+      validateObjectId(parentId);
+      
+      const dto = GetAllQuerySchema.parse(parseReq(req,["isActive"]));
+        
+      const { data, total } =
+        await this._getAllCategoryUseCase.execute(dto, parentId!);
+
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data,
+        totalPages: Math.ceil(total / dto.limit),
       });
     } catch (error) {
       console.log("Error in get categories for admin:", error);
@@ -177,6 +200,8 @@ export class CategoryController implements ICategoryController {
       handleError(res, error);
     }
   }
+
+  
 
   async getSubCategories(req: Request, res: Response): Promise<void> {
     try {
