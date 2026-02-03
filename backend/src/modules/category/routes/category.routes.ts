@@ -13,49 +13,64 @@ const categoryController = container.resolve(CategoryController);
 /* ---------- CREATE ---------- */
 router.post(
   "/",
-  (req, res) => categoryController.createCategory(req, res)
+
+  (req, res) => categoryController.createCategory(req, res),
 );
 
 /* ---------- EDIT ---------- */
 router.put(
   "/:id",
-  (req, res) => categoryController.editCategory(req, res)
+
+  (req, res) => categoryController.editCategory(req, res),
 );
 
 /* ---------- BLOCK ---------- */
 router.patch(
   "/:id/block",
-  (req, res) => categoryController.blockCategory(req, res)
+
+  (req, res) => categoryController.blockCategory(req, res),
 );
 
 /* ---------- UNBLOCK ---------- */
 router.patch(
   "/:id/unblock",
-  (req, res) => categoryController.unblockCategory(req, res)
+
+  (req, res) => categoryController.unblockCategory(req, res),
 );
 
 /* ---------- USER: get parent categories ---------- */
 router.get(
   "/parent",
-  (req, res) => categoryController.getParentCategories(req, res)
+
+  (req, res) => categoryController.getParentCategories(req, res),
 );
 
 /* ---------- USER: get sub categories ---------- */
 router.get(
   "/sub/:parentId",
-  (req, res) => categoryController.getSubCategories(req, res)
+
+  (req, res) => categoryController.getSubCategories(req, res),
 );
 
 /* ---------- ADMIN: get all categories ---------- */
 router.get(
   "/",
-  (req, res) => categoryController.getAllCategoryForAdmin(req, res)
+
+  (req, res) => categoryController.getAllParentCategoryForAdmin(req, res),
+);
+
+/* ---------- ADMIN: get all sub-categories ---------- */
+router.get(
+  "/:parentId/sub-categories",
+
+  (req, res) => categoryController.getAllSubCategoryForAdmin(req, res),
 );
 
 /* ---------- GET CATEGORY BY ID ---------- */
 router.get(
   "/:id",
-  (req, res) => categoryController.getCategoryById(req, res)
+
+  (req, res) => categoryController.getCategoryById(req, res),
 );
 
 export default router;

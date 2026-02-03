@@ -4,12 +4,10 @@ import { lazy, Suspense } from "react";
 const AdminBootstrap = lazy(
   () => import("../features/admin/components/AdminBootstrap")
 );
-const Home = lazy(
+const AdminDashboard = lazy(
   () => import("../features/admin/pages/Home")
 );
-const AdminDashboard = lazy(
-  () => import("../features/auth/pages/AdminDashboard")
-);
+
 const LoginPage = lazy(
   () => import("../features/auth/pages/LoginPage")
 );
@@ -54,8 +52,10 @@ const adminRoutes = [
     path: "categoryManagement",
     element: (
       <Suspense fallback={<Loader />}>
-       
-          <CategoryTable />
+       <AdminBootstrap>
+        <CategoryTable />
+       </AdminBootstrap>
+          
         
       </Suspense>
     ),
@@ -64,8 +64,10 @@ const adminRoutes = [
     path: "subCategoryManagement",
     element: (
       <Suspense fallback={<Loader />}>
-       
-          <CategoryTable />
+       <AdminBootstrap>
+        <CategoryTable />
+       </AdminBootstrap>
+          
         
       </Suspense>
     ),
@@ -75,7 +77,10 @@ const adminRoutes = [
     path: "createCategory",
     element: (
       <Suspense fallback={<Loader />}>
-        <CreateCategoryPage />
+        <AdminBootstrap>
+          <CreateCategoryPage />
+        </AdminBootstrap>
+        
       </Suspense>
     ),
   },
@@ -83,7 +88,10 @@ const adminRoutes = [
     path: "editCategory",
     element: (
       <Suspense fallback={<Loader />}>
-        <CreateCategoryPage />
+        <AdminBootstrap>
+          <CreateCategoryPage />
+        </AdminBootstrap>
+        
       </Suspense>
     ),
   },

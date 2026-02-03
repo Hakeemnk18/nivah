@@ -14,11 +14,14 @@ export class GetAllCategoryUseCase implements IGetAllCategoryUseCase {
   ) {}
 
   async execute(
-    dto: GetAllQueryDto
+    dto: GetAllQueryDto,
+    parentId: string | null
   ): Promise<{ data: Category[]; total: number }> {
     const { page, search, limit, sortValue, filters } = dto;
 
-    let query: Record<string, any> = {};
+    let query: Record<string, any> = {
+      parentId: parentId,
+    };
     let sort: Record<string, any> = {
       createdAt: -1,
     };
