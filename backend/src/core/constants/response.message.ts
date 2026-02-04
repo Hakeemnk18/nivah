@@ -74,4 +74,49 @@ export const ResponseMessages = {
   CATEGORY_UPDATED_SUCCESS: "Category updated successfully",
   CATEGORY_DELETED_SUCCESS: "Category deleted successfully",
   CATEGORY_STATUS_UPDATED_SUCCESS: "Category status updated successfully",
+
+   // Activation / Status
+  PRODUCT_ALREADY_ACTIVE: "Product already active",
+  PRODUCT_ALREADY_INACTIVE: "Product already inactive",
+  PRODUCT_ACTIVATION_FAILED: "Failed to activate product",
+  PRODUCT_DEACTIVATION_FAILED: "Failed to deactivate product",
+
+  // Fetching
+  PRODUCT_NOT_FOUND: "Product not found",
+  PRODUCT_LIST_FETCH_FAILED: "Failed to fetch products",
+  PRODUCT_FETCH_FAILED: "Failed to fetch product",
+
+  // Creation / Update
+  PRODUCT_CREATION_FAILED: "Failed to create product",
+  PRODUCT_UPDATE_FAILED: "Failed to update product",
+  PARENT_CATEGORY_NOT_USE_FOR_PRODUCT: "Parent category not use for product",
+
+  // Deletion
+  PRODUCT_DELETION_FAILED: "Failed to delete product",
+  PRODUCT_ALREADY_DELETED: "Product already deleted",
+
+  // Constraints
+  PRODUCT_HAS_ACTIVE_VARIANTS: "Product has active variants and cannot be deactivated",
+  PRODUCT_OUT_OF_STOCK: "Product is out of stock",
+  PRODUCT_VARIANT_NOT_FOUND: "Product variant not found",
+  PRODUCT_DUPLICATE_VARIANT_SIZE: "Duplicate product variant size",
+  
+
+  // Status / Flags
+  PRODUCT_ALREADY_FEATURED: "Product already featured",
+  PRODUCT_NOT_FEATURED: "Product is not featured",
+  PRODUCT_FEATURE_FAILED: "Failed to feature product",
+  PRODUCT_UNFEATURE_FAILED: "Failed to unfeature product",
+
+  // Success
+  PRODUCT_CREATED_SUCCESS: "Product created successfully",
+  PRODUCT_UPDATED_SUCCESS: "Product updated successfully",
+  PRODUCT_DELETED_SUCCESS: "Product deleted successfully",
+  PRODUCT_STATUS_UPDATED_SUCCESS: "Product status updated successfully",
+  PRODUCT_FEATURE_UPDATED_SUCCESS: "Product feature status updated successfully",
+
+  VARIANT_NOT_FOUND: "Variant not found",
+  VARIANT_ADD_SUCCESS:" Product variant added",
+  VARIANT_EDIT_SUCCESS:" Product variant updated"
+
 }

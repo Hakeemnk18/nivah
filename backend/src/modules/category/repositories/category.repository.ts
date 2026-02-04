@@ -122,6 +122,18 @@ export class CategoryRepository implements ICategoryRepository {
       .filter((c): c is Category => c !== null);
   }
 
+  async findSubCategoriesForAdmin(parentId: string): Promise<Category[]> {
+  const documents = await CategoryModel.find({
+    parentId: new ObjectId(parentId),
+  })
+    .sort({ name: 1 })
+    .lean();
+
+  return documents
+    .map(CategoryMapper.toDomain)
+    .filter((c): c is Category => c !== null);
+}
+
   async countDocument(query: Record<string, any>): Promise<number> {
     return await CategoryModel.countDocuments(query);
   }
