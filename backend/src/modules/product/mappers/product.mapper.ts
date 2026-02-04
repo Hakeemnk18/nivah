@@ -1,0 +1,183 @@
+import { Product } from "../entities/product.entity.js";
+import type { ProductListView, ProductView, UserProductListView, UserProductView } from "../types/product.type.js";
+
+export class ProductMapper {
+  static toDomain(productModelData: any): Product | null {
+    if (!productModelData) {
+      return null;
+    }
+
+    const idString =
+      productModelData._id?.toString() || productModelData.id?.toString();
+
+    if (!idString) {
+      console.error("Product data from DB is missing an ID:", productModelData);
+      return null;
+    }
+
+    return new Product({
+      id: idString,
+      name: productModelData.name,
+      description: productModelData.description,
+      images: productModelData.images,
+      category:
+        productModelData.category?.toString() ||
+        productModelData.category ||
+        null,
+      variants:
+        productModelData.variants?.map((variant: any) => ({
+          id: variant._id?.toString() || variant.id?.toString(),
+          size: variant.size,
+          stock: variant.stock,
+          price: variant.price,
+          isAvailable: variant.isAvailable,
+        })) ?? [],
+      isActive: productModelData.isActive,
+      isFeatured: productModelData.isFeatured,
+    });
+  }
+
+  static toPersistence(productEntity: Product): any {
+    return {
+      name: productEntity.name,
+      description: productEntity.description,
+      images: productEntity.images,
+      category: productEntity.category,
+      variants: productEntity.variants.map((variant) => ({
+        _id: variant.id,
+        size: variant.size,
+        stock: variant.stock,
+        price: variant.price,
+        isAvailable: variant.isAvailable,
+      })),
+      isActive: productEntity.isActive,
+      isFeatured: productEntity.isFeatured,
+    };
+  }
+
+  static toAdminView(productModelData: any): ProductView | null {
+    if (!productModelData) return null;
+
+    const id =
+      productModelData._id?.toString() || productModelData.id?.toString();
+
+    if (!id) {
+      console.error("Product data missing ID:", productModelData);
+      return null;
+    }
+
+    const category = productModelData.category;
+
+    if (!category || !category._id || !category.name) {
+      console.error(
+        "Product category not populated correctly:",
+        productModelData,
+      );
+      return null;
+    }
+
+    return {
+      id,
+      name: productModelData.name,
+      description: productModelData.description,
+      images: productModelData.images.map((item: any) => ({
+        publicId: item.publicId,
+        url: item.url,
+      })),
+      category: {
+        id: category._id.toString(),
+        name: category.name,
+      },
+      variants: productModelData.variants,
+      isActive: productModelData.isActive,
+      isFeatured: productModelData.isFeatured,
+    };
+  }
+
+    static toAdminListView(productModelData: any): ProductListView | null {
+    if (!productModelData) return null;
+
+    const id =
+      productModelData._id?.toString() || productModelData.id?.toString();
+
+    if (!id) {
+      console.error("Product data missing ID:", productModelData);
+      return null;
+    }
+
+    const category = productModelData.category;
+
+    if (!category || !category._id || !category.name) {
+      console.error(
+        "Product category not populated correctly:",
+        productModelData,
+      );
+      return null;
+    }
+
+    return {
+      id,
+      name: productModelData.name,
+      description: productModelData.description,
+      price: productModelData.variants?.[0]?.price ?? 0,
+      category: {
+        id: category._id.toString(),
+        name: category.name,
+      },
+      isActive: productModelData.isActive,
+      isFeatured: productModelData.isFeatured,
+    };
+  }
+
+  /* ================= USER DETAIL VIEW ================= */
+  static toUserView(productModelData: any): UserProductView | null {
+    if (!productModelData) return null;
+
+    const id =
+      productModelData._id?.toString() || productModelData.id?.toString();
+
+    if (!id) {
+      console.error("Product data missing ID:", productModelData);
+      return null;
+    }
+
+    return {
+      id,
+      name: productModelData.name,
+      description: productModelData.description,
+      images: productModelData.images.map((item: any) => ({
+        url: item.url,
+      })),
+      categoryId:
+        productModelData.category?.toString() ||
+        productModelData.category ||
+        "",
+      variants: productModelData.variants.map((variant: any) => ({
+        size: variant.size,
+        price: variant.price,
+      })),
+    };
+  }
+
+  /* ================= USER LIST VIEW (INFINITE SCROLL) ================= */
+  static toUserListView(
+    productModelData: any,
+  ): UserProductListView | null {
+    if (!productModelData) return null;
+
+    const id =
+      productModelData._id?.toString() || productModelData.id?.toString();
+
+    if (!id) {
+      console.error("Product data missing ID:", productModelData);
+      return null;
+    }
+
+    return {
+      id,
+      name: productModelData.name,
+      price: productModelData.variants?.[0]?.price ?? 0,
+      image: productModelData.images?.[0]?.url ?? "",
+    };
+  }
+}

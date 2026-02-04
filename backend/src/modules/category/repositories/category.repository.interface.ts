@@ -12,5 +12,6 @@ export interface ICategoryRepository {
   findAllForAdmin(allDoc: IGetAllDocDB): Promise<Category[]>;
   findAllMainCategoriesForUser(): Promise<Category[]>;
   findSubCategoriesForUser(parentId: string): Promise<Category[]>;
+  findSubCategoriesForAdmin(parentId: string): Promise<Category[]>;
   countDocument(query: Record<string, any>): Promise<number>;
 }
