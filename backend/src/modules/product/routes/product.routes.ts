@@ -42,7 +42,7 @@ router.get(
 
 /* ---------- GET PRODUCT DETAILS FOR ADMIN ---------- */
 router.get("/:id",
-  (req, res) => productController.getProductDetailsForAdmin
+  (req, res) => productController.getProductDetailsForAdmin(req, res)
 )
 
 /* ---------- ADD VARIANT ---------- */
