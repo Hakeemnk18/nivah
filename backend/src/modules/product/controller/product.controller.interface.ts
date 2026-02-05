@@ -8,4 +8,5 @@ export interface IProductController {
   unblockProduct(req: Request, res: Response): Promise<void>;
   addVariant(req: Request, res: Response): Promise<void>
   editVariant(req: Request, res: Response): Promise<void>
+  getProductDetailsForAdmin(req: Request, res: Response): Promise<void>
 }

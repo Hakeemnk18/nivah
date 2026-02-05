@@ -8,6 +8,8 @@ type Props = {
 };
 
 const ProductDetailsModal = ({ productId, onClose }: Props) => {
+
+  console.log("inside product details ", productId)
   const { data, isLoading, isError } = useAdminProductDetails(productId);
   const product = data?.data;
 

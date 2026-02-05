@@ -79,7 +79,7 @@ const ProductTable = () => {
 
     {
       label: "Sub Category",
-      field: "subCategoryId",
+      field: "childCategoryId",
       options: [
         { label: "All", value: "" },
         ...subCategories.map((cat) => ({
@@ -90,17 +90,17 @@ const ProductTable = () => {
     },
   ];
 
+  const { mutateAsync: blockProduct, isPending: isBlocking } =
+    useBlockProduct();
+  const { mutateAsync: unblockProduct, isPending: isUnblocking } =
+    useUnblockProduct();
+
   const { data, isLoading, isFetching, isError, refetch } = useAdminProducts(
     currentPage,
     search,
     sort,
     filters,
   );
-
-  const { mutateAsync: blockProduct, isPending: isBlocking } =
-    useBlockProduct();
-  const { mutateAsync: unblockProduct, isPending: isUnblocking } =
-    useUnblockProduct();
 
   const products = data?.data ?? [];
   const totalPages = data?.totalPages ?? 0;
@@ -114,6 +114,16 @@ const ProductTable = () => {
     setShowSort(false);
   }, [filters, sort, currentPage]);
 
+  const handleReset = () => {
+    setSearch("");
+    setSort("");
+    setFilters({
+      isActive: "",
+      parentCategoryId: "",
+      subCategoryId: "",
+    });
+    setCurrentPage(1);
+  };
   return (
     <div className="pb-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-0">
@@ -146,6 +156,13 @@ const ProductTable = () => {
               className="bg-[#232447] px-3 py-2 rounded-lg text-sm"
             >
               Sort
+            </button>
+
+            <button
+              onClick={handleReset}
+              className="bg-[#3e3f5c] px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-[#4a4b6a]"
+            >
+              Reset
             </button>
 
             <AddButton
@@ -232,9 +249,7 @@ const ProductTable = () => {
                     </td>
 
                     <td className="flex justify-end gap-4 py-3">
-                      <button onClick={() => setSelectedProductId(item.id)}>
-                        <FaEye className="text-green-400" />
-                      </button>
+                      
 
                       {item.isActive ? (
                         <button
@@ -259,6 +274,13 @@ const ProductTable = () => {
                           <FaUnlock className="text-yellow-400" />
                         </button>
                       )}
+
+                      <button
+                       onClick={()=> setSelectedProductId(item.id)}
+                          className="px-2 py-1 text-xs rounded text-green-300 bg-[#1f3b2a] hover:bg-[#254836] transition cursor-pointer"
+                        >
+                          View Product
+                        </button>
                     </td>
                   </tr>
                 ))

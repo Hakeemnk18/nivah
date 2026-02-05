@@ -180,5 +180,13 @@ export class ProductController implements IProductController {
       console.log("error in add variant controller ",error)
     }
   }
+
+  async getProductDetailsForAdmin(req: Request, res: Response): Promise<void> {
+    try {
+      
+    } catch (error) {
+      
+    }
+  }
   
 }
