@@ -19,6 +19,8 @@ const CreateCategoryPage = lazy(
   () => import("../features/category/pages/CreateCategoryForm")
 );
 
+const ProductTable = lazy( ()=> import("../features/products/pages/ProductList"))
+
 /* ---------- fallback loader ---------- */
 const Loader = () => (
   <div className="flex flex-col items-center justify-center h-screen bg-[#181a2a] gap-3">
@@ -91,6 +93,19 @@ const adminRoutes = [
         <AdminBootstrap>
           <CreateCategoryPage />
         </AdminBootstrap>
+        
+      </Suspense>
+    ),
+  },
+
+  {
+    path: "productManagement",
+    element: (
+      <Suspense fallback={<Loader />}>
+       
+          <ProductTable />
+
+          
         
       </Suspense>
     ),

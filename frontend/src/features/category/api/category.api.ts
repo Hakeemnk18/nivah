@@ -66,9 +66,17 @@ export const getParentCategoriesApi = async (): Promise<GetIdNameResponse> => {
 };
 
 /* ---------- USER: GET SUB CATEGORIES ---------- */
-export const getSubCategoriesApi = async (
+export const getSubCategoriesApiById = async (
   parentId: string
 ): Promise<GetIdNameResponse> => {
   const response = await api.get<GetIdNameResponse>(`/category/sub/${parentId}`);
+  return response.data;
+};
+
+/* ---------- ADMIN: GET ALL SUB CATEGORIES ---------- */
+export const getAllSubCategoriesForAdminApi = async (): Promise<GetIdNameResponse> => {
+  const response = await api.get<GetIdNameResponse>(
+    "/categories/sub-categories"
+  );
   return response.data;
 };
