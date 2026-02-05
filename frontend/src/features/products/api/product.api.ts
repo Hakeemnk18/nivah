@@ -56,9 +56,10 @@ export const getAllProductsForAdminApi = async (
 };
 
 /* ---------- GET PRODUCT BY ID ---------- */
-export const getProductByIdApi = async (
+export const getProductByIdForAdminApi = async (
   id: string
 ): Promise<GetProductDetailsResponse> => {
+  console.log("api called ", id)
   const response = await api.get<GetProductDetailsResponse>(`/products/${id}`);
   return response.data;
 };

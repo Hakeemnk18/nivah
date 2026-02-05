@@ -40,9 +40,9 @@ router.get(
   (req, res) => productController.getAllProductForAdmin(req, res),
 );
 
-
-router.get("/:id", 
-  (req,res)=> productController.getProductDetailsForAdmin
+/* ---------- GET PRODUCT DETAILS FOR ADMIN ---------- */
+router.get("/:id",
+  (req, res) => productController.getProductDetailsForAdmin
 )
 
 /* ---------- ADD VARIANT ---------- */

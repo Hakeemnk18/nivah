@@ -25,6 +25,7 @@ import { VariantArraySchema, VariantSchema } from "../dtos/variant.dto.js";
 import type { IAddProductVariantUseCase } from "../use-cases/interfaces/add.product.variant.use-case.interface.js";
 import type { IEditProductVariantUseCase } from "../use-cases/interfaces/edit.product.variant.use-case.interface.js";
 import { EditProductSchema, type EditProductRequestDto } from "../dtos/edit.product.dto.js";
+import type { IGetProductDetailsForAdminUseCase } from "../use-cases/interfaces/get.product.admin.use-case.interface.js";
 
 @injectable()
 export class ProductController implements IProductController {
@@ -48,10 +49,13 @@ export class ProductController implements IProductController {
     private readonly _addProductVariantUseCase: IAddProductVariantUseCase,
 
     @inject("IEditProductVariantUseCase")
-    private readonly _editProductVariantUseCase: IEditProductVariantUseCase
+    private readonly _editProductVariantUseCase: IEditProductVariantUseCase,
+
+    @inject("IGetProductDetailsForAdminUseCase")
+    private readonly _getProductDetailsForAdminUseCase: IGetProductDetailsForAdminUseCase,
 
 
-  ) {}
+  ) { }
 
   async createProduct(req: Request, res: Response): Promise<void> {
     try {
@@ -90,7 +94,7 @@ export class ProductController implements IProductController {
     }
   }
 
-  
+
 
   async blockProduct(req: Request, res: Response): Promise<void> {
     try {
@@ -129,7 +133,7 @@ export class ProductController implements IProductController {
   async getAllProductForAdmin(req: Request, res: Response): Promise<void> {
     try {
       const dto = GetAllQuerySchema.parse(parseReq(req, ["isActive", "childCategoryId", "parentCategoryId"]));
-      console.log("inside get all ",dto)
+      console.log("inside get all ", dto)
       const { data, total } =
         await this._getAllProductForAdminUseCase.execute(dto);
 
@@ -150,7 +154,7 @@ export class ProductController implements IProductController {
       const { productId } = req.params
       validateObjectId(productId)
       const dto = VariantArraySchema.parse(req.body)
-      console.log("inside add variant controller ",dto)
+      console.log("inside add variant controller ", dto)
       await this._addProductVariantUseCase.execute(productId!, dto)
 
       res.status(HttpStatusCode.OK).json({
@@ -159,12 +163,12 @@ export class ProductController implements IProductController {
       });
     } catch (error) {
       handleError(res, error)
-      console.log("error in add variant controller ",error)
+      console.log("error in add variant controller ", error)
     }
   }
 
   async editVariant(req: Request, res: Response): Promise<void> {
-     try {
+    try {
       const { productId, variantId } = req.params
       validateObjectId(variantId)
       validateObjectId(productId)
@@ -177,16 +181,25 @@ export class ProductController implements IProductController {
       });
     } catch (error) {
       handleError(res, error)
-      console.log("error in add variant controller ",error)
+      console.log("error in add variant controller ", error)
     }
   }
 
   async getProductDetailsForAdmin(req: Request, res: Response): Promise<void> {
     try {
-      
+      console.log("inside get product details for admin controller")
+      const { id } = req.params
+      validateObjectId(id)
+      const data = await this._getProductDetailsForAdminUseCase.execute(id!)
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data,
+      });
     } catch (error) {
-      
+      handleError(res, error)
+      console.log("error in get product details for admin controller ", error)
     }
   }
-  
+
 }
