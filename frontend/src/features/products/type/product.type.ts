@@ -1,0 +1,131 @@
+import type { ApiResponse, GetAllDocResponse } from "../../../shared/types/api.types";
+
+/* ----------------------------------
+ * Payloads
+ * ---------------------------------- */
+
+export type CreateProductPayload = {
+  name: string;
+  description: string;
+  categoryId: string;
+  isFeatured?: boolean;
+  image: AdminProductImage[]
+  variant: IVariant[]
+};
+
+export type IVariant = {
+  size: string;
+  stock: number;
+  price: number;
+}
+
+/* ----------------------------------
+ * Variants (Admin)
+ * ---------------------------------- */
+
+export type AdminVariantItem =  IVariant & {
+  id: string;
+  isAvailable: boolean;
+};
+
+export type AddVariantPayload = Omit<AdminVariantItem, "id">
+
+export type UpdateVariantParams = {
+  productId: string;
+  variantId: string;
+  data: AddVariantPayload;
+};
+
+/* ----------------------------------
+ * Images
+ * ---------------------------------- */
+
+export type AdminProductImage = {
+  url: string;
+  publicId: string;
+};
+
+export type UserProductImage = {
+  url: string;
+};
+
+/* ----------------------------------
+ * Product Views
+ * ---------------------------------- */
+
+export type ProductDetails = {
+  id: string;
+  name: string;
+  description: string;
+  images: AdminProductImage[];
+  category: {
+    id: string;
+    name: string;
+  };
+  variants: AdminVariantItem[];
+  isActive: boolean;
+  isFeatured: boolean;
+  createdAt: string;
+};
+
+export type ProductListItem = {
+  id: string;
+  name: string;
+  price: number;
+  category: {
+    id: string;
+    name: string;
+  };
+  description: string;
+  isActive: boolean;
+  isFeatured: boolean;
+};
+
+/* ----------------------------------
+ * User Views
+ * ---------------------------------- */
+
+export type UserVariantView = {
+  size: string;
+  price: number;
+};
+
+export type UserProductDetails = {
+  id: string;
+  name: string;
+  description: string;
+  images: UserProductImage[];
+  categoryId: string;
+  variants: UserVariantView[];
+};
+
+export type UserProductListItem = {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+};
+
+/* ----------------------------------
+ * API Responses
+ * ---------------------------------- */
+
+export type GetProductListResponse =
+  GetAllDocResponse<ProductListItem[]>;
+
+export type GetProductDetailsResponse =
+  ApiResponse<ProductDetails>;
+
+/* ----------------------------------
+ * React Query Keys (Admin)
+ * ---------------------------------- */
+
+export type AdminProductQueryKey = [
+  "admin-products",
+  {
+    currentPage: number;
+    search: string;
+    sort: string;
+    filters: Record<string, any>;
+  }
+];

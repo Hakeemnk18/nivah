@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useParentCategories } from "../hooks/useParentCategories";
-import { useCreateCategory } from "../hooks/useCreateCategory";
+import { useParentCategories } from "../hooks/use.parent.categories";
+import { useCreateCategory } from "../hooks/use.create.category";
 import { handleApiError } from "../../../shared/utils/handle.api.error";
 import toast from "react-hot-toast";
-import { useCategoryById } from "../hooks/useCategoryById";
-import { useEditCategory } from "../hooks/useEditCategory";
+import { useCategoryById } from "../hooks/use.category.by.id";
+import { useEditCategory } from "../hooks/use.edit.category";
 
 type FormState = {
   name: string;
