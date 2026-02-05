@@ -40,6 +40,11 @@ router.get(
   (req, res) => productController.getAllProductForAdmin(req, res),
 );
 
+
+router.get("/:id", 
+  (req,res)=> productController.getProductDetailsForAdmin
+)
+
 /* ---------- ADD VARIANT ---------- */
 router.post(
   "/:productId/variants",

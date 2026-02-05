@@ -89,6 +89,16 @@ const CategoryTable = () => {
     setShowSort(false);
   }, [filters, sort, currentPage]);
 
+  /* ---- reset ---- */
+  const handleReset = () => {
+    setSearch("");
+    setSort("");
+    setFilters({
+      isActive: "",
+    });
+    setCurrentPage(1);
+  };
+
   /* ---------- handlers ---------- */
   const handleEdit = (id: string) => {
     navigate(`/admin/editCategory?categoryId=${id}`);
@@ -148,6 +158,13 @@ const CategoryTable = () => {
               className="bg-[#232447] px-3 py-2 rounded-lg text-sm"
             >
               Sort
+            </button>
+
+            <button
+              onClick={handleReset}
+              className="bg-[#3e3f5c] px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-[#4a4b6a]"
+            >
+              Reset
             </button>
 
             <AddButton label="Add Category" onClick={handleAdd} />
