@@ -50,8 +50,6 @@ export class EditProductVariantUseCase
       price: v.price,
     }));
     
-
-    
     const isValid = assertUniqueVariantSizes(combinedVariants);
     
     if(!isValid){

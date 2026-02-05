@@ -129,7 +129,7 @@ export class ProductController implements IProductController {
   async getAllProductForAdmin(req: Request, res: Response): Promise<void> {
     try {
       const dto = GetAllQuerySchema.parse(parseReq(req, ["isActive", "childCategoryId", "parentCategoryId"]));
-
+      console.log("inside get all ",dto)
       const { data, total } =
         await this._getAllProductForAdminUseCase.execute(dto);
 

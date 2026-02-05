@@ -1,4 +1,5 @@
 import type { IGetAllDocDB } from "../../../core/shared/interfaces/get.all.doc.interface.js";
+import type { IdName } from "../../../core/shared/types/id.name.type.js";
 import { Category } from "../entities/category.entity.js";
 
 export interface ICategoryRepository {
@@ -11,6 +12,7 @@ export interface ICategoryRepository {
   save(categoryEntity: Category): Promise<Category>;
   findAllForAdmin(allDoc: IGetAllDocDB): Promise<Category[]>;
   findAllMainCategoriesForUser(): Promise<Category[]>;
+  findAllSubCategoryForAdmin(): Promise<IdName[]> 
   findSubCategoriesForUser(parentId: string): Promise<Category[]>;
   findSubCategoriesForAdmin(parentId: string): Promise<Category[]>;
   countDocument(query: Record<string, any>): Promise<number>;

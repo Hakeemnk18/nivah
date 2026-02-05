@@ -24,6 +24,7 @@ import { GetAllQuerySchema } from "../../../core/shared/dtos/get.all.doc.dto.js"
 import { validateObjectId } from "../../../core/utils/validate.object.id.helper.js";
 import { parseReq } from "../../../core/utils/parse.query.helper.js";
 import type { IGetCategoryByIdUseCase } from "../use-cases/interfaces/get.category.by-id.use-case.interface.js";
+import type { IGetAllSubCategoriesForAdminUseCase } from "../use-cases/interfaces/get.all.sub.categories.for.admin.use-case.interface.js";
 
 @injectable()
 export class CategoryController implements ICategoryController {
@@ -51,6 +52,9 @@ export class CategoryController implements ICategoryController {
 
     @inject("IGetCategoryByIdUseCase")
     private readonly _getCategoryByIdUseCase: IGetCategoryByIdUseCase,
+
+    @inject("IGetAllSubCategoriesForAdminUseCase")
+    private readonly _getAllSubCategoriesForAdminUseCase: IGetAllSubCategoriesForAdminUseCase
   ) {}
 
   async createCategory(req: Request, res: Response): Promise<void> {
@@ -163,7 +167,7 @@ export class CategoryController implements ICategoryController {
     }
   }
 
-  async getAllSubCategoryForAdmin(req: Request, res: Response): Promise<void> {
+  async getAllSubCategoryForAdminById(req: Request, res: Response): Promise<void> {
     try {
        const { parentId } = req.params;
       validateObjectId(parentId);
@@ -221,4 +225,23 @@ export class CategoryController implements ICategoryController {
       handleError(res, error);
     }
   }
+
+  async getAllSubCategoryForAdmin(
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const data =
+      await this._getAllSubCategoriesForAdminUseCase.execute();
+
+    res.status(HttpStatusCode.OK).json({
+      success: true,
+      message: ResponseMessages.SUCCESS,
+      data,
+    });
+  } catch (error) {
+    console.log("Error in get sub categories for admin:", error);
+    handleError(res, error);
+  }
+}
 }
