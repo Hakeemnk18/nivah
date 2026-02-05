@@ -41,6 +41,10 @@ export class GetAllProductForAdminUseCase implements IGetAllProductForAdminUseCa
       sort = { createdAt: 1 };
     } else if (sortValue === "newest") {
       sort = { createdAt: -1 };
+    } else if (sortValue === "price_low_high") {
+      sort = { "variants.0.price": 1 };
+    } else if (sortValue === "price_high_low") {
+      sort = { "variants.0.price": -1 };
     }
 
     /* ---------- search (name + description) ---------- */

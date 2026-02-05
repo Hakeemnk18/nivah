@@ -45,13 +45,17 @@ router.get(
   (req, res) => categoryController.getParentCategories(req, res),
 );
 
+/* ---------- ADMIN: get all sub categories ---------- */
+router.get(
+  "/sub-categories",
+  (req, res) => categoryController.getAllSubCategoryForAdmin(req, res),
+);
+
 /* ---------- USER: get sub categories ---------- */
 router.get(
   "/sub/:parentId",
-
   (req, res) => categoryController.getSubCategories(req, res),
 );
-
 /* ---------- ADMIN: get all categories ---------- */
 router.get(
   "/",
@@ -63,7 +67,7 @@ router.get(
 router.get(
   "/:parentId/sub-categories",
 
-  (req, res) => categoryController.getAllSubCategoryForAdmin(req, res),
+  (req, res) => categoryController.getAllSubCategoryForAdminById(req, res),
 );
 
 /* ---------- GET CATEGORY BY ID ---------- */

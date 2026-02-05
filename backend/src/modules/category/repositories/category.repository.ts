@@ -8,6 +8,7 @@ import { Category } from "../entities/category.entity.js";
 import { CategoryModel } from "../infrastructure/category.schema.js";
 import type { ICategoryRepository } from "./category.repository.interface.js";
 import { CategoryMapper } from "../mappers/category.mapper.js";
+import type { IdName } from "../../../core/shared/types/id.name.type.js";
 
 const { ObjectId } = Types;
 
@@ -20,7 +21,7 @@ export class CategoryRepository implements ICategoryRepository {
     if (!domainCategory) {
       throw new CustomError(
         ResponseMessages.FAILED_TO_MAP,
-        HttpStatusCode.INTERNAL_SERVER_ERROR
+        HttpStatusCode.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -34,7 +35,7 @@ export class CategoryRepository implements ICategoryRepository {
 
   async findByNameAndParent(
     name: string,
-    parentId: string | null
+    parentId: string | null,
   ): Promise<Category | null> {
     const foundDocument = await CategoryModel.findOne({
       name,
@@ -48,7 +49,7 @@ export class CategoryRepository implements ICategoryRepository {
     if (!categoryEntity.id) {
       throw new CustomError(
         ResponseMessages.ID_MISSING,
-        HttpStatusCode.INTERNAL_SERVER_ERROR
+        HttpStatusCode.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -57,13 +58,13 @@ export class CategoryRepository implements ICategoryRepository {
     const updatedDocument = await CategoryModel.findByIdAndUpdate(
       categoryEntity.id,
       { $set: persistenceData },
-      { new: true }
+      { new: true },
     ).lean();
 
     if (!updatedDocument) {
       throw new CustomError(
         ResponseMessages.CATEGORY_NOT_FOUND,
-        HttpStatusCode.NOT_FOUND
+        HttpStatusCode.NOT_FOUND,
       );
     }
 
@@ -71,7 +72,7 @@ export class CategoryRepository implements ICategoryRepository {
     if (!domainCategory) {
       throw new CustomError(
         ResponseMessages.FAILED_TO_MAP,
-        HttpStatusCode.INTERNAL_SERVER_ERROR
+        HttpStatusCode.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -123,18 +124,33 @@ export class CategoryRepository implements ICategoryRepository {
   }
 
   async findSubCategoriesForAdmin(parentId: string): Promise<Category[]> {
-  const documents = await CategoryModel.find({
-    parentId: new ObjectId(parentId),
-  })
-    .sort({ name: 1 })
-    .lean();
+    const documents = await CategoryModel.find({
+      parentId: new ObjectId(parentId),
+    })
+      .sort({ name: 1 })
+      .lean();
 
-  return documents
-    .map(CategoryMapper.toDomain)
-    .filter((c): c is Category => c !== null);
-}
+    return documents
+      .map(CategoryMapper.toDomain)
+      .filter((c): c is Category => c !== null);
+  }
 
   async countDocument(query: Record<string, any>): Promise<number> {
     return await CategoryModel.countDocuments(query);
+  }
+
+  async findAllSubCategoryForAdmin(): Promise<IdName[]> {
+    const documents = await CategoryModel.find({
+      parentId: { $ne: null },
+    })
+    .sort({ name: 1 })
+    .lean();
+
+    return documents.map((item)=> (
+      {
+        id: item._id.toString(),
+        name: item.name
+      }
+    ))
   }
 }
