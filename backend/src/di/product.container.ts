@@ -20,8 +20,8 @@ import { UnblockProductUseCase } from "../modules/product/use-cases/unblock.prod
 import type { IGetAllProductForAdminUseCase } from "../modules/product/use-cases/interfaces/get.all.product.admin.use-case.interface.js";
 import { GetAllProductForAdminUseCase } from "../modules/product/use-cases/get.all.product.admin.use-case.js";
 
-import type { IGetProductForAdminUseCase } from "../modules/product/use-cases/interfaces/get.product.admin.use-case.interface.js";
-import { GetProductForAdminUseCase } from "../modules/product/use-cases/get.product.admin.use-case.js";
+import type { IGetProductDetailsForAdminUseCase } from "../modules/product/use-cases/interfaces/get.product.admin.use-case.interface.js";
+import { GetProductDetailsForAdminUseCase } from "../modules/product/use-cases/get.product.admin.use-case.js";
 
 import type { IGetProductForUserUseCase } from "../modules/product/use-cases/interfaces/get.product.user.use-case.interface.js";
 import { GetProductForUserUseCase } from "../modules/product/use-cases/get.product.user.use-case.js";
@@ -60,10 +60,10 @@ export const registerProductDependencies = () => {
     }
   );
 
-  container.register<IGetProductForAdminUseCase>(
-    "IGetProductForAdminUseCase",
+  container.register<IGetProductDetailsForAdminUseCase>(
+    "IGetProductDetailsForAdminUseCase",
     {
-      useClass: GetProductForAdminUseCase,
+      useClass: GetProductDetailsForAdminUseCase,
     }
   );
 
