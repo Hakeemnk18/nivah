@@ -1,7 +1,6 @@
 import { FaEdit, FaTimes, FaPlus } from "react-icons/fa";
 import { useAdminProductDetails } from "../hook/use.admin.product.detail";
 
-
 type Props = {
   productId: string;
   onClose: () => void;
@@ -9,7 +8,6 @@ type Props = {
 
 const ProductDetailsModal = ({ productId, onClose }: Props) => {
 
-  console.log("inside product details ", productId)
   const { data, isLoading, isError } = useAdminProductDetails(productId);
   const product = data?.data;
 
@@ -26,28 +24,20 @@ const ProductDetailsModal = ({ productId, onClose }: Props) => {
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center px-4">
       <div className="bg-[#1d1e33] text-white rounded-xl w-full max-w-3xl p-6 relative">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4"
-        >
+        <button onClick={onClose} className="absolute top-4 right-4">
           <FaTimes />
         </button>
 
-        <h3 className="text-lg font-semibold mb-4">
-          {product.name}
-        </h3>
+        <h3 className="text-lg font-semibold mb-4">{product.name}</h3>
+        <h3 className="text-lg font-semibold mb-1">{product.category.name}</h3>
+
+        <p className="text-sm text-gray-300 mb-4">{product.description}</p>
 
         {/* Images */}
         <div className="grid grid-cols-3 gap-3 mb-6">
           {product.images.map((img, idx) => (
-            <div
-              key={idx}
-              className="relative group rounded overflow-hidden"
-            >
-              <img
-                src={img.url}
-                className="w-full h-28 object-cover"
-              />
+            <div key={idx} className="relative group rounded overflow-hidden">
+              <img src={img.url} className="w-full h-28 object-cover" />
               <button className="absolute top-2 right-2 hidden group-hover:block">
                 <FaEdit />
               </button>

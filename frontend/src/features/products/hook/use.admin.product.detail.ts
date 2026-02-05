@@ -3,7 +3,7 @@ import { getProductByIdForAdminApi } from "../api/product.api";
 import type { GetProductDetailsResponse } from "../type/product.type";
 
 export const useAdminProductDetails = (productId: string) => {
-  console.log("hook called ", productId)
+  
   return useQuery<
     GetProductDetailsResponse,
     Error

@@ -154,7 +154,7 @@ export class ProductController implements IProductController {
       const { productId } = req.params
       validateObjectId(productId)
       const dto = VariantArraySchema.parse(req.body)
-      console.log("inside add variant controller ", dto)
+      
       await this._addProductVariantUseCase.execute(productId!, dto)
 
       res.status(HttpStatusCode.OK).json({
@@ -187,7 +187,7 @@ export class ProductController implements IProductController {
 
   async getProductDetailsForAdmin(req: Request, res: Response): Promise<void> {
     try {
-      console.log("inside get product details for admin controller")
+      
       const { id } = req.params
       validateObjectId(id)
       const data = await this._getProductDetailsForAdminUseCase.execute(id!)
