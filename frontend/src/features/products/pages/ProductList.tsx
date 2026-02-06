@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 
 import ProductDetailsModal from "../component/ProductDetailsModal";
 import { useParentCategories } from "../../category/hooks/use.parent.categories";
-import { useAllSubCategoriesForAdmin } from "../../category/hooks/use.sub.category";
+import { useAllSubCategoriesForAdmin } from "../../category/hooks/use.admin.sub.category";
 
 /* ---------- SORT OPTIONS ---------- */
 const sortOptions = [
@@ -238,18 +238,17 @@ const ProductTable = () => {
 
                     <td>
                       <span
-                        className={`px-2 py-1 rounded-full text-xs ${
-                          item.isActive
+                        className={`px-2 py-1 rounded-full text-xs ${item.isActive
                             ? "bg-[#1f3b7a] text-blue-300"
                             : "bg-[#3e3f5c] text-gray-300"
-                        }`}
+                          }`}
                       >
                         {item.isActive ? "Active" : "Inactive"}
                       </span>
                     </td>
 
                     <td className="flex justify-end gap-4 py-3">
-                      
+
 
                       {item.isActive ? (
                         <button
@@ -276,11 +275,11 @@ const ProductTable = () => {
                       )}
 
                       <button
-                       onClick={()=> setSelectedProductId(item.id)}
-                          className="px-2 py-1 text-xs rounded text-green-300 bg-[#1f3b2a] hover:bg-[#254836] transition cursor-pointer"
-                        >
-                          View Product
-                        </button>
+                        onClick={() => setSelectedProductId(item.id)}
+                        className="px-2 py-1 text-xs rounded text-green-300 bg-[#1f3b2a] hover:bg-[#254836] transition cursor-pointer"
+                      >
+                        View Product
+                      </button>
                     </td>
                   </tr>
                 ))
