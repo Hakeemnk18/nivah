@@ -1,6 +1,6 @@
 import api from "../../../api/axios.instance";
 import type { ApiResponse, GetIdNameResponse, } from "../../../shared/types/api.types";
-import type {  CreateCategoryPayload, GetCategoryDetailsResponse, GetCategoryListResponse } from "../type/category.type";
+import type { CreateCategoryPayload, GetCategoryDetailsResponse, GetCategoryListResponse } from "../type/category.type";
 
 
 
@@ -38,10 +38,10 @@ export const getAllCategoriesForAdminApi = async (
   query: Record<string, any>,
   parentId: string | null = null
 ): Promise<GetCategoryListResponse> => {
-   let url = "/categories";
-   if (parentId) {
-     url = `/categories/${parentId}/sub-categories`;
-   }
+  let url = "/categories";
+  if (parentId) {
+    url = `/categories/${parentId}/sub-categories`;
+  }
   const response = await api.get<GetCategoryListResponse>(url, {
     params: query,
   });
@@ -80,3 +80,12 @@ export const getAllSubCategoriesForAdminApi = async (): Promise<GetIdNameRespons
   );
   return response.data;
 };
+
+/* ---------- USER: GET ALL SUB CATEGORIES ---------- */
+export const getAllSubCategoriesForUserApi = async (): Promise<GetIdNameResponse> => {
+  const response = await api.get<GetIdNameResponse>(
+    "/categories/sub-categories/list"
+  );
+  return response.data;
+};
+

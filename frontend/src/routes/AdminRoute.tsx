@@ -19,7 +19,8 @@ const CreateCategoryPage = lazy(
   () => import("../features/category/pages/CreateCategoryForm")
 );
 
-const ProductTable = lazy( ()=> import("../features/products/pages/ProductList"))
+const ProductTable = lazy(() => import("../features/products/pages/ProductList"))
+const CreateProductPage = lazy(() => import("../features/products/pages/CreateProduct"))
 
 /* ---------- fallback loader ---------- */
 const Loader = () => (
@@ -54,11 +55,11 @@ const adminRoutes = [
     path: "categoryManagement",
     element: (
       <Suspense fallback={<Loader />}>
-       <AdminBootstrap>
-        <CategoryTable />
-       </AdminBootstrap>
-          
-        
+        <AdminBootstrap>
+          <CategoryTable />
+        </AdminBootstrap>
+
+
       </Suspense>
     ),
   },
@@ -66,15 +67,15 @@ const adminRoutes = [
     path: "subCategoryManagement",
     element: (
       <Suspense fallback={<Loader />}>
-       <AdminBootstrap>
-        <CategoryTable />
-       </AdminBootstrap>
-          
-        
+        <AdminBootstrap>
+          <CategoryTable />
+        </AdminBootstrap>
+
+
       </Suspense>
     ),
   },
-  
+
   {
     path: "createCategory",
     element: (
@@ -82,7 +83,7 @@ const adminRoutes = [
         <AdminBootstrap>
           <CreateCategoryPage />
         </AdminBootstrap>
-        
+
       </Suspense>
     ),
   },
@@ -93,7 +94,7 @@ const adminRoutes = [
         <AdminBootstrap>
           <CreateCategoryPage />
         </AdminBootstrap>
-        
+
       </Suspense>
     ),
   },
@@ -102,14 +103,25 @@ const adminRoutes = [
     path: "productManagement",
     element: (
       <Suspense fallback={<Loader />}>
-       
-          <ProductTable />
 
-          
-        
+        <ProductTable />
+
+
+
       </Suspense>
     ),
   },
+  {
+    path: "createProduct",
+    element: (
+      <Suspense fallback={<Loader />}>
+
+        <CreateProductPage />
+
+
+      </Suspense>
+    ),
+  }
 ];
 
 export default adminRoutes;

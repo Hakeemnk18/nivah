@@ -30,6 +30,8 @@ import type { IGetSubCategoryUseCase } from "../modules/category/use-cases/inter
 import { GetSubCategoryUseCase } from "../modules/category/use-cases/get.sub.category.use-case.js";
 import type { IGetAllSubCategoriesForAdminUseCase } from "../modules/category/use-cases/interfaces/get.all.sub.categories.for.admin.use-case.interface.js";
 import { GetAllSubCategoriesForAdminUseCase } from "../modules/category/use-cases/get.all.sub.categories.for.admin.use-case.js";
+import type { IGetAllSubCategoryForUserUseCase } from "../modules/category/use-cases/interfaces/get.all.sub.category.for.user.use-case.interface.js";
+import { GetAllSubCategoryForUserUseCase } from "../modules/category/use-cases/get.all.sub.category.for.user.use-case.js";
 
 export const registerCategoryDependencies = () => {
   /* ---------- repository ---------- */
@@ -78,5 +80,9 @@ export const registerCategoryDependencies = () => {
 
   container.register<IGetAllSubCategoriesForAdminUseCase>("IGetAllSubCategoriesForAdminUseCase", {
     useClass: GetAllSubCategoriesForAdminUseCase,
+  });
+
+  container.register<IGetAllSubCategoryForUserUseCase>("IGetAllSubCategoryForUserUseCase", {
+    useClass: GetAllSubCategoryForUserUseCase,
   });
 };

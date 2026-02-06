@@ -11,4 +11,5 @@ export interface ICategoryController {
   getParentCategories(req: Request, res: Response): Promise<void>;
   getSubCategories(req: Request, res: Response): Promise<void>;
   getAllSubCategoryForAdmin(req: Request, res: Response): Promise<void>;
+  getAllSubCategoryForUser(req: Request, res: Response): Promise<void>;
 }

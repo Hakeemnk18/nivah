@@ -25,6 +25,7 @@ import { validateObjectId } from "../../../core/utils/validate.object.id.helper.
 import { parseReq } from "../../../core/utils/parse.query.helper.js";
 import type { IGetCategoryByIdUseCase } from "../use-cases/interfaces/get.category.by-id.use-case.interface.js";
 import type { IGetAllSubCategoriesForAdminUseCase } from "../use-cases/interfaces/get.all.sub.categories.for.admin.use-case.interface.js";
+import type { IGetAllSubCategoryForUserUseCase } from "../use-cases/interfaces/get.all.sub.category.for.user.use-case.interface.js";
 
 @injectable()
 export class CategoryController implements ICategoryController {
@@ -54,8 +55,11 @@ export class CategoryController implements ICategoryController {
     private readonly _getCategoryByIdUseCase: IGetCategoryByIdUseCase,
 
     @inject("IGetAllSubCategoriesForAdminUseCase")
-    private readonly _getAllSubCategoriesForAdminUseCase: IGetAllSubCategoriesForAdminUseCase
-  ) {}
+    private readonly _getAllSubCategoriesForAdminUseCase: IGetAllSubCategoriesForAdminUseCase,
+
+    @inject("IGetAllSubCategoryForUserUseCase")
+    private readonly _getAllSubCategoryForUserUseCase: IGetAllSubCategoryForUserUseCase
+  ) { }
 
   async createCategory(req: Request, res: Response): Promise<void> {
     try {
@@ -148,10 +152,10 @@ export class CategoryController implements ICategoryController {
 
   async getAllParentCategoryForAdmin(req: Request, res: Response): Promise<void> {
     try {
-       
-      const dto = GetAllQuerySchema.parse(parseReq(req,["isActive"]));
-        
-         
+
+      const dto = GetAllQuerySchema.parse(parseReq(req, ["isActive"]));
+
+
       const { data, total } =
         await this._getAllCategoryUseCase.execute(dto, null);
 
@@ -169,11 +173,11 @@ export class CategoryController implements ICategoryController {
 
   async getAllSubCategoryForAdminById(req: Request, res: Response): Promise<void> {
     try {
-       const { parentId } = req.params;
+      const { parentId } = req.params;
       validateObjectId(parentId);
-      
-      const dto = GetAllQuerySchema.parse(parseReq(req,["isActive"]));
-        
+
+      const dto = GetAllQuerySchema.parse(parseReq(req, ["isActive"]));
+
       const { data, total } =
         await this._getAllCategoryUseCase.execute(dto, parentId!);
 
@@ -205,7 +209,7 @@ export class CategoryController implements ICategoryController {
     }
   }
 
-  
+
 
   async getSubCategories(req: Request, res: Response): Promise<void> {
     try {
@@ -227,21 +231,39 @@ export class CategoryController implements ICategoryController {
   }
 
   async getAllSubCategoryForAdmin(
-  req: Request,
-  res: Response
-): Promise<void> {
-  try {
-    const data =
-      await this._getAllSubCategoriesForAdminUseCase.execute();
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const data =
+        await this._getAllSubCategoriesForAdminUseCase.execute();
 
-    res.status(HttpStatusCode.OK).json({
-      success: true,
-      message: ResponseMessages.SUCCESS,
-      data,
-    });
-  } catch (error) {
-    console.log("Error in get sub categories for admin:", error);
-    handleError(res, error);
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data,
+      });
+    } catch (error) {
+      console.log("Error in get sub categories for admin:", error);
+      handleError(res, error);
+    }
   }
-}
+  async getAllSubCategoryForUser(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const data =
+        await this._getAllSubCategoryForUserUseCase.execute();
+
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data,
+      });
+    } catch (error) {
+      console.log("Error in get sub categories for user:", error);
+      handleError(res, error);
+    }
+  }
 }

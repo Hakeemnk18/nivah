@@ -5,14 +5,13 @@ import type { IdName } from "../../../core/shared/types/id.name.type.js";
 
 @injectable()
 export class GetAllSubCategoriesForAdminUseCase
-  implements IGetAllSubCategoriesForAdminUseCase
-{
+  implements IGetAllSubCategoriesForAdminUseCase {
   constructor(
     @inject("ICategoryRepository")
     private readonly _categoryRepository: ICategoryRepository
-  ) {}
+  ) { }
 
   async execute(): Promise<IdName[]> {
-    return this._categoryRepository.findAllSubCategoryForAdmin();
+    return this._categoryRepository.findAllSubCategories({ parentId: { $ne: null } })
   }
 }

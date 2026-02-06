@@ -139,14 +139,12 @@ export class CategoryRepository implements ICategoryRepository {
     return await CategoryModel.countDocuments(query);
   }
 
-  async findAllSubCategoryForAdmin(): Promise<IdName[]> {
-    const documents = await CategoryModel.find({
-      parentId: { $ne: null },
-    })
-    .sort({ name: 1 })
-    .lean();
+  async findAllSubCategories(query: Record<string, any>): Promise<IdName[]> {
+    const documents = await CategoryModel.find(query)
+      .sort({ name: 1 })
+      .lean();
 
-    return documents.map((item)=> (
+    return documents.map((item) => (
       {
         id: item._id.toString(),
         name: item.name

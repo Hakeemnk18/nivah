@@ -77,4 +77,11 @@ router.get(
   (req, res) => categoryController.getCategoryById(req, res),
 );
 
+/* ---------- USER: get all sub-categories ---------- */
+router.get(
+  "/sub-categories/list",
+
+  (req, res) => categoryController.getAllSubCategoryForUser(req, res),
+);
+
 export default router;

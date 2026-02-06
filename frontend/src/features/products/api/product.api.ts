@@ -59,7 +59,7 @@ export const getAllProductsForAdminApi = async (
 export const getProductByIdForAdminApi = async (
   id: string
 ): Promise<GetProductDetailsResponse> => {
-  
+
   const response = await api.get<GetProductDetailsResponse>(`/products/${id}`);
   return response.data;
 };
