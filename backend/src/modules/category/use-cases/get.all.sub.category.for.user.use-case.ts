@@ -11,6 +11,6 @@ export class GetAllSubCategoryForUserUseCase implements IGetAllSubCategoryForUse
     ) { }
 
     async execute(): Promise<IdName[]> {
-        return this._categoryRepository.findAllSubCategories({ parentId: { $ne: null } })
+        return await this._categoryRepository.findAllSubCategories({ parentId: { $ne: null }, isActive: true })
     }
 }

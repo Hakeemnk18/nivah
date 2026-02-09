@@ -9,6 +9,8 @@ import ImageCropInput from "../../../shared/components/ImageCropInput";
 import VariantTable from "../component/VariantTable";
 import { handleApiError } from "../../../shared/utils/handle.api.error";
 import type { CreateProductPayload } from "../type/product.type";
+import { uploadToCloudinary } from "../../../shared/utils/cloudinary";
+import AdminLoader from "../../admin/components/AdminLoader";
 
 type Variant = {
     size: string;
@@ -20,6 +22,7 @@ type FormState = {
     name: string;
     description: string;
     categoryId: string;
+    isFeatured: boolean;
     images: File[];
     variants: Variant[];
 };
@@ -33,22 +36,17 @@ type FormErrors = {
 };
 
 const CreateProductForm = () => {
-
-
     const navigate = useNavigate();
-
-
     const { data: categories } = useAllSubCategoriesForUser();
-
     const { mutateAsync: createProduct, isPending } = useCreateProduct();
-
-
+    const [submitting, setSubmitting] = useState(false);
     const [formData, setFormData] = useState<FormState>({
         name: "",
         description: "",
         categoryId: "",
         images: [],
         variants: [{ size: "", price: "", quantity: "" }],
+        isFeatured: false,
     });
 
     const [errors, setErrors] = useState<FormErrors>({});
@@ -64,11 +62,9 @@ const CreateProductForm = () => {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        console.log("call handle submit ")
         e.preventDefault();
-
-        console.log("images ", formData.images)
         const newErrors: FormErrors = {};
+        let uploadedImages: { url: string; publicId: string }[] = [];
 
         if (!formData.name.trim() || formData.name.length < 2)
             newErrors.name = "Minimum 2 characters";
@@ -76,22 +72,30 @@ const CreateProductForm = () => {
         if (!formData.description.trim() || formData.description.length < 10)
             newErrors.description = "Minimum 10 characters";
 
-        if (!formData.categoryId)
+        if (!formData.categoryId || formData.categoryId === "")
             newErrors.categoryId = "Category is required";
 
         if (formData.images.length === 0)
             newErrors.images = "At least one image is required";
 
         /* ---------- variants validation ---------- */
-        const sizes = formData.variants.map(v => v.size.trim());
+        const sizes = formData.variants.map(v => v.size.trim().toLowerCase());
         const hasDuplicate = new Set(sizes).size !== sizes.length;
 
-        if (hasDuplicate)
+        if (hasDuplicate) {
             newErrors.variants = "Duplicate size is not allowed";
-
+        }
         for (const v of formData.variants) {
             if (!v.size || !v.price || !v.quantity) {
                 newErrors.variants = "All variant fields are required";
+                break;
+            }
+            if (Number(v.price) <= 0 || Number(v.quantity) <= 0) {
+                newErrors.variants = "Price and quantity must be greater than 0";
+                break;
+            }
+            if (v.size.trim().length > 9) {
+                newErrors.variants = "Size must be at most 9 characters";
                 break;
             }
         }
@@ -102,93 +106,123 @@ const CreateProductForm = () => {
         }
 
         try {
+            setSubmitting(true);
+            try {
+                uploadedImages = await Promise.all(
+                    formData.images.map(file => uploadToCloudinary(file))
+                );
+
+            } catch (err) {
+                setErrors({ images: "Image upload failed. Please try again." });
+                return;
+            }
             const payload: CreateProductPayload = {
                 ...formData,
-                variant: formData.variants.map(v => ({
+                variants: formData.variants.map(v => ({
                     size: v.size.trim(),
                     price: Number(v.price),
                     stock: Number(v.quantity),
                 })),
-                image: [{ url: "", publicId: "" }, { url: "", publicId: "" }, { url: "", publicId: "" }],
+                images: uploadedImages,
             };
-
             await createProduct(payload);
-
+            setSubmitting(false);
+            toast.success("Product created successfully");
             navigate("/admin/productManagement");
         } catch (err) {
             const fieldErrors = handleApiError(err);
             if (fieldErrors) setErrors(fieldErrors);
+            setSubmitting(false);
         }
     };
 
+
+
     return (
-        <div className="pb-20">
-            <div className="max-w-3xl mx-auto bg-[#1d1e33] p-6 rounded-xl text-white">
-                <h2 className="text-xl font-semibold mb-6">
-                    Create Product
-                </h2>
+        <>
+            {submitting && <AdminLoader fullScreen label="Creating product..." />}
+            <div className="pb-20">
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* name */}
-                    <input
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Product name"
-                        className="w-full px-4 py-2 rounded-lg bg-[#232447]"
-                    />
-                    {errors.name && <p className="text-red-400 text-sm">{errors.name}</p>}
+                <div className="max-w-3xl mx-auto bg-[#1d1e33] p-6 rounded-xl text-white">
 
-                    {/* description */}
-                    <textarea
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        rows={4}
-                        placeholder="Product description"
-                        className="w-full px-4 py-2 rounded-lg bg-[#232447]"
-                    />
+                    <h2 className="text-xl font-semibold mb-6">
+                        Create Product
+                    </h2>
 
-                    {/* category */}
-                    <select
-                        name="categoryId"
-                        value={formData.categoryId}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 rounded-lg bg-[#232447]"
-                    >
-                        <option value="">Select category</option>
-                        {categories?.data?.map((cat: any) => (
-                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                        ))}
-                    </select>
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* name */}
+                        <input
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            placeholder="Product name"
+                            className="w-full px-4 py-2 rounded-lg bg-[#232447]"
+                        />
+                        {errors.name && <p className="text-red-400 text-sm">{errors.name}</p>}
 
-                    {/* images */}
-                    <ImageCropInput
-                        max={3}
-                        aspect={1}
-                        onChange={(files) => setFormData({ ...formData, images: files })}
-                        error={errors.images}
-                    />
+                        {/* description */}
+                        <textarea
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            rows={4}
+                            placeholder="Product description"
+                            className="w-full px-4 py-2 rounded-lg bg-[#232447]"
+                        />
+                        {errors.description && <p className="text-red-400 text-sm">{errors.description}</p>}
+                        {/* featured */}
+                        <label className="flex items-center gap-3 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={formData.isFeatured}
+                                onChange={(e) =>
+                                    setFormData({ ...formData, isFeatured: e.target.checked })
+                                }
+                                className="h-4 w-4 accent-blue-600"
+                            />
+                            <span className="text-sm">Featured product</span>
+                        </label>
+                        {/* category */}
+                        <select
+                            name="categoryId"
+                            value={formData.categoryId}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 rounded-lg bg-[#232447]"
+                        >
+                            <option value="">Select category</option>
+                            {categories?.data?.map((cat: any) => (
+                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                            ))}
+                        </select>
+                        {errors.categoryId && <p className="text-red-400 text-sm">{errors.categoryId}</p>}
+                        {/* images */}
+                        <ImageCropInput
+                            max={3}
+                            aspect={1}
+                            onChange={(files) => setFormData({ ...formData, images: files })}
+                            error={errors.images}
+                        />
 
-                    {/* variants */}
-                    <VariantTable
-                        value={formData.variants}
-                        onChange={(variants) => setFormData({ ...formData, variants })}
-                        error={errors.variants}
-                    />
+                        {/* variants */}
+                        <VariantTable
+                            value={formData.variants}
+                            onChange={(variants) => setFormData({ ...formData, variants })}
+                            error={errors.variants}
+                        />
 
-                    {/* actions */}
-                    <div className="flex justify-end gap-3">
-                        <button type="button" onClick={() => navigate(-1)} className="px-4 py-2 bg-[#2c2e4a] rounded-lg">
-                            Cancel
-                        </button>
-                        <button type="submit" disabled={isPending} className="px-5 py-2 bg-blue-600 rounded-lg">
-                            Create
-                        </button>
-                    </div>
-                </form>
+                        {/* actions */}
+                        <div className="flex justify-end gap-3">
+                            <button type="button" onClick={() => navigate(-1)} className="px-4 py-2 bg-[#2c2e4a] rounded-lg">
+                                Cancel
+                            </button>
+                            <button type="submit" disabled={isPending} className="px-5 py-2 bg-blue-600 rounded-lg">
+                                Create
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

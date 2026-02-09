@@ -17,10 +17,10 @@ export class CreateProductUseCase implements ICreateProductUseCase {
 
     @inject("ICategoryRepository")
     private readonly _categoryRepository: ICategoryRepository
-  ) {}
+  ) { }
 
   async execute(dto: CreateProductRequestDto): Promise<void> {
-   const category = await this._categoryRepository.findById(dto.categoryId);
+    const category = await this._categoryRepository.findById(dto.categoryId);
     if (!category || category.isActive === false) {
       throw new CustomError(
         ResponseMessages.CATEGORY_NOT_FOUND,
@@ -28,7 +28,7 @@ export class CreateProductUseCase implements ICreateProductUseCase {
       );
     }
 
-    if(category.parentId === null){
+    if (category.parentId === null) {
       throw new CustomError(
         ResponseMessages.PARENT_CATEGORY_NOT_USE_FOR_PRODUCT,
         HttpStatusCode.BAD_REQUEST
@@ -43,7 +43,7 @@ export class CreateProductUseCase implements ICreateProductUseCase {
       category: dto.categoryId,
       variants: dto.variants,
       isActive: true,
-      isFeatured: false,
+      isFeatured: dto.isFeatured,
     });
 
     const product = await this._productRepository.create(productEntity);

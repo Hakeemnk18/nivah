@@ -7,6 +7,7 @@ interface CloudinaryResponse {
 }
 
 export const uploadToCloudinary = async (file: File) => {
+    console.log("cloudinary heleper called")
     const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
     const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
