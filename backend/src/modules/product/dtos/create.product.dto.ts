@@ -9,7 +9,7 @@ export const CreateProductSchema = z.object({
     .trim()
     .min(2, "Product name must be at least 2 characters")
     .max(150, "Product name must not exceed 150 characters"),
-
+  isFeatured: z.boolean().default(false),
   description: z
     .string()
     .trim()
@@ -18,12 +18,12 @@ export const CreateProductSchema = z.object({
 
   images: z
     .array(ImageSchema)
-  .min(1, "At least one product image is required")
-  .max(3, "Product images must not exceed 3"),
+    .min(1, "At least one product image is required")
+    .max(3, "Product images must not exceed 3"),
 
   categoryId: ObjectIdSchema
     .trim(),
-  variants: VariantArraySchema 
+  variants: VariantArraySchema
 });
 
 export type CreateProductRequestDto = z.infer<

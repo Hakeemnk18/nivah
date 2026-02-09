@@ -4,7 +4,8 @@ export const VariantSchema = z.object({
   size: z
     .string()
     .trim()
-    .min(1, "Variant size is required"),
+    .min(1, "Variant size is required")
+    .max(9, "Variant size must be at most 9 characters"),
 
   stock: z
     .number()
@@ -32,6 +33,6 @@ export const VariantArraySchema = z
     }
   );
 
-  export type AddVariantRequestDto = z.infer<
-    typeof VariantSchema
-  >;
+export type AddVariantRequestDto = z.infer<
+  typeof VariantSchema
+>;

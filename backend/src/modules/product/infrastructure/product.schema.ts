@@ -60,6 +60,8 @@ const productSchema = new Schema<IProduct>(
         size: {
           type: String,
           required: true,
+          uppercase: true,
+          trim: true,
         },
 
         stock: {

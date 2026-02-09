@@ -59,6 +59,7 @@ export class ProductController implements IProductController {
 
   async createProduct(req: Request, res: Response): Promise<void> {
     try {
+
       const dto: CreateProductRequestDto =
         CreateProductSchema.parse(req.body);
 
@@ -133,7 +134,7 @@ export class ProductController implements IProductController {
   async getAllProductForAdmin(req: Request, res: Response): Promise<void> {
     try {
       const dto = GetAllQuerySchema.parse(parseReq(req, ["isActive", "childCategoryId", "parentCategoryId"]));
-      console.log("inside get all ", dto)
+
       const { data, total } =
         await this._getAllProductForAdminUseCase.execute(dto);
 
@@ -154,7 +155,7 @@ export class ProductController implements IProductController {
       const { productId } = req.params
       validateObjectId(productId)
       const dto = VariantArraySchema.parse(req.body)
-      
+
       await this._addProductVariantUseCase.execute(productId!, dto)
 
       res.status(HttpStatusCode.OK).json({
@@ -187,7 +188,7 @@ export class ProductController implements IProductController {
 
   async getProductDetailsForAdmin(req: Request, res: Response): Promise<void> {
     try {
-      
+
       const { id } = req.params
       validateObjectId(id)
       const data = await this._getProductDetailsForAdminUseCase.execute(id!)
