@@ -9,14 +9,14 @@ export const ResponseMessages = {
   INVALID_ID: "Invalid ID format.",
 
   VALIDATION_FAILED: 'Validation failed',
-  INVALID_CREDENTIALS: 'Invalid email or password', 
+  INVALID_CREDENTIALS: 'Invalid email or password',
   USER_NOT_FOUND: 'User not found',
   EMAIL_ALREADY_EXISTS: 'Email already exists',
-  FAILED_TO_MAP:'Failed to map newly created user from database',
+  FAILED_TO_MAP: 'Failed to map newly created user from database',
   SERVER_ERROR: 'Internal server error',
   UNAUTHORIZED: 'Unauthorized access',
   ACCESS_DENIED: 'Access denied',
-  TOO_MANY_REQUESTS:"Too Many Requests",
+  TOO_MANY_REQUESTS: "Too Many Requests",
   JWT_ENV_NOT_SET: "JWT environment variables are not set!",
   USER_ALREADY_VERIFIED: "User already verified",
   USER_NOT_VERIFIED: "User not verified",
@@ -75,7 +75,7 @@ export const ResponseMessages = {
   CATEGORY_DELETED_SUCCESS: "Category deleted successfully",
   CATEGORY_STATUS_UPDATED_SUCCESS: "Category status updated successfully",
 
-   // Activation / Status
+  // Activation / Status
   PRODUCT_ALREADY_ACTIVE: "Product already active",
   PRODUCT_ALREADY_INACTIVE: "Product already inactive",
   PRODUCT_ACTIVATION_FAILED: "Failed to activate product",
@@ -100,7 +100,7 @@ export const ResponseMessages = {
   PRODUCT_OUT_OF_STOCK: "Product is out of stock",
   PRODUCT_VARIANT_NOT_FOUND: "Product variant not found",
   PRODUCT_DUPLICATE_VARIANT_SIZE: "Duplicate product variant size",
-  
+
 
   // Status / Flags
   PRODUCT_ALREADY_FEATURED: "Product already featured",
@@ -115,8 +115,11 @@ export const ResponseMessages = {
   PRODUCT_STATUS_UPDATED_SUCCESS: "Product status updated successfully",
   PRODUCT_FEATURE_UPDATED_SUCCESS: "Product feature status updated successfully",
 
+  INVALID_CLOUDINARY_PUBLIC_ID: "Invalid Cloudinary public ID",
+  DELETE_CLOUDINARY_IMAGE_FAILED: "Failed to delete Cloudinary image",
+
   VARIANT_NOT_FOUND: "Variant not found",
-  VARIANT_ADD_SUCCESS:" Product variant added",
-  VARIANT_EDIT_SUCCESS:" Product variant updated"
+  VARIANT_ADD_SUCCESS: " Product variant added",
+  VARIANT_EDIT_SUCCESS: " Product variant updated"
 
 }

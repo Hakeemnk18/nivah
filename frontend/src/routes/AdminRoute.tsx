@@ -21,6 +21,7 @@ const CreateCategoryPage = lazy(
 
 const ProductTable = lazy(() => import("../features/products/pages/ProductList"))
 const CreateProductPage = lazy(() => import("../features/products/pages/CreateProduct"))
+const EditProductPage = lazy(() => import("../features/products/pages/EditProduct"))
 
 /* ---------- fallback loader ---------- */
 const Loader = () => (
@@ -117,6 +118,17 @@ const adminRoutes = [
       <Suspense fallback={<Loader />}>
 
         <CreateProductPage />
+
+
+      </Suspense>
+    ),
+  },
+  {
+    path: "editProduct",
+    element: (
+      <Suspense fallback={<Loader />}>
+
+        <EditProductPage />
 
 
       </Suspense>

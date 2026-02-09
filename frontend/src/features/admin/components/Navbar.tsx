@@ -19,7 +19,7 @@ import { useLogout } from "../../auth/hooks/useLogout";
 const navItems = [
   { label: "Dashboard", path: "/admin/dashboard", icon: FaTachometerAlt },
   { label: "Categories", path: "/admin/categoryManagement", icon: FaList },
-  { label: "Products", path: "/admin/products", icon: FaBox },
+  { label: "Products", path: "/admin/productManagement", icon: FaBox },
   { label: "Orders", path: "/admin/orders", icon: FaShoppingCart },
   { label: "Users", path: "/admin/users", icon: FaUsers },
 ];
@@ -54,8 +54,7 @@ const AdminNavbar = () => {
               key={path}
               to={path}
               className={({ isActive }) =>
-                `hover:text-white transition ${
-                  isActive ? "text-white" : ""
+                `hover:text-white transition ${isActive ? "text-white" : ""
                 }`
               }
             >
@@ -116,10 +115,9 @@ const AdminNavbar = () => {
                     to={path}
                     onClick={() => setOpen(false)}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-3 py-2 rounded-lg transition ${
-                        isActive
-                          ? "bg-[#232447] text-white"
-                          : "hover:bg-[#232447]"
+                      `flex items-center gap-3 px-3 py-2 rounded-lg transition ${isActive
+                        ? "bg-[#232447] text-white"
+                        : "hover:bg-[#232447]"
                       }`
                     }
                   >

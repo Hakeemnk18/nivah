@@ -144,6 +144,7 @@ export class Product {
     description: string;
     images: { url: string; publicId: string }[];
     categoryId: string;
+    isFeatured: boolean;
   }): Product {
     const name = props.name.trim();
     const description = props.description.trim();
@@ -176,6 +177,7 @@ export class Product {
       description,
       images: props.images,
       category: props.categoryId,
+      isFeatured: props.isFeatured,
     });
   }
 }

@@ -9,6 +9,8 @@ import type {
   GetProductListResponse,
   AddVariantPayload,
   UpdateVariantParams,
+  UpdateProductPayload,
+  UpdateProductParams,
 } from "../type/product.type";
 
 /* ---------- CREATE PRODUCT ---------- */
@@ -21,10 +23,9 @@ export const createProductApi = async (
 
 /* ---------- EDIT PRODUCT ---------- */
 export const editProductApi = async (
-  id: string,
-  data: CreateProductPayload
+  params: UpdateProductParams
 ): Promise<ApiResponse> => {
-  const response = await api.put<ApiResponse>(`/products/${id}`, data);
+  const response = await api.put<ApiResponse>(`/products/${params.id}`, params.data);
   return response.data;
 };
 

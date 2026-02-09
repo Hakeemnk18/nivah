@@ -1,13 +1,13 @@
 import { FaEdit, FaTimes, FaPlus } from "react-icons/fa";
 import { useAdminProductDetails } from "../hook/use.admin.product.detail";
-
+import { useNavigate } from "react-router-dom";
 type Props = {
   productId: string;
   onClose: () => void;
 };
 
 const ProductDetailsModal = ({ productId, onClose }: Props) => {
-
+  const navigate = useNavigate();
   const { data, isLoading, isError } = useAdminProductDetails(productId);
   const product = data?.data;
 
@@ -23,7 +23,7 @@ const ProductDetailsModal = ({ productId, onClose }: Props) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center px-4">
-      <div className="bg-[#1d1e33] text-white rounded-xl w-full max-w-3xl p-6 relative">
+      <div className="bg-[#1d1e33] text-white rounded-xl w-full max-w-3xl p-6 relative" >
         <button onClick={onClose} className="absolute top-4 right-4">
           <FaTimes />
         </button>
@@ -38,7 +38,9 @@ const ProductDetailsModal = ({ productId, onClose }: Props) => {
           {product.images.map((img, idx) => (
             <div key={idx} className="relative group rounded overflow-hidden">
               <img src={img.url} className="w-full h-28 object-cover" />
-              <button className="absolute top-2 right-2 hidden group-hover:block">
+              <button
+
+                className="absolute top-2 right-2 hidden group-hover:block">
                 <FaEdit />
               </button>
             </div>
@@ -65,7 +67,12 @@ const ProductDetailsModal = ({ productId, onClose }: Props) => {
 
         {/* Actions */}
         <div className="flex flex-wrap gap-3 justify-end">
-          <button className="bg-[#232447] px-4 py-2 rounded">
+          <button
+            onClick={() => {
+
+              navigate(`/admin/editProduct?productId=${productId}`);
+            }}
+            className="bg-[#232447] px-4 py-2 rounded cursor-pointer">
             Edit Product
           </button>
           <button className="bg-[#1f3b7a] px-4 py-2 rounded flex items-center gap-2">
