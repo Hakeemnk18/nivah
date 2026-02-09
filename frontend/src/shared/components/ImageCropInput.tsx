@@ -1,20 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import ImageCropModal from "./ImageCroppedModal";
+import type { ImageItem } from "../types/image.type";
 
-type ImageItem = {
-    file: File;
-    preview: string;
-};
+
 
 type Props = {
     max: number;
     aspect: number;
-    onChange: (files: File[]) => void;
+    value: ImageItem[];
+    onChange: (images: ImageItem[]) => void;
     error?: string;
 };
 
-const ImageCropInput = ({ max, aspect, onChange, error }: Props) => {
-    const [images, setImages] = useState<ImageItem[]>([]);
+const ImageCropInput = ({ max, aspect, onChange, error, value }: Props) => {
+    const [images, setImages] = useState<ImageItem[]>(value);
+    useEffect(() => {
+        setImages(value);
+    }, [value]);
     const [currentFile, setCurrentFile] = useState<File | null>(null);
     const [editIndex, setEditIndex] = useState<number | null>(null);
 
@@ -24,7 +26,9 @@ const ImageCropInput = ({ max, aspect, onChange, error }: Props) => {
     useEffect(() => {
         return () => {
             images.forEach(img => {
-                URL.revokeObjectURL(img.preview);
+                if (img.type === "new") {
+                    URL.revokeObjectURL(img.preview);
+                }
             });
         };
     }, []);
@@ -32,17 +36,25 @@ const ImageCropInput = ({ max, aspect, onChange, error }: Props) => {
     /* ---------- after crop ---------- */
     const handleDone = (croppedFile: File) => {
         const preview = URL.createObjectURL(croppedFile);
+        const newItem: ImageItem = {
+            type: "new",
+            file: croppedFile,
+            preview,
+        };
         let updated = [...images];
 
+
         if (editIndex !== null) {
-            URL.revokeObjectURL(images[editIndex].preview);
-            updated[editIndex] = { file: croppedFile, preview };
+            if (images[editIndex].type === "new") {
+                URL.revokeObjectURL(images[editIndex].preview);
+            }
+            updated[editIndex] = newItem;
         } else {
-            updated.push({ file: croppedFile, preview });
+            updated.push(newItem);
         }
 
         setImages(updated);
-        onChange(updated.map(i => i.file));
+        onChange(updated.map(i => i));
 
         setCurrentFile(null);
         setEditIndex(null);
@@ -50,10 +62,12 @@ const ImageCropInput = ({ max, aspect, onChange, error }: Props) => {
 
     /* ---------- remove ---------- */
     const handleRemove = (index: number) => {
-        URL.revokeObjectURL(images[index].preview);
+        if (images[index].type === "new") {
+            URL.revokeObjectURL(images[index].preview);
+        }
         const updated = images.filter((_, i) => i !== index);
         setImages(updated);
-        onChange(updated.map(i => i.file));
+        onChange(updated.map(i => i));
     };
 
     /* ---------- add ---------- */
@@ -80,7 +94,7 @@ const ImageCropInput = ({ max, aspect, onChange, error }: Props) => {
                         className="relative rounded-lg overflow-hidden bg-[#232447]"
                     >
                         <img
-                            src={img.preview}
+                            src={img.type === "new" ? img.preview : img.url}
                             className="w-full h-32 object-cover"
                             alt={`product-${i}`}
                         />

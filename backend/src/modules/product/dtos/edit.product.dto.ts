@@ -14,7 +14,7 @@ export const EditProductSchema = z.object({
     .trim()
     .min(10, "Product description must be at least 10 characters")
     .max(1000, "Product description must not exceed 1000 characters"),
-
+  isFeatured: z.boolean().default(false),
   images: z
     .array(ImageSchema)
     .min(1, "At least one product image is required")

@@ -3,8 +3,8 @@ import { getCategoryByIdApi } from "../api/category.api";
 
 export const useCategoryById = (id: string | null) => {
   return useQuery({
-    queryKey: ["category", id],
+    queryKey: ["admin-category", id],
     queryFn: () => getCategoryByIdApi(id as string),
-    enabled: !!id, // ✅ critical
+    enabled: !!id,
   });
 };

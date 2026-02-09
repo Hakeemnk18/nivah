@@ -8,9 +8,22 @@ export type CreateProductPayload = {
   name: string;
   description: string;
   categoryId: string;
-  isFeatured?: boolean;
-  image: AdminProductImage[]
-  variant: IVariant[]
+  isFeatured: boolean;
+  images: AdminProductImage[]
+  variants: IVariant[]
+};
+
+export type UpdateProductPayload = {
+  name: string;
+  description: string;
+  categoryId: string;
+  isFeatured: boolean;
+  images: AdminProductImage[]
+};
+
+export type UpdateProductParams = {
+  id: string;
+  data: UpdateProductPayload;
 };
 
 export type IVariant = {
@@ -23,7 +36,7 @@ export type IVariant = {
  * Variants (Admin)
  * ---------------------------------- */
 
-export type AdminVariantItem =  IVariant & {
+export type AdminVariantItem = IVariant & {
   id: string;
   isAvailable: boolean;
 };

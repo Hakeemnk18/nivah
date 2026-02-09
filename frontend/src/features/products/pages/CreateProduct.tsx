@@ -11,6 +11,7 @@ import { handleApiError } from "../../../shared/utils/handle.api.error";
 import type { CreateProductPayload } from "../type/product.type";
 import { uploadToCloudinary } from "../../../shared/utils/cloudinary";
 import AdminLoader from "../../admin/components/AdminLoader";
+import type { ImageItem } from "../../../shared/types/image.type";
 
 type Variant = {
     size: string;
@@ -23,7 +24,7 @@ type FormState = {
     description: string;
     categoryId: string;
     isFeatured: boolean;
-    images: File[];
+    images: ImageItem[];
     variants: Variant[];
 };
 
@@ -61,6 +62,8 @@ const CreateProductForm = () => {
         setErrors({ ...errors, [e.target.name]: "" });
     };
 
+
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const newErrors: FormErrors = {};
@@ -86,8 +89,12 @@ const CreateProductForm = () => {
             newErrors.variants = "Duplicate size is not allowed";
         }
         for (const v of formData.variants) {
-            if (!v.size || !v.price || !v.quantity) {
+            if (!v.size.trim() || !v.price.trim() || !v.quantity.trim()) {
                 newErrors.variants = "All variant fields are required";
+                break;
+            }
+            if (isNaN(Number(v.price)) || isNaN(Number(v.quantity))) {
+                newErrors.variants = "Price and quantity must be numbers";
                 break;
             }
             if (Number(v.price) <= 0 || Number(v.quantity) <= 0) {
@@ -108,12 +115,12 @@ const CreateProductForm = () => {
         try {
             setSubmitting(true);
             try {
-                uploadedImages = await Promise.all(
-                    formData.images.map(file => uploadToCloudinary(file))
-                );
-
-            } catch (err) {
+                const newImages = formData.images.filter(img => img.type === "new");
+                uploadedImages = await Promise.all(newImages.map(img => uploadToCloudinary(img.file)));
+            } catch (err: any) {
+                //setSubmitting(false);
                 setErrors({ images: "Image upload failed. Please try again." });
+                console.log("Cloudinary error response:", err?.response?.data);
                 return;
             }
             const payload: CreateProductPayload = {
@@ -199,6 +206,7 @@ const CreateProductForm = () => {
                         <ImageCropInput
                             max={3}
                             aspect={1}
+                            value={formData.images}
                             onChange={(files) => setFormData({ ...formData, images: files })}
                             error={errors.images}
                         />

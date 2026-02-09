@@ -193,10 +193,11 @@ const ProductTable = () => {
           <table className="w-full text-sm min-w-[720px]">
             <thead>
               <tr className="text-left text-gray-400 border-b border-[#2c2e4a]">
-                <th className="py-3">Name</th>
-                <th className="min-w-[160px]">Category</th>
-                <th className="w-[100px]">Price</th>
-                <th className="w-[90px]">Status</th>
+                <th className="w-[180px]">Name</th>
+                <th className="w-[160px]">Category</th>
+                <th className="w-[120px] text-center">Featured</th>
+                <th className="w-[90px]">Price</th>
+                <th className="w-[100px]">Status</th>
                 <th className="text-right w-[140px]">Actions</th>
               </tr>
             </thead>
@@ -227,20 +228,22 @@ const ProductTable = () => {
                   </td>
                 </tr>
               ) : (
+
                 products.map((item) => (
                   <tr
                     key={item.id}
                     className="border-t border-[#2c2e4a] hover:bg-[#232447]"
                   >
                     <td className="py-3 font-medium">{item.name}</td>
-                    <td className="text-gray-300">{item.category.name}</td>
-                    <td>₹{item.price}</td>
+                    <td className="text-gray-300 w-[160px] truncate">{item.category.name}</td>
+                    <td className="text-gray-300 py-3 w-[120px] text-center">{item.isFeatured ? "Featured" : "Not Featured"}</td>
+                    <td className="w-[90px]">₹{item.price}</td>
 
                     <td>
                       <span
                         className={`px-2 py-1 rounded-full text-xs ${item.isActive
-                            ? "bg-[#1f3b7a] text-blue-300"
-                            : "bg-[#3e3f5c] text-gray-300"
+                          ? "bg-[#1f3b7a] text-blue-300"
+                          : "bg-[#3e3f5c] text-gray-300"
                           }`}
                       >
                         {item.isActive ? "Active" : "Inactive"}

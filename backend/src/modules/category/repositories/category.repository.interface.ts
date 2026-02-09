@@ -12,7 +12,7 @@ export interface ICategoryRepository {
   save(categoryEntity: Category): Promise<Category>;
   findAllForAdmin(allDoc: IGetAllDocDB): Promise<Category[]>;
   findAllMainCategoriesForUser(): Promise<Category[]>;
-  findAllSubCategoryForAdmin(): Promise<IdName[]> 
+  findAllSubCategories(query: Record<string, any>): Promise<IdName[]>
   findSubCategoriesForUser(parentId: string): Promise<Category[]>;
   findSubCategoriesForAdmin(parentId: string): Promise<Category[]>;
   countDocument(query: Record<string, any>): Promise<number>;

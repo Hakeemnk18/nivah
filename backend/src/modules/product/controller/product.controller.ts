@@ -80,8 +80,7 @@ export class ProductController implements IProductController {
       const { id } = req.params;
       validateObjectId(id);
 
-      const dto: EditProductRequestDto =
-        EditProductSchema.parse(req.body);
+      const dto: EditProductRequestDto = EditProductSchema.parse(req.body);
 
       await this._editProductUseCase.execute(id!, dto);
 
