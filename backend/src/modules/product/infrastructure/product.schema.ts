@@ -76,7 +76,7 @@ const productSchema = new Schema<IProduct>(
           min: 0,
         },
 
-        isAvailable: {
+        isActive: {
           type: Boolean,
           default: true,
         },

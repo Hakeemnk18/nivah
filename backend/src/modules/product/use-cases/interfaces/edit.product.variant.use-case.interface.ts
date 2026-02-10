@@ -1,9 +1,9 @@
-import type { AddVariantRequestDto } from "../../dtos/variant.dto.js";
+import type { UpdateVariantRequestDto } from "../../dtos/variant.dto.js";
 
 export interface IEditProductVariantUseCase {
   execute(
     productId: string,
     variantId: string,
-    dto: AddVariantRequestDto
+    dto: UpdateVariantRequestDto
   ): Promise<void>;
 }

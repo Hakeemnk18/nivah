@@ -11,6 +11,8 @@ import type {
   UpdateVariantParams,
   UpdateProductPayload,
   UpdateProductParams,
+  VariantResponse,
+  AddVariantParams,
 } from "../type/product.type";
 
 /* ---------- CREATE PRODUCT ---------- */
@@ -67,25 +69,35 @@ export const getProductByIdForAdminApi = async (
 
 /* ---------- ADD VARIANT ---------- */
 export const addVariantApi = async (
-  productId: string,
-  data: AddVariantPayload
+  params: AddVariantParams
 ): Promise<ApiResponse> => {
   const response = await api.post<ApiResponse>(
-    `/products/${productId}/variants`,
-    data
+    `/products/${params.productId}/variants`,
+    params.data
   );
   return response.data;
 };
 
 /* ---------- EDIT VARIANT ---------- */
-export const editVariantApi = async (
+export const updateVariantApi = async (
   params: UpdateVariantParams
 ): Promise<ApiResponse> => {
   const { productId, variantId, data } = params;
-
+  console.log("data ", data)
   const response = await api.put<ApiResponse>(
     `/products/${productId}/variants/${variantId}`,
     data
+  );
+
+  return response.data;
+};
+
+export const getProductVariantForAdminApi = async (
+  productId: string,
+  variantId: string
+): Promise<VariantResponse> => {
+  const response = await api.get<VariantResponse>(
+    `/products/${productId}/variants/${variantId}`
   );
 
   return response.data;

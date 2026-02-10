@@ -21,11 +21,12 @@ import { validateObjectId } from "../../../core/utils/validate.object.id.helper.
 import { parseReq } from "../../../core/utils/parse.query.helper.js";
 import type { IEditProductUseCase } from "../use-cases/interfaces/edit.product.use-case.interface.js";
 import type { IGetAllProductForAdminUseCase } from "../use-cases/interfaces/get.all.product.admin.use-case.interface.js";
-import { VariantArraySchema, VariantSchema } from "../dtos/variant.dto.js";
+import { UpdateVariantSchema, VariantArraySchema, VariantSchema } from "../dtos/variant.dto.js";
 import type { IAddProductVariantUseCase } from "../use-cases/interfaces/add.product.variant.use-case.interface.js";
 import type { IEditProductVariantUseCase } from "../use-cases/interfaces/edit.product.variant.use-case.interface.js";
 import { EditProductSchema, type EditProductRequestDto } from "../dtos/edit.product.dto.js";
 import type { IGetProductDetailsForAdminUseCase } from "../use-cases/interfaces/get.product.admin.use-case.interface.js";
+import type { IGetProductVariantForAdmin } from "../use-cases/interfaces/get.product.variant.for.admin.interface.js";
 
 @injectable()
 export class ProductController implements IProductController {
@@ -53,6 +54,9 @@ export class ProductController implements IProductController {
 
     @inject("IGetProductDetailsForAdminUseCase")
     private readonly _getProductDetailsForAdminUseCase: IGetProductDetailsForAdminUseCase,
+
+    @inject("IGetProductVariantForAdmin")
+    private readonly _getProductVariantForAdminUseCase: IGetProductVariantForAdmin,
 
 
   ) { }
@@ -172,7 +176,7 @@ export class ProductController implements IProductController {
       const { productId, variantId } = req.params
       validateObjectId(variantId)
       validateObjectId(productId)
-      const dto = VariantSchema.parse(req.body)
+      const dto = UpdateVariantSchema.parse(req.body)
       await this._editProductVariantUseCase.execute(productId!, variantId!, dto)
 
       res.status(HttpStatusCode.OK).json({
@@ -181,7 +185,7 @@ export class ProductController implements IProductController {
       });
     } catch (error) {
       handleError(res, error)
-      console.log("error in add variant controller ", error)
+      console.log("error in variant controller ", error)
     }
   }
 
@@ -199,6 +203,25 @@ export class ProductController implements IProductController {
     } catch (error) {
       handleError(res, error)
       console.log("error in get product details for admin controller ", error)
+    }
+  }
+
+  async getAdminProductVariant(req: Request, res: Response): Promise<void> {
+    try {
+
+      const { productId, variantId } = req.params
+      validateObjectId(variantId)
+      validateObjectId(productId)
+      const data = await this._getProductVariantForAdminUseCase.execute(productId!, variantId!)
+
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data,
+      });
+    } catch (error) {
+      handleError(res, error)
+      console.log("error in get product variant for admin controller ", error)
     }
   }
 
