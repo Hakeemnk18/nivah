@@ -22,7 +22,7 @@ export class AddProductVariantUseCase
     productId: string,
     dto: AddVariantRequestDto[]
   ): Promise<void> {
-    console.log("inside add variant use case")
+
     const product = await this._productRepository.findById(productId);
 
     if (!product) {
@@ -33,7 +33,7 @@ export class AddProductVariantUseCase
     }
 
 
-    console.log("before calling vLI")
+
     const combinedVariants = [
       ...dto,
       ...product.variants.map((v) => ({
@@ -43,11 +43,11 @@ export class AddProductVariantUseCase
       })),
     ];
 
-    console.log("after calling vLI")
+
 
     // 🔒 Business invariant
     const isValid = assertUniqueVariantSizes(combinedVariants);
-    console.log("is valid ", isValid)
+
     if (!isValid) {
       throw new CustomError(
         ResponseMessages.PRODUCT_DUPLICATE_VARIANT_SIZE,

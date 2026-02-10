@@ -107,7 +107,7 @@ export type UserVariantView = {
 
 export type AddVariantParams = {
   productId: string;
-  data: AddVariantPayload;
+  data: AddVariantPayload[];
 };
 
 export type VariantResponse = ApiResponse<AdminVariantItem>;

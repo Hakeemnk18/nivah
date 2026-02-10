@@ -6,8 +6,11 @@ export const useAddVariant = () => {
 
     return useMutation({
         mutationFn: addVariantApi,
-        onSuccess: () => {
+        onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+            queryClient.invalidateQueries({
+                queryKey: ["admin-product-details", variables.productId],
+            });
         },
     });
 };
