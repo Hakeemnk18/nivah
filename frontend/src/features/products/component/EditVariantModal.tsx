@@ -4,6 +4,7 @@ import { useAdminProductVariant } from "../hook/use.admin.product.variant";
 import { useUpdateVariant } from "../hook/use,update,variant";
 import { handleApiError } from "../../../shared/utils/handle.api.error";
 import AdminLoader from "../../admin/components/AdminLoader";
+import toast from "react-hot-toast";
 
 interface Props {
   productId: string;
@@ -74,7 +75,7 @@ const EditVariantModal = ({ productId, variantId, onClose }: Props) => {
           isActive: formData.isActive,
         },
       });
-
+      toast.success("Variant updated successfully");
       onClose();
     } catch (err) {
       const fieldErrors = handleApiError(err);

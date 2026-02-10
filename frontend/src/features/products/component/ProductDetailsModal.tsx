@@ -3,6 +3,7 @@ import { useAdminProductDetails } from "../hook/use.admin.product.detail";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import EditVariantModal from "./EditVariantModal";
+import AddVariantModal from "./addVariantModal";
 type Props = {
   productId: string;
   onClose: () => void;
@@ -13,6 +14,7 @@ const ProductDetailsModal = ({ productId, onClose }: Props) => {
   const { data, isLoading, isError } = useAdminProductDetails(productId);
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
   const [isEditvariantModal, setIsEditvariantModal] = useState(false);
+  const [isAddvariantModal, setIsAddvariantModal] = useState(false);
   const product = data?.data;
 
   if (isLoading) {
@@ -85,11 +87,14 @@ const ProductDetailsModal = ({ productId, onClose }: Props) => {
             className="bg-[#232447] px-4 py-2 rounded cursor-pointer">
             Edit Product
           </button>
-          <button className="bg-[#1f3b7a] px-4 py-2 rounded flex items-center gap-2">
+          <button
+            onClick={() => setIsAddvariantModal(true)}
+            className="bg-[#1f3b7a] px-4 py-2 rounded flex items-center gap-2 cursor-pointer">
             <FaPlus /> Add Variant
           </button>
         </div>
       </div>
+      {isAddvariantModal && <AddVariantModal productId={productId} onClose={() => setIsAddvariantModal(false)} />}
       {(isEditvariantModal && selectedVariantId) && <EditVariantModal productId={productId} variantId={selectedVariantId} onClose={() => setIsEditvariantModal(false)} />}
     </div>
   );
