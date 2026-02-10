@@ -29,6 +29,8 @@ import type { IAddProductVariantUseCase } from "../modules/product/use-cases/int
 import { AddProductVariantUseCase } from "../modules/product/use-cases/add.product.variant.use-case.js";
 import type { IEditProductVariantUseCase } from "../modules/product/use-cases/interfaces/edit.product.variant.use-case.interface.js";
 import { EditProductVariantUseCase } from "../modules/product/use-cases/edit.product.variant.use-case.js";
+import type { IGetProductVariantForAdmin } from "../modules/product/use-cases/interfaces/get.product.variant.for.admin.interface.js";
+import { GetProductVariantForAdmin } from "../modules/product/use-cases/get.product.variant.for.admin.js";
 
 export const registerProductDependencies = () => {
   /* ---------- repository ---------- */
@@ -80,5 +82,9 @@ export const registerProductDependencies = () => {
 
   container.register<IEditProductVariantUseCase>(
     "IEditProductVariantUseCase", { useClass: EditProductVariantUseCase }
+  )
+
+  container.register<IGetProductVariantForAdmin>(
+    "IGetProductVariantForAdmin", { useClass: GetProductVariantForAdmin }
   )
 };

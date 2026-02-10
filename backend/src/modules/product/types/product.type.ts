@@ -7,28 +7,36 @@ export interface IVariant {
   size: string;
   stock: number;
   price: number;
-  isAvailable: boolean;
+  isActive: boolean;
 }
 
+
+
 export type AdminVariantView = {
-  id: string;
+  variantId: string;
   size: string;
   stock: number;
   price: number;
-  isAvailable: boolean;
+  isActive: boolean;
 };
 
-export type AddVariantProps = Omit<AdminVariantView, "id">;
+export type AddVariantProps = Omit<AdminVariantView, "variantId">;
 
 export type UserVariantView = {
   size: string;
   price: number;
 };
 
+export type EditVariantProps = {
+  stock: number;
+  price: number;
+  isActive: boolean;
+}
+
 export type UpdateVariantParams = {
   productId: string;
   variantId: string;
-  data: AddVariantProps;
+  data: EditVariantProps;
 };
 
 export interface IImage {

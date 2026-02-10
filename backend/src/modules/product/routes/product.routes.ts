@@ -57,4 +57,10 @@ router.put(
   (req, res) => productController.editVariant(req, res),
 );
 
+/* ---------- GET VARIANT DETAILS FOR ADMIN ---------- */
+router.get(
+  "/:productId/variants/:variantId",
+  (req, res) => productController.getAdminProductVariant(req, res)
+)
+
 export default router;

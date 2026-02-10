@@ -1,5 +1,5 @@
 import { Product } from "../entities/product.entity.js";
-import type { ProductListView, ProductView, UserProductListView, UserProductView } from "../types/product.type.js";
+import type { AdminVariantView, ProductListView, ProductView, UserProductListView, UserProductView } from "../types/product.type.js";
 
 export class ProductMapper {
   static toDomain(productModelData: any): Product | null {
@@ -48,7 +48,7 @@ export class ProductMapper {
         size: variant.size,
         stock: variant.stock,
         price: variant.price,
-        isAvailable: variant.isAvailable,
+        isActive: variant.isActive,
       })),
       isActive: productEntity.isActive,
       isFeatured: productEntity.isFeatured,
@@ -88,13 +88,19 @@ export class ProductMapper {
         id: category._id.toString(),
         name: category.name,
       },
-      variants: productModelData.variants,
+      variants: productModelData.variants.map((variant: any) => ({
+        id: variant._id.toString(),
+        size: variant.size,
+        stock: variant.stock,
+        price: variant.price,
+        isActive: variant.isActive,
+      })),
       isActive: productModelData.isActive,
       isFeatured: productModelData.isFeatured,
     };
   }
 
-    static toAdminListView(productModelData: any): ProductListView | null {
+  static toAdminListView(productModelData: any): ProductListView | null {
     if (!productModelData) return null;
 
     const id =
@@ -178,6 +184,26 @@ export class ProductMapper {
       name: productModelData.name,
       price: productModelData.variants?.[0]?.price ?? 0,
       image: productModelData.images?.[0]?.url ?? "",
+    };
+  }
+
+  static toVariantView(varinatData: any): AdminVariantView | null {
+    if (!varinatData) return null;
+
+    const id =
+      varinatData._id?.toString() || varinatData.id?.toString();
+
+    if (!id) {
+      console.error("Product data missing ID:", varinatData);
+      return null;
+    }
+
+    return {
+      variantId: id,
+      size: varinatData.size,
+      stock: varinatData.stock,
+      price: varinatData.price,
+      isActive: varinatData.isActive,
     };
   }
 }

@@ -38,15 +38,17 @@ export type IVariant = {
 
 export type AdminVariantItem = IVariant & {
   id: string;
-  isAvailable: boolean;
+  isActive: boolean;
 };
 
-export type AddVariantPayload = Omit<AdminVariantItem, "id">
+export type AddVariantPayload = Omit<AdminVariantItem, "id" | "isActive">
+export type UpdateVariantPayload = Omit<AdminVariantItem, "id">
+
 
 export type UpdateVariantParams = {
   productId: string;
   variantId: string;
-  data: AddVariantPayload;
+  data: UpdateVariantPayload;
 };
 
 /* ----------------------------------
@@ -102,6 +104,15 @@ export type UserVariantView = {
   size: string;
   price: number;
 };
+
+export type AddVariantParams = {
+  productId: string;
+  data: AddVariantPayload;
+};
+
+export type VariantResponse = ApiResponse<AdminVariantItem>;
+
+
 
 export type UserProductDetails = {
   id: string;

@@ -36,3 +36,20 @@ export const VariantArraySchema = z
 export type AddVariantRequestDto = z.infer<
   typeof VariantSchema
 >;
+
+export const UpdateVariantSchema = z.object({
+  stock: z
+    .number()
+    .int("Variant stock must be an integer")
+    .min(0, "Variant stock cannot be negative")
+  ,
+
+  price: z
+    .number()
+    .min(0, "Variant price cannot be negative")
+  ,
+
+  isActive: z.boolean()
+});
+
+export type UpdateVariantRequestDto = z.infer<typeof UpdateVariantSchema>;

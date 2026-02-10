@@ -10,7 +10,7 @@ import { ProductMapper } from "../mappers/product.mapper.js";
 import type { IGetAllDocDB } from "../../../core/shared/interfaces/get.all.doc.interface.js";
 import type {
   AddVariantProps,
-  IVariant,
+  AdminVariantView,
   ProductListView,
   ProductView,
   UpdateVariantParams,
@@ -111,7 +111,7 @@ export class ProductRepository implements IProductRepository {
     return ProductMapper.toAdminView(document);
   }
 
-  /* ================= USER: FULL PRODUCT ================= */
+
   async findProductForUser(id: string): Promise<UserProductView | null> {
     if (!ObjectId.isValid(id)) return null;
 
@@ -136,7 +136,6 @@ export class ProductRepository implements IProductRepository {
               size: v.size,
               stock: v.stock,
               price: v.price,
-              isAvailable: v.isAvailable,
             })),
           },
         },
@@ -156,17 +155,40 @@ export class ProductRepository implements IProductRepository {
       { _id: productId },
       {
         $set: {
-          "variants.$[variant].size": data.size,
           "variants.$[variant].stock": data.stock,
           "variants.$[variant].price": data.price,
-          "variants.$[variant].isAvailable": data.isAvailable,
+          "variants.$[variant].isActive": data.isActive,
         },
       },
       {
         arrayFilters: [{ "variant._id": variantId }],
-        new: true, 
-        runValidators: true, 
+        new: true,
+        runValidators: true,
       },
     );
+  }
+
+
+  async findProductVariant(productId: string, variantId: string, isActive?: boolean): Promise<AdminVariantView | null> {
+    const query: Record<string, any> = {
+      _id: new Types.ObjectId(productId),
+    }
+    if (isActive !== undefined) {
+      query.isActive = isActive;
+    }
+    const document = await ProductModel.aggregate([
+      { $match: query },
+      { $unwind: "$variants" },
+      { $match: { "variants._id": new Types.ObjectId(variantId) } },
+      {
+        $project: {
+          _id: 0,
+          variant: "$variants",
+        },
+      },
+    ]);
+    const data = document?.[0]?.variant;
+    if (!data) return null;
+    return ProductMapper.toVariantView(data);
   }
 }

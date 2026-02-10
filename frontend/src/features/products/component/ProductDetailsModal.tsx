@@ -1,6 +1,8 @@
 import { FaEdit, FaTimes, FaPlus } from "react-icons/fa";
 import { useAdminProductDetails } from "../hook/use.admin.product.detail";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import EditVariantModal from "./EditVariantModal";
 type Props = {
   productId: string;
   onClose: () => void;
@@ -9,6 +11,8 @@ type Props = {
 const ProductDetailsModal = ({ productId, onClose }: Props) => {
   const navigate = useNavigate();
   const { data, isLoading, isError } = useAdminProductDetails(productId);
+  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
+  const [isEditvariantModal, setIsEditvariantModal] = useState(false);
   const product = data?.data;
 
   if (isLoading) {
@@ -59,7 +63,13 @@ const ProductDetailsModal = ({ productId, onClose }: Props) => {
                 <span>
                   {v.size} · ₹{v.price} · Stock {v.stock}
                 </span>
-                <FaEdit className="cursor-pointer" />
+                <FaEdit
+                  onClick={() => {
+
+                    setSelectedVariantId(v.id);
+                    setIsEditvariantModal(true);
+                  }}
+                  className="cursor-pointer" />
               </div>
             ))}
           </div>
@@ -80,6 +90,7 @@ const ProductDetailsModal = ({ productId, onClose }: Props) => {
           </button>
         </div>
       </div>
+      {(isEditvariantModal && selectedVariantId) && <EditVariantModal productId={productId} variantId={selectedVariantId} onClose={() => setIsEditvariantModal(false)} />}
     </div>
   );
 };

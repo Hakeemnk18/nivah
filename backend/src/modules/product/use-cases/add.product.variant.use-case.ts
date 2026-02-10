@@ -4,26 +4,25 @@ import { HttpStatusCode } from "../../../core/constants/http.status.codes.js";
 import { ResponseMessages } from "../../../core/constants/response.message.js";
 
 import type { IAddProductVariantUseCase } from "./interfaces/add.product.variant.use-case.interface.js";
-import type { IProductRepository } from "../repositories/product.repository.interface.js";import type { AddVariantRequestDto } from "../dtos/variant.dto.js";
+import type { IProductRepository } from "../repositories/product.repository.interface.js"; import type { AddVariantRequestDto } from "../dtos/variant.dto.js";
 import { assertUniqueVariantSizes } from "../utils/variant.validate.helper.js";
 import type { ICategoryRepository } from "../../category/repositories/category.repository.interface.js";
 
 @injectable()
 export class AddProductVariantUseCase
-  implements IAddProductVariantUseCase
-{
+  implements IAddProductVariantUseCase {
   constructor(
     @inject("IProductRepository")
     private readonly _productRepository: IProductRepository,
 
-    
-  ) {}
+
+  ) { }
 
   async execute(
     productId: string,
     dto: AddVariantRequestDto[]
   ): Promise<void> {
-     console.log("inside add variant use case")
+    console.log("inside add variant use case")
     const product = await this._productRepository.findById(productId);
 
     if (!product) {
@@ -33,8 +32,8 @@ export class AddProductVariantUseCase
       );
     }
 
-    
-   console.log("before calling vLI")
+
+    console.log("before calling vLI")
     const combinedVariants = [
       ...dto,
       ...product.variants.map((v) => ({
@@ -43,13 +42,13 @@ export class AddProductVariantUseCase
         price: v.price,
       })),
     ];
-    
-   console.log("after calling vLI")
+
+    console.log("after calling vLI")
 
     // 🔒 Business invariant
     const isValid = assertUniqueVariantSizes(combinedVariants);
-    console.log("is valid ",isValid)
-    if(!isValid){
+    console.log("is valid ", isValid)
+    if (!isValid) {
       throw new CustomError(
         ResponseMessages.PRODUCT_DUPLICATE_VARIANT_SIZE,
         HttpStatusCode.BAD_REQUEST
@@ -62,7 +61,7 @@ export class AddProductVariantUseCase
         size: v.size,
         stock: v.stock,
         price: v.price,
-        isAvailable: true,
+        isActive: true,
       }))
     );
 

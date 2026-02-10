@@ -41,7 +41,7 @@ const CreateCategoryForm = () => {
 
   const [errors, setErrors] = useState<FormErrors>({});
 
-  
+
 
   useEffect(() => {
     if (categoryData?.data) {
@@ -83,6 +83,8 @@ const CreateCategoryForm = () => {
       newErrors.description = "Max 60 characters";
     }
 
+
+
     if (Object.keys(newErrors).length) {
       setErrors(newErrors);
       return;
@@ -104,7 +106,7 @@ const CreateCategoryForm = () => {
         });
         toast.success("Category created successfully");
       }
-      
+
       navigate("/admin/categoryManagement");
     } catch (err: any) {
       const fieldErrors = handleApiError(err);
@@ -128,11 +130,10 @@ const CreateCategoryForm = () => {
               placeholder="Category name"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full px-4 py-2 rounded-lg bg-[#232447] border focus:outline-none focus:ring-2 ${
-                errors.name
-                  ? "border-red-500 focus:ring-red-400"
-                  : "border-transparent focus:ring-blue-400"
-              }`}
+              className={`w-full px-4 py-2 rounded-lg bg-[#232447] border focus:outline-none focus:ring-2 ${errors.name
+                ? "border-red-500 focus:ring-red-400"
+                : "border-transparent focus:ring-blue-400"
+                }`}
             />
             {errors.name && (
               <p className="text-sm text-red-400 mt-1">{errors.name}</p>
@@ -143,15 +144,14 @@ const CreateCategoryForm = () => {
           <div>
             <textarea
               name="description"
-              placeholder="Description (optional)"
+              placeholder="Description"
               value={formData.description}
               onChange={handleChange}
               rows={3}
-              className={`w-full px-4 py-2 rounded-lg bg-[#232447] border resize-none focus:outline-none focus:ring-2 ${
-                errors.description
-                  ? "border-red-500 focus:ring-red-400"
-                  : "border-transparent focus:ring-blue-400"
-              }`}
+              className={`w-full px-4 py-2 rounded-lg bg-[#232447] border resize-none focus:outline-none focus:ring-2 ${errors.description
+                ? "border-red-500 focus:ring-red-400"
+                : "border-transparent focus:ring-blue-400"
+                }`}
             />
             {errors.description && (
               <p className="text-sm text-red-400 mt-1">{errors.description}</p>
@@ -175,6 +175,9 @@ const CreateCategoryForm = () => {
                   </option>
                 ))}
             </select>
+            {errors.parentId && (
+              <p className="text-sm text-red-400 mt-1">{errors.parentId}</p>
+            )}
           </div>
 
           {/* Actions */}

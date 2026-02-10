@@ -5,7 +5,7 @@ export type ProductVariant = {
   size: string; // string, not enum
   stock: number;
   price: number;
-  isAvailable?: boolean;
+  isActive?: boolean;
 };
 
 export type ProductProps = {
@@ -89,7 +89,7 @@ export class Product {
     this.category = props.category;
     this.variants = props.variants.map((v) => ({
       ...v,
-      isAvailable: v.isAvailable ?? true,
+      isActive: v.isActive ?? true,
     }));
     this.isActive = props.isActive ?? true;
     this.isFeatured = props.isFeatured ?? false;

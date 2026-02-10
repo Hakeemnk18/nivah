@@ -2,6 +2,7 @@ import toast from "react-hot-toast";
 
 
 export function handleApiError(error: any) {
+  console.log("inside api error ", error)
   const message =
     error?.response?.data?.message ||
     error?.message ||
@@ -11,7 +12,7 @@ export function handleApiError(error: any) {
 
   toast.error(message);
 
-  
+
   if (validationErrors && typeof validationErrors === "object") {
     return validationErrors;
   }
