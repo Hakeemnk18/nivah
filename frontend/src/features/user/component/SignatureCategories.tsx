@@ -1,35 +1,26 @@
+import EmptyState from "../../../shared/components/EmptyState";
 import SectionTitle from "../../../shared/components/SectionTitle";
+import { getGridClass } from "../../../shared/utils/grid.style";
+import { useSignatureCategories } from "../../category/hooks/use.signature.categories";
 
-type Category = {
-  id: number;
-  title: string;
+
+type SignatureCategory = {
+  id: string;
+  name: string;
   image: string;
 };
 
-const categories: Category[] = [
-  {
-    id: 1,
-    title: "Necklaces",
-    image: "/images/category-necklace.png",
-  },
-  {
-    id: 2,
-    title: "Necklaces",
-    image: "/images/category-necklace.png",
-  },
-  {
-    id: 3,
-    title: "Necklaces",
-    image: "/images/category-necklace.png",
-  },
-  {
-    id: 4,
-    title: "Necklaces",
-    image: "/images/category-necklace.png",
-  },
-];
+
 
 export default function SignatureCategories() {
+
+  console.log("inside signature categories")
+  const { data, isLoading, isError } = useSignatureCategories();
+  let categories: SignatureCategory[] = [];
+  if (data?.data) {
+    categories = data.data;
+  }
+
   return (
     <section
       aria-labelledby="signature-categories-heading"
@@ -37,27 +28,39 @@ export default function SignatureCategories() {
     >
       <div className="w-full px-4">
         {/* Section heading */}
-        <SectionTitle label="SIGNATURE CATEGORIES"/>
+        <SectionTitle label="SIGNATURE CATEGORIES" />
+        {/* Error */}
+        {!isLoading && isError && (
+          <EmptyState
+            title="Something went wrong"
+            description="We couldn’t load featured categories right now. Please try again later."
+          />
+        )}
+
+        {/* Empty */}
+        {!isLoading && categories.length === 0 && <EmptyState title="No categories found" description="Featured categories will appear here once available." />}
 
         {/* Categories grid */}
-        <ul className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
-          {categories.map((category) => (
-            <li key={category.id} className="text-center">
-              <figure>
-                <img
-                  src={category.image}
-                  alt={`${category.title} jewelry category`}
-                  className="mx-auto w-full max-w-[220px] rounded-xl object-cover"
-                  loading="lazy"
-                />
+        {!isLoading && categories.length > 0 && (
+          <ul className={getGridClass(categories.length)}>
+            {categories.map((category) => (
+              <li key={category.id} className="text-center">
+                <figure>
+                  <img
+                    src={category.image}
+                    alt={`${category.name} jewelry category`}
+                    className="mx-auto w-full max-w-[220px] rounded-xl object-cover"
+                    loading="lazy"
+                  />
 
-                <figcaption className="mt-4 text-sm text-[#d4af37]">
-                  {category.title}
-                </figcaption>
-              </figure>
-            </li>
-          ))}
-        </ul>
+                  <figcaption className="mt-4 text-sm text-[#d4af37]">
+                    {category.name}
+                  </figcaption>
+                </figure>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
   );

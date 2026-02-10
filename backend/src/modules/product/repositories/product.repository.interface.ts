@@ -6,6 +6,7 @@ import type {
   ProductListView,
   ProductView,
   UpdateVariantParams,
+  UserProductListView,
   UserProductView,
 } from "../types/product.type.js";
 
@@ -17,6 +18,7 @@ export interface IProductRepository {
   countDocument(query: Record<string, any>): Promise<number>;
   findProductForAdmin(id: string): Promise<ProductView | null>;
   findProductForUser(id: string): Promise<UserProductView | null>;
+  findFeaturedProducts(): Promise<UserProductListView[]>;
   findProductVariant(productId: string, variantId: string, isActive?: boolean): Promise<AdminVariantView | null>;
   addVariants(
     productId: string,

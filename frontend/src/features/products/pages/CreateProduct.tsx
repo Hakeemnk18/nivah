@@ -205,7 +205,7 @@ const CreateProductForm = () => {
                         {/* images */}
                         <ImageCropInput
                             max={3}
-                            aspect={1}
+                            aspect={4 / 5}
                             value={formData.images}
                             onChange={(files) => setFormData({ ...formData, images: files })}
                             error={errors.images}

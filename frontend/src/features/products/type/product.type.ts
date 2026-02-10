@@ -130,6 +130,8 @@ export type UserProductListItem = {
   image: string;
 };
 
+export type UserProductListResponse = ApiResponse<UserProductListItem[]>;
+
 /* ----------------------------------
  * API Responses
  * ---------------------------------- */

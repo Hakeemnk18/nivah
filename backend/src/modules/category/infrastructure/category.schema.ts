@@ -18,6 +18,8 @@ const categorySchema = new Schema<ICategory>(
       index: true,
     },
 
+
+
     description: {
       type: String,
       trim: true,

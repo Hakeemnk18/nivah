@@ -29,3 +29,11 @@ export type AdminCategoryQueryKey = [
     parentId: string | null;
   }
 ];
+
+export type signatureCategories = {
+  id: string;
+  name: string;
+  image: string;
+}
+
+export type GetSignatureCategoriesResponse = ApiResponse<signatureCategories[]>

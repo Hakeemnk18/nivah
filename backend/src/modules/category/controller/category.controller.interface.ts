@@ -12,4 +12,5 @@ export interface ICategoryController {
   getSubCategories(req: Request, res: Response): Promise<void>;
   getAllSubCategoryForAdmin(req: Request, res: Response): Promise<void>;
   getAllSubCategoryForUser(req: Request, res: Response): Promise<void>;
+  getSignatureCategories(req: Request, res: Response): Promise<void>;
 }

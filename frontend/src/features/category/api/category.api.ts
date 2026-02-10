@@ -1,6 +1,6 @@
 import api from "../../../api/axios.instance";
 import type { ApiResponse, GetIdNameResponse, } from "../../../shared/types/api.types";
-import type { CreateCategoryPayload, GetCategoryDetailsResponse, GetCategoryListResponse } from "../type/category.type";
+import type { CreateCategoryPayload, GetCategoryDetailsResponse, GetCategoryListResponse, GetSignatureCategoriesResponse } from "../type/category.type";
 
 
 
@@ -85,6 +85,14 @@ export const getAllSubCategoriesForAdminApi = async (): Promise<GetIdNameRespons
 export const getAllSubCategoriesForUserApi = async (): Promise<GetIdNameResponse> => {
   const response = await api.get<GetIdNameResponse>(
     "/categories/sub-categories/list"
+  );
+  return response.data;
+};
+
+/* ---------- USER: GET SIGNATURE CATEGORIES ---------- */
+export const getSignatureCategoriesApi = async (): Promise<GetSignatureCategoriesResponse> => {
+  const response = await api.get<GetSignatureCategoriesResponse>(
+    "/categories/signature"
   );
   return response.data;
 };

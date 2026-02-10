@@ -11,6 +11,7 @@ import type {
   UpdateProductParams,
   VariantResponse,
   AddVariantParams,
+  UserProductListResponse,
 } from "../type/product.type";
 
 /* ---------- CREATE PRODUCT ---------- */
@@ -100,3 +101,8 @@ export const getProductVariantForAdminApi = async (
 
   return response.data;
 };
+
+export const getFeaturedProductsApi = async (): Promise<UserProductListResponse> => {
+  const response = await api.get<UserProductListResponse>("/products/featured");
+  return response.data;
+};  

@@ -14,6 +14,7 @@ import type {
   ProductListView,
   ProductView,
   UpdateVariantParams,
+  UserProductListView,
   UserProductView,
 } from "../types/product.type.js";
 import type { AddVariantRequestDto } from "../dtos/variant.dto.js";
@@ -190,5 +191,18 @@ export class ProductRepository implements IProductRepository {
     const data = document?.[0]?.variant;
     if (!data) return null;
     return ProductMapper.toVariantView(data);
+  }
+
+  async findFeaturedProducts(): Promise<UserProductListView[]> {
+    const documents = await ProductModel.find({
+      isActive: true,
+      isFeatured: true,
+    })
+      .sort({ createdAt: -1 })
+      .limit(4)
+      .lean();
+
+    return documents.map(ProductMapper.toUserListView)
+      .filter((p): p is UserProductListView => p !== null);
   }
 }
