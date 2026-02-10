@@ -26,6 +26,7 @@ import { parseReq } from "../../../core/utils/parse.query.helper.js";
 import type { IGetCategoryByIdUseCase } from "../use-cases/interfaces/get.category.by-id.use-case.interface.js";
 import type { IGetAllSubCategoriesForAdminUseCase } from "../use-cases/interfaces/get.all.sub.categories.for.admin.use-case.interface.js";
 import type { IGetAllSubCategoryForUserUseCase } from "../use-cases/interfaces/get.all.sub.category.for.user.use-case.interface.js";
+import type { IGetSignatureCategoryUseCase } from "../use-cases/interfaces/get.signature.category.use-case.interface.js";
 
 @injectable()
 export class CategoryController implements ICategoryController {
@@ -58,7 +59,10 @@ export class CategoryController implements ICategoryController {
     private readonly _getAllSubCategoriesForAdminUseCase: IGetAllSubCategoriesForAdminUseCase,
 
     @inject("IGetAllSubCategoryForUserUseCase")
-    private readonly _getAllSubCategoryForUserUseCase: IGetAllSubCategoryForUserUseCase
+    private readonly _getAllSubCategoryForUserUseCase: IGetAllSubCategoryForUserUseCase,
+
+    @inject("IGetSignatureCategoryUseCase")
+    private readonly _getSignatureCategoryUseCase: IGetSignatureCategoryUseCase
   ) { }
 
   async createCategory(req: Request, res: Response): Promise<void> {
@@ -263,6 +267,23 @@ export class CategoryController implements ICategoryController {
       });
     } catch (error) {
       console.log("Error in get sub categories for user:", error);
+      handleError(res, error);
+    }
+  }
+
+  async getSignatureCategories(req: Request, res: Response): Promise<void> {
+    try {
+
+      const data =
+        await this._getSignatureCategoryUseCase.execute();
+
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data,
+      });
+    } catch (error) {
+      console.log("Error in get signature categories:", error);
       handleError(res, error);
     }
   }

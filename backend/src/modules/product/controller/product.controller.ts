@@ -27,6 +27,8 @@ import type { IEditProductVariantUseCase } from "../use-cases/interfaces/edit.pr
 import { EditProductSchema, type EditProductRequestDto } from "../dtos/edit.product.dto.js";
 import type { IGetProductDetailsForAdminUseCase } from "../use-cases/interfaces/get.product.admin.use-case.interface.js";
 import type { IGetProductVariantForAdmin } from "../use-cases/interfaces/get.product.variant.for.admin.interface.js";
+import type { IGetFeaturedProductUseCase } from "../use-cases/interfaces/get.fetured.product.use-case.interface.js";
+import console from "console";
 
 @injectable()
 export class ProductController implements IProductController {
@@ -57,6 +59,9 @@ export class ProductController implements IProductController {
 
     @inject("IGetProductVariantForAdmin")
     private readonly _getProductVariantForAdminUseCase: IGetProductVariantForAdmin,
+
+    @inject("IGetFeaturedProductUseCase")
+    private readonly _getFeaturedProductUseCase: IGetFeaturedProductUseCase,
 
 
   ) { }
@@ -191,7 +196,6 @@ export class ProductController implements IProductController {
 
   async getProductDetailsForAdmin(req: Request, res: Response): Promise<void> {
     try {
-
       const { id } = req.params
       validateObjectId(id)
       const data = await this._getProductDetailsForAdminUseCase.execute(id!)
@@ -222,6 +226,20 @@ export class ProductController implements IProductController {
     } catch (error) {
       handleError(res, error)
       console.log("error in get product variant for admin controller ", error)
+    }
+  }
+
+  async getFeaturedProducts(req: Request, res: Response): Promise<void> {
+    try {
+      const data = await this._getFeaturedProductUseCase.execute()
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data,
+      });
+    } catch (error) {
+      handleError(res, error)
+      console.log("error in get featured products controller ", error)
     }
   }
 

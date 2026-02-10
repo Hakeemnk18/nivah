@@ -11,9 +11,8 @@ export const useAdminProductDetails = (productId: string | null) => {
     queryKey: ["admin-product-details", productId],
     queryFn: () => getProductByIdForAdminApi(productId as string),
     enabled: !!productId,
-    staleTime: 0,
-    gcTime: 0,
     refetchOnMount: "always",
     refetchOnWindowFocus: false,
+    retry: 1,
   });
 };

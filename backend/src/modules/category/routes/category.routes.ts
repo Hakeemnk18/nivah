@@ -70,6 +70,13 @@ router.get(
   (req, res) => categoryController.getAllSubCategoryForAdminById(req, res),
 );
 
+/* ---------- USER: get signature categories ---------- */
+router.get(
+  "/signature",
+
+  (req, res) => categoryController.getSignatureCategories(req, res),
+);
+
 /* ---------- GET CATEGORY BY ID ---------- */
 router.get(
   "/:id",
@@ -83,5 +90,7 @@ router.get(
 
   (req, res) => categoryController.getAllSubCategoryForUser(req, res),
 );
+
+
 
 export default router;

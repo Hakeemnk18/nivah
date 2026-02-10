@@ -40,6 +40,12 @@ router.get(
   (req, res) => productController.getAllProductForAdmin(req, res),
 );
 
+/* ---------- GET FEATURED PRODUCTS ---------- */
+router.get(
+  "/featured",
+  (req, res) => productController.getFeaturedProducts(req, res)
+)
+
 /* ---------- GET PRODUCT DETAILS FOR ADMIN ---------- */
 router.get("/:id",
   (req, res) => productController.getProductDetailsForAdmin(req, res)
@@ -62,5 +68,7 @@ router.get(
   "/:productId/variants/:variantId",
   (req, res) => productController.getAdminProductVariant(req, res)
 )
+
+
 
 export default router;

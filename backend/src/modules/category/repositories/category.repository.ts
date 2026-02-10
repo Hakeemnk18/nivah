@@ -9,6 +9,7 @@ import { CategoryModel } from "../infrastructure/category.schema.js";
 import type { ICategoryRepository } from "./category.repository.interface.js";
 import { CategoryMapper } from "../mappers/category.mapper.js";
 import type { IdName } from "../../../core/shared/types/id.name.type.js";
+import type { CategorySignature } from "../types/category.type.js";
 
 const { ObjectId } = Types;
 
@@ -148,6 +149,97 @@ export class CategoryRepository implements ICategoryRepository {
       {
         id: item._id.toString(),
         name: item.name
+      }
+    ))
+  }
+
+  async findSignatureCategories(): Promise<CategorySignature[]> {
+    const signatureCategories = await CategoryModel.aggregate([
+      // 1. Main categories only
+      {
+        $match: {
+          parentId: null,
+          isActive: true,
+        },
+      },
+
+      // 2. Get subcategories
+      {
+        $lookup: {
+          from: "categories",
+          localField: "_id",
+          foreignField: "parentId",
+          as: "subCategories",
+        },
+      },
+
+      // 3. Flatten subcategories
+      { $unwind: "$subCategories" },
+
+      // 4. Join products using subcategory ID
+      {
+        $lookup: {
+          from: "products",
+          let: { subCategoryId: "$subCategories._id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$category", "$$subCategoryId"] },
+                    { $eq: ["$isActive", true] },
+                  ],
+                },
+              },
+            },
+            // { $sort: { createdAt: -1 } }, // stable
+            { $limit: 1 },
+            {
+              $project: {
+                images: 1,
+              },
+            },
+          ],
+          as: "product",
+        },
+      },
+
+      // 5. Keep only categories that actually have products
+      {
+        $match: {
+          product: { $ne: [] },
+        },
+      },
+
+      // // 6. Group back to main category (VERY IMPORTANT)
+      {
+        $group: {
+          _id: "$_id",
+          categoryName: { $first: "$name" },
+          productImage: {
+            $first: { $arrayElemAt: ["$product.images", 0] },
+          },
+        },
+      },
+
+      // // 7. Shape response
+      {
+        $project: {
+          _id: 0,
+          categoryId: "$_id",
+          categoryName: 1,
+          productImage: 1,
+        },
+      },
+
+      // // 8. Limit to 4
+      { $limit: 4 },
+    ]);
+    return signatureCategories.map((item) => (
+      {
+        id: item.categoryId.toString(),
+        name: item.categoryName,
+        image: item.productImage[0].url
       }
     ))
   }
