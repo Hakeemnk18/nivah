@@ -24,12 +24,13 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${mode === "landing"
-          ? scrolled
-            ? "backdrop-blur bg-black/30"
-            : "bg-transparent"
-          : "bg-[var(--card)]"
-          }`}
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+          mode === "landing"
+            ? scrolled
+              ? "backdrop-blur bg-black/30"
+              : "bg-transparent"
+            : "bg-[var(--card)]"
+        }`}
         style={{
           borderColor: scrolled ? "var(--card)" : "transparent",
           color: "var(--text)",
@@ -38,7 +39,14 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
           {/* Mobile menu button */}
           <button
-            className="md:hidden text-white"
+            className={`md:hidden 
+              ${
+                mode === "landing"
+                  ? scrolled
+                    ? "text-[var(--text)]"
+                    : "text-white"
+                  : "text-[var(--text)]"
+              }`}
             onClick={() => setIsOpen((v) => !v)}
             aria-label="Toggle menu"
           >
@@ -52,12 +60,13 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
           {/* Desktop nav */}
           <ul
             className={`hidden md:flex gap-8 text-sm font-medium
-               ${mode === "landing"
-                ? scrolled
-                  ? "text-[var(--text)]"
-                  : "text-white"
-                : "text-[var(--text)]"
-              }`}
+               ${
+                 mode === "landing"
+                   ? scrolled
+                     ? "text-[var(--text)]"
+                     : "text-white"
+                   : "text-[var(--text)]"
+               }`}
           >
             <li>Home</li>
             <li>Shop</li>
@@ -65,12 +74,13 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
           </ul>
 
           <div
-            className={`flex items-center gap-4 md:flex-1 md:justify-end ${mode === "landing"
-              ? scrolled
-                ? "text-[var(--text)]"
-                : "text-white"
-              : "text-[var(--text)]"
-              }`}
+            className={`flex items-center gap-4 md:flex-1 md:justify-end ${
+              mode === "landing"
+                ? scrolled
+                  ? "text-[var(--text)]"
+                  : "text-white"
+                : "text-[var(--text)]"
+            }`}
           >
             <ShoppingCart size={20} />
             <ThemeToggle />
