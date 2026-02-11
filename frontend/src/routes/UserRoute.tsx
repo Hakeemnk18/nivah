@@ -1,12 +1,29 @@
 import LandingPage from "../features/user/pages/LandingPage"
+import { lazy } from "react";
+import { LandingLayout } from "../shared/layouts/LandingUserLayout";
+import { DefaultUserLayout } from "../shared/layouts/DefualtUserLayout";
 
+
+const ProductlisingPage = lazy(() => import("../features/products/component/productList/productListng"));
 const userRoutes = [
     {
-        path:"/",
-        element:(
-            <LandingPage />
-        )
-    }
-]
+        element: <LandingLayout />,
+        children: [
+            {
+                path: "/",
+                element: <LandingPage />,
+            },
+        ],
+    },
+    {
+        element: <DefaultUserLayout />,
+        children: [
+            {
+                path: "products",
+                element: <ProductlisingPage />,
+            },
+        ],
+    },
+];
 
 export default userRoutes

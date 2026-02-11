@@ -9,3 +9,9 @@ export const GetAllQuerySchema = z.object({
 });
 
 export type GetAllQueryDto = z.infer<typeof GetAllQuerySchema>;
+
+export const GetAllQuerySchemaCursor = GetAllQuerySchema.extend({
+  cursor: z.string().optional().nullish(),
+});
+
+export type GetAllQueryDtoCursor = z.infer<typeof GetAllQuerySchemaCursor>;

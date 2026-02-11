@@ -14,7 +14,7 @@ export class GetAllProductForAdminUseCase implements IGetAllProductForAdminUseCa
 
     @inject("ICategoryRepository")
     private readonly _categoryRepository: ICategoryRepository,
-  ) {}
+  ) { }
 
   async execute(
     dto: GetAllQueryDto,

@@ -33,6 +33,8 @@ import type { IGetProductVariantForAdmin } from "../modules/product/use-cases/in
 import { GetProductVariantForAdmin } from "../modules/product/use-cases/get.product.variant.for.admin.js";
 import type { IGetFeaturedProductUseCase } from "../modules/product/use-cases/interfaces/get.fetured.product.use-case.interface.js";
 import { GetFeaturedProductUseCase } from "../modules/product/use-cases/get.fetured.product.use-case.js";
+import type { IGetAllProductForUserUseCase } from "../modules/product/use-cases/interfaces/get.all.product.user.use-case.interface.js";
+import { GetAllProductForUserUseCase } from "../modules/product/use-cases/get.all.product.user.use-case.js";
 
 export const registerProductDependencies = () => {
   /* ---------- repository ---------- */
@@ -92,5 +94,9 @@ export const registerProductDependencies = () => {
 
   container.register<IGetFeaturedProductUseCase>(
     "IGetFeaturedProductUseCase", { useClass: GetFeaturedProductUseCase }
+  )
+
+  container.register<IGetAllProductForUserUseCase>(
+    "IGetAllProductForUserUseCase", { useClass: GetAllProductForUserUseCase }
   )
 };

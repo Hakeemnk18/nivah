@@ -1,10 +1,10 @@
 import userRoutes from "./UserRoute";
 import App from "../App";
-import UserLayout from "../shared/layouts/UserLayoutes";
 import adminRoutes from "./AdminRoute";
 import AdminLayout from "../shared/layouts/AdminLayoutes";
 import { ErrorBoundary } from "../shared/components/ErrorBoundary";
 import NotFound from "../shared/components/NotFound";
+import UserLayout from "../shared/layouts/UserLayoutes";
 
 const allRoutes = [
   {
@@ -15,10 +15,10 @@ const allRoutes = [
       </ErrorBoundary>
     ),
     children: [
-      {
-        element: <UserLayout />,
-        children: [...userRoutes],
-      },
+
+      ...userRoutes,
+
+
       {
         path: "admin",
         element: <AdminLayout />,
