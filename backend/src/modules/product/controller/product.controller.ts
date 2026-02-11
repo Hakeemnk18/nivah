@@ -16,9 +16,9 @@ import {
   type CreateProductRequestDto,
 } from "../dtos/create.product.dto.js";
 
-import { GetAllQuerySchema } from "../../../core/shared/dtos/get.all.doc.dto.js";
+import { GetAllQuerySchema, GetAllQuerySchemaCursor } from "../../../core/shared/dtos/get.all.doc.dto.js";
 import { validateObjectId } from "../../../core/utils/validate.object.id.helper.js";
-import { parseReq } from "../../../core/utils/parse.query.helper.js";
+import { parseReq, parseUserReq } from "../../../core/utils/parse.query.helper.js";
 import type { IEditProductUseCase } from "../use-cases/interfaces/edit.product.use-case.interface.js";
 import type { IGetAllProductForAdminUseCase } from "../use-cases/interfaces/get.all.product.admin.use-case.interface.js";
 import { UpdateVariantSchema, VariantArraySchema, VariantSchema } from "../dtos/variant.dto.js";
@@ -29,6 +29,7 @@ import type { IGetProductDetailsForAdminUseCase } from "../use-cases/interfaces/
 import type { IGetProductVariantForAdmin } from "../use-cases/interfaces/get.product.variant.for.admin.interface.js";
 import type { IGetFeaturedProductUseCase } from "../use-cases/interfaces/get.fetured.product.use-case.interface.js";
 import console from "console";
+import type { IGetAllProductForUserUseCase } from "../use-cases/interfaces/get.all.product.user.use-case.interface.js";
 
 @injectable()
 export class ProductController implements IProductController {
@@ -62,6 +63,9 @@ export class ProductController implements IProductController {
 
     @inject("IGetFeaturedProductUseCase")
     private readonly _getFeaturedProductUseCase: IGetFeaturedProductUseCase,
+
+    @inject("IGetAllProductForUserUseCase")
+    private readonly _getAllProductForUserUseCase: IGetAllProductForUserUseCase,
 
 
   ) { }
@@ -240,6 +244,26 @@ export class ProductController implements IProductController {
     } catch (error) {
       handleError(res, error)
       console.log("error in get featured products controller ", error)
+    }
+  }
+
+  async getAllProductForUser(req: Request, res: Response): Promise<void> {
+    try {
+      const dto = GetAllQuerySchemaCursor.parse(
+        parseUserReq(req, ["childCategoryId", "parentCategoryId"]),
+      );
+
+      const result =
+        await this._getAllProductForUserUseCase.execute(dto);
+
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        ...result,
+      });
+    } catch (error) {
+      console.log("Error in get products for user:", error);
+      handleError(res, error);
     }
   }
 

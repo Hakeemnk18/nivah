@@ -40,6 +40,12 @@ router.get(
   (req, res) => productController.getAllProductForAdmin(req, res),
 );
 
+/* ---------- USER: GET ALL PRODUCTS ---------- */
+router.get(
+  "/list",
+  (req, res) => productController.getAllProductForUser(req, res),
+);
+
 /* ---------- GET FEATURED PRODUCTS ---------- */
 router.get(
   "/featured",

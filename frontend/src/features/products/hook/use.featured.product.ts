@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { getFeaturedProductsApi } from "../api/product.api";
-import type { UserProductListResponse } from "../type/product.type";
+import type { UserFeaturedProductListResponse } from "../type/product.type";
 
 export const useFeaturedProducts = () => {
 
     return useQuery<
-        UserProductListResponse,
+        UserFeaturedProductListResponse,
         Error
     >({
         queryKey: ["featured-products"],

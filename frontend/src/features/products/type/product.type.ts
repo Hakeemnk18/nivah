@@ -130,7 +130,15 @@ export type UserProductListItem = {
   image: string;
 };
 
-export type UserProductListResponse = ApiResponse<UserProductListItem[]>;
+export type userList = {
+  data: UserProductListItem[];
+  nextCursor: string | null;
+  hasMore: boolean;
+}
+
+export type UserFeaturedProductListResponse = ApiResponse<UserProductListItem[]>;
+
+export type UserProductListResponse = ApiResponse<userList>;
 
 /* ----------------------------------
  * API Responses
@@ -150,6 +158,15 @@ export type AdminProductQueryKey = [
   "admin-products",
   {
     currentPage: number;
+    search: string;
+    sort: string;
+    filters: Record<string, any>;
+  }
+];
+
+export type UserProductQueryKey = [
+  "user-products",
+  {
     search: string;
     sort: string;
     filters: Record<string, any>;

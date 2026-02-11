@@ -7,7 +7,7 @@ import { Product } from "../entities/product.entity.js";
 import { ProductModel } from "../infrastructure/product.schema.js";
 import type { IProductRepository } from "./product.repository.interface.js";
 import { ProductMapper } from "../mappers/product.mapper.js";
-import type { IGetAllDocDB } from "../../../core/shared/interfaces/get.all.doc.interface.js";
+import type { IGetAllDocDB, IGetAllDocDBCursor } from "../../../core/shared/interfaces/get.all.doc.interface.js";
 import type {
   AddVariantProps,
   AdminVariantView,
@@ -204,5 +204,44 @@ export class ProductRepository implements IProductRepository {
 
     return documents.map(ProductMapper.toUserListView)
       .filter((p): p is UserProductListView => p !== null);
+  }
+
+  async findAllForUser(
+    allDoc: IGetAllDocDBCursor,
+  ): Promise<{ data: UserProductListView[]; nextCursor: string | null; hasMore: boolean }> {
+    const { query, limit, sort, cursor } = allDoc;
+
+    const cursorQuery = cursor
+      ? {
+        _id:
+          sort._id === -1
+            ? { $lt: cursor }
+            : { $gt: cursor },
+      }
+      : {};
+
+    const documents = await ProductModel.find({
+      ...query,
+      ...cursorQuery,
+    })
+      .sort(sort)
+      .limit(limit + 1) // ← REQUIRED
+      .populate("category", "name")
+      .lean();
+
+    const hasMore = documents.length > limit;
+
+    if (hasMore) documents.pop();
+
+    const data = documents
+      .map(ProductMapper.toUserListView)
+      .filter((p): p is UserProductListView => p !== null);
+
+    const nextCursor =
+      hasMore && documents.length > 0
+        ? documents[documents.length - 1]!._id.toString()
+        : null;
+
+    return { data, nextCursor, hasMore };
   }
 }

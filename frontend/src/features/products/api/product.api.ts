@@ -1,4 +1,5 @@
 import api from "../../../api/axios.instance";
+import { sampleProducts } from "../../../shared/data/sample.products";
 import type {
   ApiResponse,
 } from "../../../shared/types/api.types";
@@ -12,6 +13,7 @@ import type {
   VariantResponse,
   AddVariantParams,
   UserProductListResponse,
+  UserFeaturedProductListResponse,
 } from "../type/product.type";
 
 /* ---------- CREATE PRODUCT ---------- */
@@ -102,7 +104,31 @@ export const getProductVariantForAdminApi = async (
   return response.data;
 };
 
-export const getFeaturedProductsApi = async (): Promise<UserProductListResponse> => {
-  const response = await api.get<UserProductListResponse>("/products/featured");
+export const getFeaturedProductsApi = async (): Promise<UserFeaturedProductListResponse> => {
+  const response = await api.get<UserFeaturedProductListResponse>("/products/featured");
   return response.data;
-};  
+};
+
+
+/* ---------- USER: GET ALL PRODUCTS ---------- */
+export const getAllProductsForUserApi = async (
+  query: Record<string, any>
+): Promise<UserProductListResponse> => {
+  // const response = await api.get<UserProductListResponse>("/products/list", {
+  //   params: query,
+  // });
+  const response = {
+    data: {
+      data: {
+        data: sampleProducts,
+        hasMore: false,
+        nextCursor: null,
+      },
+      success: true,
+      message: "Products fetched successfully",
+    }
+
+
+  }
+  return response.data;
+};

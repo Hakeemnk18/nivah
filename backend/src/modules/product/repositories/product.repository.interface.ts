@@ -1,4 +1,4 @@
-import type { IGetAllDocDB } from "../../../core/shared/interfaces/get.all.doc.interface.js";
+import type { IGetAllDocDB, IGetAllDocDBCursor } from "../../../core/shared/interfaces/get.all.doc.interface.js";
 import { Product } from "../entities/product.entity.js";
 import type {
   AddVariantProps,
@@ -28,4 +28,7 @@ export interface IProductRepository {
   updateVariantById(
     params: UpdateVariantParams,
   ): Promise<Product | null>
+  findAllForUser(
+    allDoc: IGetAllDocDBCursor,
+  ): Promise<{ data: UserProductListView[]; nextCursor: string | null; hasMore: boolean }>
 }

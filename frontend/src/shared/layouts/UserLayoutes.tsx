@@ -6,12 +6,14 @@ import Footer from "../components/Footer";
 
 export default function UserLayout() {
   return (
-    <div className="user-theme">
-      <Navbar />
-      <main className="w-full">
+    <div className="user-theme ">
+
+
+      <main>
         <Outlet />
       </main>
-      <Footer />
+
+
     </div>
   );
 }

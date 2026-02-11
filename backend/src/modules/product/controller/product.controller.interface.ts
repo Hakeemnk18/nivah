@@ -11,4 +11,5 @@ export interface IProductController {
   getProductDetailsForAdmin(req: Request, res: Response): Promise<void>
   getAdminProductVariant(req: Request, res: Response): Promise<void>
   getFeaturedProducts(req: Request, res: Response): Promise<void>
+  getAllProductForUser(req: Request, res: Response): Promise<void>
 }
