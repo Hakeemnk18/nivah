@@ -57,7 +57,7 @@ export default function FeaturedProducts() {
                 )}
 
                 {/* Empty */}
-                {!isLoading && products.length === 0 && <EmptyState title="No products found" description="Featured products will appear here once available." />}
+                {!isLoading && !isError && products.length === 0 && <EmptyState title="No products found" description="Featured products will appear here once available." />}
 
                 {/* Products grid */}
                 {!isLoading && products.length > 0 && (

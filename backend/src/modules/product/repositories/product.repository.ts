@@ -7,10 +7,11 @@ import { Product } from "../entities/product.entity.js";
 import { ProductModel } from "../infrastructure/product.schema.js";
 import type { IProductRepository } from "./product.repository.interface.js";
 import { ProductMapper } from "../mappers/product.mapper.js";
-import type { IGetAllDocDB, IGetAllDocDBCursor } from "../../../core/shared/interfaces/get.all.doc.interface.js";
+import type { IGetAllDocDB } from "../../../core/shared/interfaces/get.all.doc.interface.js";
 import type {
   AddVariantProps,
   AdminVariantView,
+  PaginatedUserProductList,
   ProductListView,
   ProductView,
   UpdateVariantParams,
@@ -112,7 +113,6 @@ export class ProductRepository implements IProductRepository {
     return ProductMapper.toAdminView(document);
   }
 
-
   async findProductForUser(id: string): Promise<UserProductView | null> {
     if (!ObjectId.isValid(id)) return null;
 
@@ -169,11 +169,14 @@ export class ProductRepository implements IProductRepository {
     );
   }
 
-
-  async findProductVariant(productId: string, variantId: string, isActive?: boolean): Promise<AdminVariantView | null> {
+  async findProductVariant(
+    productId: string,
+    variantId: string,
+    isActive?: boolean,
+  ): Promise<AdminVariantView | null> {
     const query: Record<string, any> = {
       _id: new Types.ObjectId(productId),
-    }
+    };
     if (isActive !== undefined) {
       query.isActive = isActive;
     }
@@ -202,46 +205,38 @@ export class ProductRepository implements IProductRepository {
       .limit(4)
       .lean();
 
-    return documents.map(ProductMapper.toUserListView)
+    return documents
+      .map(ProductMapper.toUserListView)
       .filter((p): p is UserProductListView => p !== null);
   }
 
-  async findAllForUser(
-    allDoc: IGetAllDocDBCursor,
-  ): Promise<{ data: UserProductListView[]; nextCursor: string | null; hasMore: boolean }> {
-    const { query, limit, sort, cursor } = allDoc;
+  async findAllForUser(allDoc: IGetAllDocDB): Promise<PaginatedUserProductList> {
+    const { query, limit, sort, page } = allDoc;
 
-    const cursorQuery = cursor
-      ? {
-        _id:
-          sort._id === -1
-            ? { $lt: cursor }
-            : { $gt: cursor },
-      }
-      : {};
+    const skip = (page - 1) * limit;
 
-    const documents = await ProductModel.find({
-      ...query,
-      ...cursorQuery,
-    })
+    const documents = await ProductModel.find(query)
       .sort(sort)
-      .limit(limit + 1) // ← REQUIRED
+      .skip(skip)
+      .limit(limit)
       .populate("category", "name")
       .lean();
 
-    const hasMore = documents.length > limit;
+    const totalCount = await ProductModel.countDocuments(query);
+    const hasMore = skip + documents.length < totalCount;
 
-    if (hasMore) documents.pop();
+   
 
     const data = documents
       .map(ProductMapper.toUserListView)
       .filter((p): p is UserProductListView => p !== null);
 
-    const nextCursor =
-      hasMore && documents.length > 0
-        ? documents[documents.length - 1]!._id.toString()
-        : null;
+    
 
-    return { data, nextCursor, hasMore };
+    return { 
+      data, 
+      nextPage: hasMore ? page + 1 : null, 
+      hasMore 
+    };
   }
 }

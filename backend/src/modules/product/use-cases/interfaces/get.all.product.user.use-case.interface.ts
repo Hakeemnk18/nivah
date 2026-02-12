@@ -1,10 +1,6 @@
-import type { GetAllQueryDtoCursor } from "../../../../core/shared/dtos/get.all.doc.dto.js";
-import type { UserProductListView } from "../../types/product.type.js";
+import type { GetAllQueryDto } from "../../../../core/shared/dtos/get.all.doc.dto.js";
+import type { PaginatedUserProductList, UserProductListView } from "../../types/product.type.js";
 
 export interface IGetAllProductForUserUseCase {
-    execute(dto: GetAllQueryDtoCursor): Promise<{
-        data: UserProductListView[];
-        nextCursor: string | null;
-        hasMore: boolean;
-    }>;
+    execute(dto: GetAllQueryDto): Promise<PaginatedUserProductList>;
 }

@@ -1,8 +1,9 @@
-import type { IGetAllDocDB, IGetAllDocDBCursor } from "../../../core/shared/interfaces/get.all.doc.interface.js";
+import type { IGetAllDocDB } from "../../../core/shared/interfaces/get.all.doc.interface.js";
 import { Product } from "../entities/product.entity.js";
 import type {
   AddVariantProps,
   AdminVariantView,
+  PaginatedUserProductList,
   ProductListView,
   ProductView,
   UpdateVariantParams,
@@ -29,6 +30,6 @@ export interface IProductRepository {
     params: UpdateVariantParams,
   ): Promise<Product | null>
   findAllForUser(
-    allDoc: IGetAllDocDBCursor,
-  ): Promise<{ data: UserProductListView[]; nextCursor: string | null; hasMore: boolean }>
+    allDoc: IGetAllDocDB,
+  ): Promise<PaginatedUserProductList>
 }
