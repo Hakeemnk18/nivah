@@ -138,7 +138,13 @@ export type userList = {
 
 export type UserFeaturedProductListResponse = ApiResponse<UserProductListItem[]>;
 
-export type UserProductListResponse = ApiResponse<userList>;
+export type UserProductListResponse = {
+  success: boolean;
+  message: string;
+  data: UserProductListItem[];
+  nextPage: number | null;
+  hasMore: boolean;
+};
 
 /* ----------------------------------
  * API Responses

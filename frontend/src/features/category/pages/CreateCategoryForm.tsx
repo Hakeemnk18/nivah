@@ -79,8 +79,8 @@ const CreateCategoryForm = () => {
     if (!formData.description.trim()) {
       newErrors.description = "Description is required";
     }
-    if (formData.description.length > 60) {
-      newErrors.description = "Max 60 characters";
+    if (formData.description.length > 200) {
+      newErrors.description = "Max 200 characters";
     }
 
 

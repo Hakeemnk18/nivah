@@ -16,9 +16,9 @@ import {
   type CreateProductRequestDto,
 } from "../dtos/create.product.dto.js";
 
-import { GetAllQuerySchema, GetAllQuerySchemaCursor } from "../../../core/shared/dtos/get.all.doc.dto.js";
+import { GetAllQuerySchema } from "../../../core/shared/dtos/get.all.doc.dto.js";
 import { validateObjectId } from "../../../core/utils/validate.object.id.helper.js";
-import { parseReq, parseUserReq } from "../../../core/utils/parse.query.helper.js";
+import { parseReq } from "../../../core/utils/parse.query.helper.js";
 import type { IEditProductUseCase } from "../use-cases/interfaces/edit.product.use-case.interface.js";
 import type { IGetAllProductForAdminUseCase } from "../use-cases/interfaces/get.all.product.admin.use-case.interface.js";
 import { UpdateVariantSchema, VariantArraySchema, VariantSchema } from "../dtos/variant.dto.js";
@@ -249,13 +249,14 @@ export class ProductController implements IProductController {
 
   async getAllProductForUser(req: Request, res: Response): Promise<void> {
     try {
-      const dto = GetAllQuerySchemaCursor.parse(
-        parseUserReq(req, ["childCategoryId", "parentCategoryId"]),
+      
+      const dto = GetAllQuerySchema.parse(
+        parseReq(req, ["childCategoryId", "parentCategoryId"]),
       );
-
+      
       const result =
         await this._getAllProductForUserUseCase.execute(dto);
-
+      
       res.status(HttpStatusCode.OK).json({
         success: true,
         message: ResponseMessages.SUCCESS,

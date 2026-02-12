@@ -17,25 +17,24 @@ export const useUserProducts = (
 
     return useInfiniteQuery<
         UserProductListResponse,
-        Error,
-        UserProductListResponse,
-        UserProductQueryKey
+        Error
     >({
         queryKey,
 
-        queryFn: ({ pageParam }) =>
+        queryFn: ({ pageParam = 1 }) =>
             getAllProductsForUserApi({
                 search,
                 sort,
-                cursor: pageParam,
+                page: pageParam,
                 ...filters,
             }),
 
-        initialPageParam: undefined,
+        initialPageParam: 1,
 
         getNextPageParam: (lastPage) =>
-            lastPage?.data?.hasMore ? lastPage.data.nextCursor : undefined,
+            lastPage?.hasMore ? lastPage.nextPage : undefined,
 
         refetchOnWindowFocus: false,
+        retry: false
     });
 };

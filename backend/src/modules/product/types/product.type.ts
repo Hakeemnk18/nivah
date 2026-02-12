@@ -81,3 +81,9 @@ export type ProductListView = {
   description: string;
   isFeatured: boolean;
 };
+
+export type PaginatedUserProductList = {
+  data: UserProductListView[];
+  nextPage: number | null;
+  hasMore: boolean;
+};

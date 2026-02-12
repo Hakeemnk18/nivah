@@ -217,7 +217,9 @@ export class CategoryController implements ICategoryController {
 
   async getSubCategories(req: Request, res: Response): Promise<void> {
     try {
+      
       const { parentId } = req.params;
+      
       validateObjectId(parentId);
 
       const categories =

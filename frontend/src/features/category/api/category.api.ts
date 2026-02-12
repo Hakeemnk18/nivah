@@ -69,7 +69,7 @@ export const getParentCategoriesApi = async (): Promise<GetIdNameResponse> => {
 export const getSubCategoriesApiById = async (
   parentId: string
 ): Promise<GetIdNameResponse> => {
-  const response = await api.get<GetIdNameResponse>(`/category/sub/${parentId}`);
+  const response = await api.get<GetIdNameResponse>(`/categories/sub/${parentId}`);
   return response.data;
 };
 

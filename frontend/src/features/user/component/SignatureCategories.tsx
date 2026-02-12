@@ -14,7 +14,7 @@ type SignatureCategory = {
 
 export default function SignatureCategories() {
 
-  console.log("inside signature categories")
+  
   const { data, isLoading, isError } = useSignatureCategories();
   let categories: SignatureCategory[] = [];
   if (data?.data) {
@@ -38,7 +38,7 @@ export default function SignatureCategories() {
         )}
 
         {/* Empty */}
-        {!isLoading && categories.length === 0 && <EmptyState title="No categories found" description="Featured categories will appear here once available." />}
+        {!isLoading && !isError && categories.length === 0 && <EmptyState title="No categories found" description="Featured categories will appear here once available." />}
 
         {/* Categories grid */}
         {!isLoading && categories.length > 0 && (

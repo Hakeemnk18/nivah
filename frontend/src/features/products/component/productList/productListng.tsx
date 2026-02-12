@@ -6,23 +6,40 @@ import CategoryPills from "./CategoryPills";
 import EmptyState from "../../../../shared/components/EmptyState";
 import ProductCard from "./productCard";
 import { useUserProducts } from "../../hook/use.user.products";
-import { sampleProducts } from "../../../../shared/data/sample.products";
-import {
-  sampleChildCategories,
-  sampleParentCategories,
-} from "../../../../shared/data/sample.categories";
+import ProductEmptyState from "./ProductEmptyState";
+import { useParentCategories } from "../../../category/hooks/use.parent.categories";
+import { useSubCategoriesByIdForUser } from "../../../category/hooks/use.sub.categories.by.id";
 
 export default function ProductListing() {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
   const [parentId, setParentId] = useState<string | undefined>();
   const [childId, setChildId] = useState<string | undefined>();
-  const [parentCategories, setParentCategories] = useState<
-    { id: string; name: string }[]
-  >(sampleParentCategories);
-  const [childCategories, setChildCategories] = useState<
-    { id: string; name: string }[]
-  >(sampleChildCategories);
+  const [firstParentId, setFirstParentId ] = useState<string | undefined>();
+
+  /* ---------- Fetch Parent Categories ---------- */
+  const { data: parentData, isLoading: parentLoading } = useParentCategories();
+
+  const parentCategories = parentData?.data || [];
+
+  // /* ---------- Auto Select First Parent ---------- */
+  useEffect(() => {
+    if (!parentId && parentCategories.length > 0) {
+      setFirstParentId(parentCategories[0].id);
+    }
+  }, [parentCategories]);
+
+  /* ---------- Fetch Sub Categories Based on Parent ---------- */
+  const { data: childData, isLoading: childLoading } =
+    useSubCategoriesByIdForUser(parentId || firstParentId);
+
+  const childCategories = childData?.data || [];
+
+  /* ---------- Reset Child When Parent Changes ---------- */
+  useEffect(() => {
+    setChildId(undefined);
+  }, [parentId]);
+
   const {
     data,
     fetchNextPage,
@@ -43,7 +60,7 @@ export default function ProductListing() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
           fetchNextPage();
         }
       },
@@ -55,9 +72,10 @@ export default function ProductListing() {
     return () => observer.disconnect();
   }, [fetchNextPage, hasNextPage]);
 
-  // const products =
-  //     data?.data?.data || [];
-  const products = sampleProducts;
+  const products =
+      data?.pages.flatMap((page) => page.data) || [];
+  
+  //const products = sampleProducts;
 
   return (
     <section className="w-full bg-[var(--bg)] text-[var(--text)] py-8 md:py-12">
@@ -86,7 +104,6 @@ export default function ProductListing() {
             activeId={parentId}
             onSelect={(id) => {
               setParentId(id);
-              setChildId(undefined);
             }}
             variant="parent"
           />
@@ -120,15 +137,12 @@ export default function ProductListing() {
           />
         )}
 
-        {!isLoading && products.length === 0 && (
-          <EmptyState
-            title="No products found"
-            description="Try adjusting your filters or search."
-          />
+        {!isLoading && !isError && products.length === 0 && (
+          <ProductEmptyState />
         )}
 
         {/* Product Grid */}
-        {products.length > 0 && (
+        {products.length > 0 && !isError && !isLoading && (
           <>
             <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
               {products.map((product) => (

@@ -21,26 +21,3 @@ export function parseReq(req: Request, filtersArr: string[]): IParseResult {
     filters,
   };
 }
-
-export interface IUserParseResult {
-  search: string;
-  limit: number;
-  sortValue: string;
-  cursor?: string;
-  filters: Record<string, any>;
-}
-
-export function parseUserReq(
-  req: Request,
-  filtersArr: string[],
-): IUserParseResult {
-  const filters = buildFilters(filtersArr, req.query);
-
-  return {
-    search: req.query.search as any,
-    limit: req.query.limit as any,
-    sortValue: req.query.sort as any,
-    cursor: req.query.cursor as any,
-    filters,
-  };
-}

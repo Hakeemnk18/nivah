@@ -114,21 +114,23 @@ export const getFeaturedProductsApi = async (): Promise<UserFeaturedProductListR
 export const getAllProductsForUserApi = async (
   query: Record<string, any>
 ): Promise<UserProductListResponse> => {
-  // const response = await api.get<UserProductListResponse>("/products/list", {
-  //   params: query,
-  // });
-  const response = {
-    data: {
-      data: {
-        data: sampleProducts,
-        hasMore: false,
-        nextCursor: null,
-      },
-      success: true,
-      message: "Products fetched successfully",
-    }
-
-
-  }
+  const response = await api.get<UserProductListResponse>("/products/list", {
+    params: query,
+  });
+  
   return response.data;
 };
+
+// const response = {
+  //   data: {
+  //     data: {
+  //       data: sampleProducts,
+  //       hasMore: false,
+  //       nextCursor: null,
+  //     },
+  //     success: true,
+  //     message: "Products fetched successfully",
+  //   }
+
+
+  // }
