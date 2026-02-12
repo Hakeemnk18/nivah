@@ -5,6 +5,7 @@ import { DefaultUserLayout } from "../shared/layouts/DefualtUserLayout";
 
 
 const ProductlisingPage = lazy(() => import("../features/products/component/productList/productListng"));
+const ProductDetailsPage = lazy(() => import("../features/products/pages/ProductDetailsPage"));
 const userRoutes = [
     {
         element: <LandingLayout />,
@@ -21,6 +22,10 @@ const userRoutes = [
             {
                 path: "products",
                 element: <ProductlisingPage />,
+            },
+            {
+                path: "productDetails",
+                element: <ProductDetailsPage />,
             },
         ],
     },

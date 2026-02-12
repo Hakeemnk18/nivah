@@ -100,10 +100,7 @@ export type ProductListItem = {
  * User Views
  * ---------------------------------- */
 
-export type UserVariantView = {
-  size: string;
-  price: number;
-};
+
 
 export type AddVariantParams = {
   productId: string;
@@ -112,6 +109,9 @@ export type AddVariantParams = {
 
 export type VariantResponse = ApiResponse<AdminVariantItem>;
 
+export type UserVariantView = IVariant & {
+  id: string;
+}
 
 
 export type UserProductDetails = {
