@@ -1,135 +1,152 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductCard from "../component/productList/productCard";
-import { BuyNowButton } from "../component/BuyNowButton";
 import { QuantitySelector } from "../component/QuantitySelector";
 import { SizeSelector } from "../component/SizeSelector";
 import { ProductImageGallery } from "../component/ProductImageGallery";
-import type { UserProductDetails } from "../type/product.type";
+
 import { ProductHighlights } from "../component/ProductHighlights";
 import { Shield, Truck, Gem } from "lucide-react";
 import SectionTitle from "../../../shared/components/SectionTitle";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useUserProductDetails } from "../hook/use.user.product.details";
+import { useRelatedProducts } from "../hook/use.related.product";
+import { ProductDetailSkeleton } from "../component/ProductDetailsSckelton";
+import { useUserProductVariantDetails } from "../hook/use.user.product.variant";
 
-const dummyProduct: UserProductDetails = {
-  id: "1",
-  name: "Ruby Ring",
-  categoryId: "1",
-  description:
-    "Make a subtle statement with this elegantly designed ruby-tone ring. Crafted with refined detailing and a comfortable finish, it adds a touch of sophistication to both everyday outfits and special occasions.",
-  images: [
-    { url: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1" },
-    { url: "https://images.unsplash.com/photo-1617038220319-276d3cfab638" },
-    { url: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1" },
-  ],
-  variants: [
-    { id: "1", size: "6", price: 199, stock: 1 },
-    { id: "2", size: "7", price: 500, stock: 10 },
-    { id: "3", size: "8", price: 600, stock: 10 },
-  ],
-};
 
-const relatedProducts = Array.from({ length: 4 }).map((_, i) => ({
-  id: `${i}`,
-  name: "Ruby Ring",
-  price: 199,
-  image: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1",
-}));
+
+
+
+
 
 export default function ProductDetailsPage() {
-  const [selectedImage, setSelectedImage] = useState(
-    dummyProduct.images[0].url,
-  );
-  const [selectedSize, setSelectedSize] = useState(
-    dummyProduct.variants[0].size,
-  );
-  const [quantity, setQuantity] = useState(1);
+  const [searchParams] = useSearchParams();
+  let productId = searchParams.get("productId");
+  const { data: productDetails, isLoading: isLoadingProductDetails } = useUserProductDetails(productId);
+  const { data: relatedProductsData, isLoading: isLoadingRelatedProducts } = useRelatedProducts(productDetails?.data?.categoryId);
+  const relatedProducts = relatedProductsData?.data;
+  const product = productDetails?.data;
+  const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
+  const navigate = useNavigate();
 
-  const selectedVariant = dummyProduct.variants.find(
-    (v) => v.size === selectedSize,
-  );
+  const [quantity, setQuantity] = useState(1);
+  const [selectedVariantId, setSelectedVariantId] = useState<string | undefined>(undefined);
+
+
+  const {
+    data: variantData,
+    refetch: refetchVariant,
+    isFetching
+  } = useUserProductVariantDetails(productId, selectedVariantId!);
+
+  const selectedVariant = variantData?.data;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [productId]);
+
+  useEffect(() => {
+    if (product) {
+      setSelectedImage(product.images[0].url);
+      setSelectedVariantId(product.variants[0].variantId);
+      setQuantity(1);
+    }
+  }, [product]);
+
+  const onVariantSelect = (variantId: string) => {
+    setSelectedVariantId(variantId);
+    setQuantity(1);
+    refetchVariant();
+  };
 
   return (
     <section className="bg-[var(--bg)] text-[var(--text)] py-10">
       <div className="max-w-7xl mx-auto px-4">
+
+        {(isLoadingProductDetails || !product) &&
+          <ProductDetailSkeleton />
+        }
         {/* 2 Column Layout */}
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* LEFT COLUMN */}
-          <div className="order-1">
-            {/* Big Image */}
-            <ProductImageGallery
-              selectedImage={selectedImage}
-              productName={dummyProduct.name}
-            />
-
-            {/* Thumbnails */}
-            <div className="flex gap-4 mt-6">
-              {dummyProduct.images.map((img, i) => (
-                <button
-                  key={i}
-                  onClick={() => setSelectedImage(img.url)}
-                  className="w-20 h-20 rounded-lg overflow-hidden border border-[var(--muted)]"
-                >
-                  <img
-                    src={img.url}
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* RIGHT COLUMN */}
-          <div className="flex flex-col  order-3  lg:sticky lg:top-24 self-start">
-            {/* Top Content */}
-            <div>
-              <h1 className="text-4xl font-bold tracking-wide">
-                {dummyProduct.name}
-              </h1>
-
-              <p className="text-2xl font-semibold text-[var(--accent)] mt-3">
-                ₹{selectedVariant?.price}
-              </p>
-
-              <div className="h-[1px] bg-[var(--accent)] w-24 mt-4 mb-6" />
-
-              <p className="text-[var(--muted)] leading-relaxed text-sm md:text-base">
-                {dummyProduct.description}
-              </p>
-            </div>
-
-            {/* Bottom Controls (Now aligned to big image bottom) */}
-            <div className="mt-auto pt-8 space-y-6">
-              <SizeSelector
-                variants={dummyProduct.variants}
-                selected={selectedSize}
-                onSelect={setSelectedSize}
+        {!isLoadingProductDetails && productDetails !== undefined &&
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            {/* LEFT COLUMN */}
+            <div className="order-1">
+              {/* Big Image */}
+              <ProductImageGallery
+                selectedImage={selectedImage}
+                productName={product?.name}
               />
 
-              {selectedVariant && (
-                <p
-                  className={`text-sm font-medium ${
-                    selectedVariant.stock === 0
-                      ? "text-red-500"
-                      : selectedVariant.stock < 10
-                        ? "text-yellow-500"
-                        : "text-green-500"
-                  }`}
-                >
-                  {selectedVariant.stock === 0
-                    ? "Out of Stock"
-                    : selectedVariant.stock < 10
-                      ? `Only ${selectedVariant.stock} left`
-                      : "In Stock"}
+              {/* Thumbnails */}
+              <div className="flex gap-4 mt-6">
+                {product?.images.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedImage(img.url)}
+                    className="w-20 h-20 rounded-lg overflow-hidden border border-[var(--muted)]"
+                  >
+                    <img
+                      src={img.url}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN */}
+            <div className="flex flex-col  order-3  lg:sticky lg:top-24 self-start">
+              {/* Top Content */}
+              <div>
+                <h1 className="text-4xl font-bold tracking-wide">
+                  {product?.name}
+                </h1>
+
+                <p className="text-2xl font-semibold text-[var(--accent)] mt-3">
+                  ₹{selectedVariant?.price}
                 </p>
-              )}
 
-              <QuantitySelector value={quantity} onChange={setQuantity} />
+                <div className="h-[1px] bg-[var(--accent)] w-24 mt-4 mb-6" />
 
-              <BuyNowButton />
+                <p className="text-[var(--muted)] leading-relaxed text-sm md:text-base">
+                  {product?.description}
+                </p>
+              </div>
+
+              {/* Bottom Controls (Now aligned to big image bottom) */}
+              <div className="mt-auto pt-8 space-y-6">
+                <SizeSelector
+                  variants={product?.variants || []}
+                  selected={selectedVariantId}
+                  onSelect={onVariantSelect}
+                />
+
+                <p className="text-sm font-medium min-h-[20px]">
+                  {isFetching ? (
+                    <span className="opacity-60">Updating...</span>
+                  ) : selectedVariant ? (
+                    selectedVariant.stock === 0
+                      ? <span className="text-red-500">Out of Stock</span>
+                      : selectedVariant.stock < 10
+                        ? <span className="text-yellow-500">
+                          Only {selectedVariant.stock} left
+                        </span>
+                        : <span className="text-green-500">In Stock</span>
+                  ) : null}
+                </p>
+
+                <QuantitySelector
+                  maxQuantity={selectedVariant?.stock!}
+                  value={quantity} onChange={setQuantity} />
+
+                <button className="w-full py-4 rounded-2xl bg-[var(--accent)] text-black font-semibold text-sm tracking-wide hover:opacity-90 transition shadow-lg">
+                  Buy Now
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-
+        }
         {/* PRODUCT HIGHLIGHTS OUTSIDE GRID */}
         <ProductHighlights
           items={[
@@ -151,9 +168,10 @@ export default function ProductDetailsPage() {
             },
           ]}
         />
-
         <section className="mt-20">
-          <div className="max-w-7xl mx-auto px-4">
+          <div
+
+            className="max-w-7xl mx-auto px-4">
             {/* Section Title */}
             <div className="text-center mb-12">
               <SectionTitle label="You May Also Like" />
@@ -170,12 +188,21 @@ export default function ProductDetailsPage() {
           lg:grid-cols-4
         "
             >
-              {relatedProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+
+
+              {!isLoadingRelatedProducts && relatedProducts !== undefined && relatedProducts.map((product) => (
+                <div
+                  key={product.id}
+                  onClick={() => navigate(`/productDetails?productId=${product.id}`)}
+                  className="cursor-pointer"
+                >
+                  <ProductCard product={product} />
+                </div>
               ))}
             </div>
           </div>
         </section>
+
       </div>
     </section>
   );

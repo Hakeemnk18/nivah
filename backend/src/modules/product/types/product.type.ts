@@ -23,6 +23,8 @@ export type AdminVariantView = {
 export type AddVariantProps = Omit<AdminVariantView, "variantId">;
 
 export type UserVariantView = {
+  variantId: string
+  stock: number
   size: string;
   price: number;
 };

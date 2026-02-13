@@ -62,3 +62,24 @@ export const sampleProducts: UserProductListItem[] = [
         image: "/images/signature-offer.png",
     },
 ];
+
+// const dummyProduct: UserProductDetails = {
+//   id: "1",
+//   name: "Ruby Ring",
+//   categoryId: "1",
+//   description:
+//     "Make a subtle statement with this elegantly designed ruby-tone ring. Crafted with refined detailing and a comfortable finish, it adds a touch of sophistication to both everyday outfits and special occasions.",
+//   images: [
+//     { url: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1" },
+//     { url: "https://images.unsplash.com/photo-1617038220319-276d3cfab638" },
+//     { url: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1" },
+//   ],
+//   variants: [
+//     { id: "1", size: "6", price: 199, stock: 1 },
+//     { id: "2", size: "7", price: 500, stock: 10 },
+//     { id: "3", size: "8", price: 600, stock: 10 },
+//   ],
+// };
+
+
+

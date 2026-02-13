@@ -14,6 +14,8 @@ import type {
   AddVariantParams,
   UserProductListResponse,
   UserFeaturedProductListResponse,
+  UserProductDetailsResponse,
+  UserProductVariantResponse,
 } from "../type/product.type";
 
 /* ---------- CREATE PRODUCT ---------- */
@@ -93,6 +95,7 @@ export const updateVariantApi = async (
   return response.data;
 };
 
+/* ---------- ADMIN: GET PRODUCT VARIANT ---------- */
 export const getProductVariantForAdminApi = async (
   productId: string,
   variantId: string
@@ -104,6 +107,7 @@ export const getProductVariantForAdminApi = async (
   return response.data;
 };
 
+/* ---------- USER: GET FEATURED PRODUCTS ---------- */
 export const getFeaturedProductsApi = async (): Promise<UserFeaturedProductListResponse> => {
   const response = await api.get<UserFeaturedProductListResponse>("/products/featured");
   return response.data;
@@ -117,20 +121,39 @@ export const getAllProductsForUserApi = async (
   const response = await api.get<UserProductListResponse>("/products/list", {
     params: query,
   });
-  
+
   return response.data;
 };
 
-// const response = {
-  //   data: {
-  //     data: {
-  //       data: sampleProducts,
-  //       hasMore: false,
-  //       nextCursor: null,
-  //     },
-  //     success: true,
-  //     message: "Products fetched successfully",
-  //   }
+/* ---------- USER: GET PRODUCT BY ID ---------- */
+export const getProductByIdForUserApi = async (
+  id: string
+): Promise<UserProductDetailsResponse> => {
+
+  const response = await api.get<UserProductDetailsResponse>(`/products/list/${id}`);
+
+  return response.data;
+};
+
+/* ---------- USER: GET RELATED PRODUCTS ---------- */
+export const getRelatedProductsApi = async (
+  categoryId: string
+): Promise<UserProductListResponse> => {
+  const response = await api.get<UserProductListResponse>(`/products/related/${categoryId}`);
+  return response.data;
+};
+
+/* ---------- USER: GET PRODUCT VARIANT ---------- */
+export const getProductVariantForUserApi = async (
+  productId: string,
+  variantId: string
+): Promise<UserProductVariantResponse> => {
+  const response = await api.get<UserProductVariantResponse>(
+    `/products/list/${productId}/variants/${variantId}`
+  );
+
+  return response.data;
+};
 
 
-  // }
+

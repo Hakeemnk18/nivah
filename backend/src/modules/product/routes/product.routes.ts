@@ -75,6 +75,20 @@ router.get(
   (req, res) => productController.getAdminProductVariant(req, res)
 )
 
+/* ---------- GET PRODUCT DETAILS FOR USER ---------- */
+router.get("/list/:id",
+  (req, res) => productController.getProductDetailsForUser(req, res)
+)
+
+/* ---------- GET RELATED PRODUCTS ---------- */
+router.get("/related/:categoryId",
+  (req, res) => productController.getRelatedProducts(req, res)
+)
+
+/* ---------- GET PRODUCT VARIANT FOR USER ---------- */
+router.get("/list/:productId/variants/:variantId",
+  (req, res) => productController.getProductVariantForUser(req, res)
+)
 
 
 export default router;

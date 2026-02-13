@@ -9,7 +9,10 @@ export interface IProductController {
   addVariant(req: Request, res: Response): Promise<void>
   editVariant(req: Request, res: Response): Promise<void>
   getProductDetailsForAdmin(req: Request, res: Response): Promise<void>
+  getProductDetailsForUser(req: Request, res: Response): Promise<void>
   getAdminProductVariant(req: Request, res: Response): Promise<void>
   getFeaturedProducts(req: Request, res: Response): Promise<void>
   getAllProductForUser(req: Request, res: Response): Promise<void>
+  getRelatedProducts(req: Request, res: Response): Promise<void>
+  getProductVariantForUser(req: Request, res: Response): Promise<void>
 }

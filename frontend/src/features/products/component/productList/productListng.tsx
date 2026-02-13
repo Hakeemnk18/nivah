@@ -9,13 +9,15 @@ import { useUserProducts } from "../../hook/use.user.products";
 import ProductEmptyState from "./ProductEmptyState";
 import { useParentCategories } from "../../../category/hooks/use.parent.categories";
 import { useSubCategoriesByIdForUser } from "../../../category/hooks/use.sub.categories.by.id";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductListing() {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
   const [parentId, setParentId] = useState<string | undefined>();
   const [childId, setChildId] = useState<string | undefined>();
-  const [firstParentId, setFirstParentId ] = useState<string | undefined>();
+  const [firstParentId, setFirstParentId] = useState<string | undefined>();
+  const navigate = useNavigate();
 
   /* ---------- Fetch Parent Categories ---------- */
   const { data: parentData, isLoading: parentLoading } = useParentCategories();
@@ -73,8 +75,8 @@ export default function ProductListing() {
   }, [fetchNextPage, hasNextPage]);
 
   const products =
-      data?.pages.flatMap((page) => page.data) || [];
-  
+    data?.pages.flatMap((page) => page.data) || [];
+
   //const products = sampleProducts;
 
   return (
@@ -86,7 +88,7 @@ export default function ProductListing() {
         <div className="flex flex-col gap-4 mt-6">
           {/* Top row: Sort + Search */}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            {}
+            { }
             {/* Sort */}
             <div className="order-2 sm:order-1 w-36 sm:w-auto">
               <SortSelect value={sort} onChange={setSort} />
@@ -146,7 +148,7 @@ export default function ProductListing() {
           <>
             <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
               {products.map((product) => (
-                <li key={product.id}>
+                <li key={product.id} onClick={() => navigate(`/productDetails?productId=${product.id}`)}>
                   <ProductCard product={product} />
                 </li>
               ))}
