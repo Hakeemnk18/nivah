@@ -35,6 +35,10 @@ import type { IGetFeaturedProductUseCase } from "../modules/product/use-cases/in
 import { GetFeaturedProductUseCase } from "../modules/product/use-cases/get.fetured.product.use-case.js";
 import type { IGetAllProductForUserUseCase } from "../modules/product/use-cases/interfaces/get.all.product.user.use-case.interface.js";
 import { GetAllProductForUserUseCase } from "../modules/product/use-cases/get.all.product.user.use-case.js";
+import type { IGetRelatedProductUseCase } from "../modules/product/use-cases/interfaces/get.related.product.use-case.interface.js";
+import { GetRelatedProductUseCase } from "../modules/product/use-cases/get.related.product.use-case.js";
+import type { IGetProductVariantForUserUseCase } from "../modules/product/use-cases/interfaces/get.product.variant.for.user.use-case.interface.js";
+import { GetProductVariantForUserUseCase } from "../modules/product/use-cases/get.product.variant.for.user.use-case.js";
 
 export const registerProductDependencies = () => {
   /* ---------- repository ---------- */
@@ -98,5 +102,13 @@ export const registerProductDependencies = () => {
 
   container.register<IGetAllProductForUserUseCase>(
     "IGetAllProductForUserUseCase", { useClass: GetAllProductForUserUseCase }
+  )
+
+  container.register<IGetProductVariantForUserUseCase>(
+    "IGetProductVariantForUserUseCase", { useClass: GetProductVariantForUserUseCase }
+  )
+
+  container.register<IGetRelatedProductUseCase>(
+    "IGetRelatedProductUseCase", { useClass: GetRelatedProductUseCase }
   )
 };

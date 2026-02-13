@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
 
 type Props = {
-    selectedImage: string;
-    productName: string;
+    selectedImage: string | undefined;
+    productName: string | undefined;
 };
 
 export function ProductImageGallery({ selectedImage, productName }: Props) {

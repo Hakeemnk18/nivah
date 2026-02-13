@@ -159,8 +159,10 @@ export class ProductMapper {
         productModelData.category ||
         "",
       variants: productModelData.variants.map((variant: any) => ({
+        variantId: variant._id.toString(),
         size: variant.size,
         price: variant.price,
+        stock: variant.stock,
       })),
     };
   }

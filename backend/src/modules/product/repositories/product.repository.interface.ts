@@ -32,4 +32,6 @@ export interface IProductRepository {
   findAllForUser(
     allDoc: IGetAllDocDB,
   ): Promise<PaginatedUserProductList>
+
+  findRelatedProducts(categoryId: string): Promise<UserProductListView[]>
 }

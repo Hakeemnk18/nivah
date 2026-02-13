@@ -225,18 +225,32 @@ export class ProductRepository implements IProductRepository {
     const totalCount = await ProductModel.countDocuments(query);
     const hasMore = skip + documents.length < totalCount;
 
-   
+
 
     const data = documents
       .map(ProductMapper.toUserListView)
       .filter((p): p is UserProductListView => p !== null);
 
-    
 
-    return { 
-      data, 
-      nextPage: hasMore ? page + 1 : null, 
-      hasMore 
+
+    return {
+      data,
+      nextPage: hasMore ? page + 1 : null,
+      hasMore
     };
+  }
+
+  async findRelatedProducts(categoryId: string): Promise<UserProductListView[]> {
+    const documents = await ProductModel.find({
+      isActive: true,
+      category: categoryId,
+    })
+      .sort({ createdAt: -1 })
+      .limit(4)
+      .lean();
+
+    return documents
+      .map(ProductMapper.toUserListView)
+      .filter((p): p is UserProductListView => p !== null);
   }
 }

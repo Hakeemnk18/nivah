@@ -30,6 +30,9 @@ import type { IGetProductVariantForAdmin } from "../use-cases/interfaces/get.pro
 import type { IGetFeaturedProductUseCase } from "../use-cases/interfaces/get.fetured.product.use-case.interface.js";
 import console from "console";
 import type { IGetAllProductForUserUseCase } from "../use-cases/interfaces/get.all.product.user.use-case.interface.js";
+import type { IGetProductForUserUseCase } from "../use-cases/interfaces/get.product.user.use-case.interface.js";
+import type { IGetRelatedProductUseCase } from "../use-cases/interfaces/get.related.product.use-case.interface.js";
+import type { IGetProductVariantForUserUseCase } from "../use-cases/interfaces/get.product.variant.for.user.use-case.interface.js";
 
 @injectable()
 export class ProductController implements IProductController {
@@ -67,6 +70,14 @@ export class ProductController implements IProductController {
     @inject("IGetAllProductForUserUseCase")
     private readonly _getAllProductForUserUseCase: IGetAllProductForUserUseCase,
 
+    @inject("IGetProductForUserUseCase")
+    private readonly _getProductForUserUseCase: IGetProductForUserUseCase,
+
+    @inject("IGetRelatedProductUseCase")
+    private readonly _getRelatedProductUseCase: IGetRelatedProductUseCase,
+
+    @inject("IGetProductVariantForUserUseCase")
+    private readonly _getProductVariantForUserUseCase: IGetProductVariantForUserUseCase,
 
   ) { }
 
@@ -249,14 +260,14 @@ export class ProductController implements IProductController {
 
   async getAllProductForUser(req: Request, res: Response): Promise<void> {
     try {
-      
+
       const dto = GetAllQuerySchema.parse(
         parseReq(req, ["childCategoryId", "parentCategoryId"]),
       );
-      
+
       const result =
         await this._getAllProductForUserUseCase.execute(dto);
-      
+
       res.status(HttpStatusCode.OK).json({
         success: true,
         message: ResponseMessages.SUCCESS,
@@ -265,6 +276,58 @@ export class ProductController implements IProductController {
     } catch (error) {
       console.log("Error in get products for user:", error);
       handleError(res, error);
+    }
+  }
+
+  async getProductDetailsForUser(req: Request, res: Response): Promise<void> {
+    try {
+
+      const { id } = req.params
+      validateObjectId(id)
+      const data = await this._getProductForUserUseCase.execute(id!)
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data,
+      });
+    } catch (error) {
+      handleError(res, error)
+      console.log("error in get product details for user controller ", error)
+    }
+  }
+
+  async getRelatedProducts(req: Request, res: Response): Promise<void> {
+    try {
+      const { categoryId } = req.params
+      validateObjectId(categoryId)
+      const data = await this._getRelatedProductUseCase.execute(categoryId!)
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data,
+      });
+    } catch (error) {
+      handleError(res, error)
+      console.log("error in get related products controller ", error)
+    }
+  }
+
+  async getProductVariantForUser(req: Request, res: Response): Promise<void> {
+    try {
+      const { productId, variantId } = req.params
+      validateObjectId(variantId)
+      validateObjectId(productId)
+
+      const data = await this._getProductVariantForUserUseCase.execute(productId!, variantId!)
+
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data,
+      });
+    } catch (error) {
+      handleError(res, error)
+      console.log("error in get product variant for user controller ", error)
     }
   }
 

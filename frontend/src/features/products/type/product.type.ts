@@ -110,7 +110,7 @@ export type AddVariantParams = {
 export type VariantResponse = ApiResponse<AdminVariantItem>;
 
 export type UserVariantView = IVariant & {
-  id: string;
+  variantId: string;
 }
 
 
@@ -122,6 +122,9 @@ export type UserProductDetails = {
   categoryId: string;
   variants: UserVariantView[];
 };
+
+export type UserProductDetailsResponse = ApiResponse<UserProductDetails>;
+export type UserProductVariantResponse = ApiResponse<UserVariantView>;
 
 export type UserProductListItem = {
   id: string;
