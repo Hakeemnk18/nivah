@@ -7,17 +7,17 @@ import { JwtService } from "../infrastructure/services/jwt.service.js";
 
 
 export const registerCommonDependencies = () => {
-container.register<IHashingService>("IHashingService", {
-useClass: BcryptService,
-});
+    container.register<IHashingService>("IHashingService", {
+        useClass: BcryptService,
+    });
 
 
-container.register<ITokenService>("ITokenService", { useClass: JwtService });
+    container.register<ITokenService>("ITokenService", { useClass: JwtService });
 
-// container.register<IRandomTokenService>("IRandomTokenService", {
-// useClass: RandomTokenService,
-// });
+    // container.register<IRandomTokenService>("IRandomTokenService", {
+    // useClass: RandomTokenService,
+    // });
 
-// Auth middleware (shared)
-// container.register<IAuthenticate>("IAuthenticate", { useClass: Authenticate });
- };
+    // Auth middleware (shared)
+    // container.register<IAuthenticate>("IAuthenticate", { useClass: Authenticate });
+};
