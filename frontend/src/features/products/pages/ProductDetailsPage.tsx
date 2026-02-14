@@ -14,11 +14,6 @@ import { ProductDetailSkeleton } from "../component/ProductDetailsSckelton";
 import { useUserProductVariantDetails } from "../hook/use.user.product.variant";
 
 
-
-
-
-
-
 export default function ProductDetailsPage() {
   const [searchParams] = useSearchParams();
   let productId = searchParams.get("productId");
