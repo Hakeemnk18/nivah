@@ -51,7 +51,7 @@ const productSchema = new Schema<IProduct>(
       type: Schema.Types.ObjectId,
       ref: "Category", // sub-category
       required: true,
-      index: true,
+
     },
 
     /* ---------- Variants (Embedded) ---------- */

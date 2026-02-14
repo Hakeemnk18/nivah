@@ -3,16 +3,18 @@ import { container } from "tsyringe";
 
 import { Authenticate } from "../../../infrastructure/middileware/auth.middleware.js";
 import { authorizeRoles } from "../../../infrastructure/middileware/role.middleware.js";
-import { CategoryController } from "../controller/category.controller.js";
+import { CartController } from "../controller/cart.controller.js";
 
 const router = Router();
 
 const authenticate = container.resolve(Authenticate);
-const categoryController = container.resolve(CategoryController);
+const cartController = container.resolve(CartController);
 
 /* ---------- CREATE ---------- */
 router.post(
   "/",
 
-  (req, res) => categoryController.createCategory(req, res),
+  (req, res) => cartController.addToCart(req, res),
 );
+
+export default router;

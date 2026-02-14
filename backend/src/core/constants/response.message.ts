@@ -120,6 +120,34 @@ export const ResponseMessages = {
 
   VARIANT_NOT_FOUND: "Variant not found",
   VARIANT_ADD_SUCCESS: " Product variant added",
-  VARIANT_EDIT_SUCCESS: " Product variant updated"
+  VARIANT_EDIT_SUCCESS: " Product variant updated",
+
+  CART_NOT_FOUND: "Cart not found",
+  CART_FETCH_FAILED: "Failed to fetch cart",
+
+  // Item operations
+  CART_ITEM_NOT_FOUND: "Cart item not found",
+  CART_ADD_FAILED: "Failed to add item to cart",
+  CART_UPDATE_FAILED: "Failed to update cart item",
+  CART_REMOVE_FAILED: "Failed to remove item from cart",
+
+  // Validation
+  CART_EMPTY: "Cart is empty",
+  CART_INVALID_QUANTITY: "Invalid quantity",
+  CART_ITEM_OUT_OF_STOCK: "Item is out of stock",
+  CART_QUANTITY_EXCEEDS_STOCK: "Requested quantity exceeds available stock",
+
+  // Success
+  CART_ITEM_ADDED_SUCCESS: "Item added to cart successfully",
+  CART_ITEM_UPDATED_SUCCESS: "Cart item updated successfully",
+  CART_ITEM_REMOVED_SUCCESS: "Item removed from cart successfully",
+  CART_CLEARED_SUCCESS: "Cart cleared successfully",
+
+  INVALID_CART_OWNER: "Invalid cart owner.",
+  CART_CREATE_FAILED: "Failed to create cart.",
+
+  INVALID_QUANTITY: "Invalid quantity.",
+  OUT_OF_STOCK: "Product is out of stock.",
+
 
 }

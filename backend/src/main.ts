@@ -6,15 +6,13 @@ import type { Application } from 'express';
 import registerUserModule from "./modules/user/user.module.js";
 import registerCategoryModule from "./modules/category/category.module.js";
 import registerProductModule from "./modules/product/product.module.js";
-
+import registerCartModule from "./modules/cart/cart.module.js";
 
 
 const PORT = env.PORT
 
 const startServer = async () => {
     try {
-        
-
 
         console.log("Connecting to database...");
         await connectDB();
@@ -26,7 +24,8 @@ const startServer = async () => {
         registerUserModule(expressApp);
         registerCategoryModule(expressApp)
         registerProductModule(expressApp)
-        
+        registerCartModule(expressApp)
+
 
 
         expressApp.listen(PORT, () => {
@@ -35,11 +34,11 @@ const startServer = async () => {
 
 
     } catch (error) {
-        
+
 
         if (error instanceof Error) {
             console.error(error.message);
-            console.error(error.stack); 
+            console.error(error.stack);
         } else {
             console.error("An unknown error occurred", error);
         }
