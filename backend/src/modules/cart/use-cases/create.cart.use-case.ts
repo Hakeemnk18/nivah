@@ -45,7 +45,6 @@ export class CreateCartUseCase implements ICreateCartUseCase {
         HttpStatusCode.BAD_REQUEST
       );
     }
-    console.log("variant ", stockAvailable)
 
     const stock = stockAvailable.stock;
     /* ---------- find existing cart ---------- */

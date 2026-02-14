@@ -1,6 +1,7 @@
 
 
 import { motion } from "framer-motion";
+import Shimmer from "../../../shared/components/sckelton/Shimmer";
 
 export function ProductDetailSkeleton() {
     return (
@@ -117,17 +118,3 @@ function SkeletonLine({ width = "w-full" }: { width?: string }) {
     );
 }
 
-function Shimmer() {
-    return (
-        <motion.div
-            initial={{ x: "-100%" }}
-            animate={{ x: "100%" }}
-            transition={{
-                repeat: Infinity,
-                duration: 1.5,
-                ease: "linear",
-            }}
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--bg)]/60 to-transparent"
-        />
-    );
-}
