@@ -12,6 +12,10 @@ import { useUserProductDetails } from "../hook/use.user.product.details";
 import { useRelatedProducts } from "../hook/use.related.product";
 import { ProductDetailSkeleton } from "../component/ProductDetailsSckelton";
 import { useUserProductVariantDetails } from "../hook/use.user.product.variant";
+import { useAddItemToCart } from "../../cart/hooks/use.add.item.to.cart";
+import toast from "react-hot-toast";
+import { getGuestId } from "../../../shared/utils/guest";
+import { handleApiError } from "../../../shared/utils/handle.api.error";
 
 
 export default function ProductDetailsPage() {
@@ -26,6 +30,7 @@ export default function ProductDetailsPage() {
 
   const [quantity, setQuantity] = useState(1);
   const [selectedVariantId, setSelectedVariantId] = useState<string | undefined>(undefined);
+  const { mutateAsync: addItemToCart, isPending: isAddingItemToCart } = useAddItemToCart();
 
 
   const {
@@ -53,6 +58,52 @@ export default function ProductDetailsPage() {
     setQuantity(1);
     refetchVariant();
   };
+
+  const handleAddToCart = async () => {
+    console.log("inside add to cart")
+    if (!selectedVariantId) {
+      toast.error("Please select a variant");
+      return;
+    }
+    if (quantity > selectedVariant?.stock!) {
+      toast.error("Quantity is greater than stock");
+      return;
+    }
+
+    if (!product?.id) {
+      toast.error("Product not found");
+      return;
+    }
+
+    const guestId = getGuestId()
+    console.log("guest id ", guestId)
+    try {
+      await addItemToCart({
+        productId: product?.id!,
+        variantId: selectedVariantId,
+        quantity: quantity,
+        guestId,
+      });
+      toast.success("Item added to cart");
+    } catch (error) {
+      const validateError = handleApiError(error)
+      if (validateError?.quantity) {
+        toast.error(validateError.quantity)
+      }
+      if (validateError?.variantId) {
+        toast.error(validateError.variantId)
+      }
+      if (validateError?.productId) {
+        toast.error(validateError.productId)
+      }
+      if (validateError?.guestId) {
+        toast.error(validateError.guestId)
+      }
+
+
+    }
+
+  }
 
   return (
     <section className="bg-[var(--bg)] text-[var(--text)] py-10">
@@ -135,8 +186,10 @@ export default function ProductDetailsPage() {
                   maxQuantity={selectedVariant?.stock!}
                   value={quantity} onChange={setQuantity} />
 
-                <button className="w-full py-4 rounded-2xl bg-[var(--accent)] text-black font-semibold text-sm tracking-wide hover:opacity-90 transition shadow-lg">
-                  Buy Now
+                <button
+                  onClick={handleAddToCart}
+                  className="w-full py-4 rounded-2xl bg-[var(--accent)] text-black font-semibold text-sm tracking-wide hover:opacity-90 transition shadow-lg">
+                  Add to Cart
                 </button>
               </div>
             </div>
