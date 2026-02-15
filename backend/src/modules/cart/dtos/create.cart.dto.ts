@@ -1,19 +1,12 @@
 import { z } from "zod";
 import { ObjectIdSchema } from "../../../core/utils/object.id.validation.js";
+import { GuestIdSchema } from "../../../core/utils/guest.id.validation.js";
 
 export const AddCartItemSchema = z.object({
 
-  guestId: z
-    .string()
-    .trim()
-    .uuid()
-    .min(1, "Guest id is required"),
-
-  productId: ObjectIdSchema.trim(),
-
-
-  variantId: ObjectIdSchema.trim(),
-
+  guestId: GuestIdSchema,
+  productId: ObjectIdSchema,
+  variantId: ObjectIdSchema,
   quantity: z
     .number()
     .int("Quantity must be an integer")

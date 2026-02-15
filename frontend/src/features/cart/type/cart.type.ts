@@ -1,3 +1,5 @@
+import type { ApiResponse } from "../../../shared/types/api.types";
+
 export type AddCartItemPayload = {
     guestId: string;
     productId: string;
@@ -12,7 +14,7 @@ export type ProductView = {
 }
 
 export type CartItemView = {
-    id: string;
+    itemId: string;
     product: ProductView;
     variantId: string;
     quantity: number;
@@ -24,5 +26,21 @@ export type CartView = {
     totalItems: number;
     totalPrice: number;
 }
+
+export type ActionType = "increment" | "decrement";
+
+export type UpdateCartCountPayload = {
+    guestId: string;
+    cartId: string;
+    itemId: string;
+    action: ActionType;
+}
+export type RemoveCartItemPayload = {
+    guestId: string;
+    cartId: string;
+    itemId: string;
+}
+
+export type GetCartResponse = ApiResponse<CartView>
 
 

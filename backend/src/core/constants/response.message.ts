@@ -148,6 +148,7 @@ export const ResponseMessages = {
 
   INVALID_QUANTITY: "Invalid quantity.",
   OUT_OF_STOCK: "Product is out of stock.",
-
+  ITEM_NOT_FOUND: "Cart item not found.",
+  CART_COUNT_UPDATED_SUCCESS: "Cart count updated successfully",
 
 }

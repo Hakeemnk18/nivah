@@ -84,8 +84,8 @@ export class CreateCartUseCase implements ICreateCartUseCase {
 
       const updated = await this._cartRepository.incrementItemQuantity({
         cartId: cart.id!,
-        productId: dto.productId,
-        variantId: dto.variantId,
+        guestId: dto.guestId,
+        itemId: sameItemInCart.id!,
         quantity: dto.quantity,
         stock,
       });
@@ -100,6 +100,7 @@ export class CreateCartUseCase implements ICreateCartUseCase {
 
       const updated = await this._cartRepository.pushNewItem({
         cartId: cart.id!,
+        guestId: dto.guestId,
         stock,
         item: {
           productId: dto.productId,

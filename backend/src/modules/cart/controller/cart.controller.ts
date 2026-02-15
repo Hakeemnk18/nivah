@@ -6,7 +6,12 @@ import { ResponseMessages } from "../../../core/constants/response.message.js";
 import { handleError } from "../../../core/errors/custom.error.js";
 import type { Request, Response } from "express";
 import type { ICreateCartUseCase } from "../use-cases/interfaces/create.cart.use-case.interface.js";
-
+import type { IGetCartUseCase } from "../use-cases/interfaces/get.cart.use-case.interface.js";
+import { GuestIdSchema } from "../../../core/utils/guest.id.validation.js";
+import type { IRemoveCartItemUseCase } from "../use-cases/interfaces/remove.cart.item.use-case.interface.js";
+import type { IUpdateCartCountUseCase } from "../use-cases/interfaces/update.cart.count.use-case.interface.js";
+import { RemoveCartItemSchema } from "../dtos/remove.cart.dto.js";
+import { UpdateCartItemQuantitySchema } from "../dtos/update.cart.dto.js";
 
 
 @injectable()
@@ -14,6 +19,9 @@ export class CartController implements ICartController {
 
     constructor(
         @inject("ICreateCartUseCase") private _createCartUseCase: ICreateCartUseCase,
+        @inject("IGetCartUseCase") private _getCartUseCase: IGetCartUseCase,
+        @inject("IRemoveCartItemUseCase") private _removeCartItemUseCase: IRemoveCartItemUseCase,
+        @inject("IUpdateCartCountUseCase") private _updateCartCountUseCase: IUpdateCartCountUseCase,
     ) { }
 
     async addToCart(req: Request, res: Response): Promise<void> {
@@ -32,15 +40,45 @@ export class CartController implements ICartController {
 
     async getCart(req: Request, res: Response): Promise<void> {
         try {
-            // const dto = GetCartSchema.parse(req.body);
-            // await this._getCartUseCase.execute(dto)
-            // res.status(HttpStatusCode.OK).json({
-            //     success: true,
-            //     message: ResponseMessages.SUCCESS,
-            // });
+            const guestId = req.params.guestId;
+            const dto = GuestIdSchema.parse(guestId);
+            const cart = await this._getCartUseCase.execute(dto);
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: ResponseMessages.SUCCESS,
+                data: cart,
+            });
         } catch (error) {
             handleError(res, error)
             console.log("error in get cart controller", error)
+        }
+    }
+
+    async removeCartItem(req: Request, res: Response): Promise<void> {
+        try {
+            const dto = RemoveCartItemSchema.parse(req.body);
+            await this._removeCartItemUseCase.execute(dto)
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: ResponseMessages.CART_ITEM_REMOVED_SUCCESS,
+            });
+        } catch (error) {
+            handleError(res, error)
+            console.log("error in remove cart item controller", error)
+        }
+    }
+
+    async updateCartCount(req: Request, res: Response): Promise<void> {
+        try {
+            const dto = UpdateCartItemQuantitySchema.parse(req.body);
+            await this._updateCartCountUseCase.execute(dto)
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: ResponseMessages.CART_COUNT_UPDATED_SUCCESS,
+            });
+        } catch (error) {
+            handleError(res, error)
+            console.log("error in update cart count controller", error)
         }
     }
 
