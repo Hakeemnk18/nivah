@@ -7,7 +7,7 @@ import { Cart } from "../entities/cart.entity.js";
 import { CartModel } from "../infrastructure/cart.schema.js";
 import { CartMapper } from "../mappers/cart.mapper.js";
 import type { ICartRepository } from "./cart.repository.interface.js";
-import type { AddCartItemPayload, CartView, FindSameItemInCartPayload, PushNewItemPayload } from "../types/cart.type.js";
+import type { AddCartItemPayload, CartView, FindSameItemInCartPayload, PushNewItemPayload, RemoveCartItemPayload } from "../types/cart.type.js";
 
 const { ObjectId } = Types;
 
@@ -91,34 +91,11 @@ export class CartRepository implements ICartRepository {
     return domainCart;
   }
 
-  async findCartForViewByGuestId(
-    guestId: string
-  ): Promise<CartView | null> {
-    const document = await CartModel.findOne({
-      guestId,
-      isActive: true,
-    }).lean();
-
-    return CartMapper.toView(document);
-  }
-
-  async findCartForViewByUserId(
-    userId: string
-  ): Promise<CartView | null> {
-    if (!ObjectId.isValid(userId)) return null;
-
-    const document = await CartModel.findOne({
-      userId,
-      isActive: true,
-    }).lean();
-
-    return CartMapper.toView(document);
-  }
 
   async incrementItemQuantity(
     dto: AddCartItemPayload
   ): Promise<boolean> {
-    const { cartId, productId, variantId, quantity } = dto;
+    const { cartId, itemId, quantity, stock, guestId } = dto;
 
     if (!ObjectId.isValid(cartId)) return false;
 
@@ -126,10 +103,11 @@ export class CartRepository implements ICartRepository {
       {
         _id: cartId,
         isActive: true,
+        guestId,
         items: {
           $elemMatch: {
-            productId,
-            variantId,
+            _id: itemId,
+            quantity: { $lte: stock - quantity },
           },
         },
       },
@@ -149,13 +127,14 @@ export class CartRepository implements ICartRepository {
   async pushNewItem(
     dto: PushNewItemPayload
   ): Promise<boolean> {
-    const { cartId, item, stock } = dto;
+    const { cartId, item, stock, guestId } = dto;
     if (!ObjectId.isValid(cartId)) return false;
 
     const updated = await CartModel.findOneAndUpdate(
       {
         _id: cartId,
         isActive: true,
+        guestId,
         items: {
           $not: {
             $elemMatch: {
@@ -180,7 +159,7 @@ export class CartRepository implements ICartRepository {
   async findSameItemInCart(
     dto: FindSameItemInCartPayload
   ): Promise<boolean> {
-    const { cartId, productId, variantId } = dto;
+    const { cartId, itemId } = dto;
 
     if (!ObjectId.isValid(cartId)) return false;
 
@@ -189,12 +168,157 @@ export class CartRepository implements ICartRepository {
       isActive: true,
       items: {
         $elemMatch: {
-          productId,
-          variantId,
+          _id: itemId,
         },
       },
     }).lean();
 
     return !!document;
+  }
+
+  async findCartForViewByGuestId(
+    guestId: string
+  ): Promise<CartView | null> {
+
+    const result = await CartModel.aggregate([
+      {
+        $match: { guestId, isActive: true }
+      },
+
+      { $unwind: "$items" },
+
+      {
+        $lookup: {
+          from: "products",
+          localField: "items.productId",
+          foreignField: "_id",
+          as: "product"
+        }
+      },
+
+      { $unwind: "$product" },
+
+      // find selected variant
+      {
+        $addFields: {
+          selectedVariant: {
+            $first: {
+              $filter: {
+                input: "$product.variants",
+                as: "v",
+                cond: { $eq: ["$$v._id", "$items.variantId"] }
+              }
+            }
+          }
+        }
+      },
+
+      {
+        $project: {
+          cartId: "$_id",
+          guestId: 1,
+          itemId: "$items._id",
+          quantity: "$items.quantity",
+          variantId: "$items.variantId",
+
+          product: {
+            name: "$product.name",
+            image: { $arrayElemAt: ["$product.images.url", 0] },
+            price: "$selectedVariant.price"
+          }
+        }
+      },
+
+      {
+        $group: {
+          _id: "$cartId",
+          guestId: { $first: "$guestId" },
+          items: {
+            $push: {
+              id: "$itemId",
+              product: "$product",
+              variantId: "$variantId",
+              quantity: "$quantity"
+            }
+          },
+          totalItems: { $sum: "$quantity" },
+          totalPrice: {
+            $sum: {
+              $multiply: ["$quantity", "$product.price"]
+            }
+          }
+        }
+      }
+    ]);
+
+    if (!result.length) return null;
+
+    return CartMapper.toView(result[0]);
+
+  }
+
+  async decrementItemQuantity(
+    dto: AddCartItemPayload
+  ): Promise<boolean> {
+    const { cartId, itemId, quantity, stock, guestId } = dto;
+
+    if (!ObjectId.isValid(cartId)) return false;
+
+    const updated = await CartModel.findOneAndUpdate(
+      {
+        _id: cartId,
+        isActive: true,
+        guestId,
+        items: {
+          $elemMatch: {
+            _id: itemId,
+            quantity: { $gt: 1 }
+          },
+        },
+      },
+      {
+        $inc: {
+          "items.$.quantity": -quantity,
+        },
+      },
+      {
+        new: false
+      }
+    ).lean();
+
+    return !!updated;
+  }
+
+  async removeItem(
+    dto: RemoveCartItemPayload
+  ): Promise<boolean> {
+    const { cartId, itemId, guestId } = dto;
+
+    if (!ObjectId.isValid(cartId)) return false;
+
+    const updated = await CartModel.findOneAndUpdate(
+      {
+        _id: cartId,
+        isActive: true,
+        guestId,
+        items: {
+          $elemMatch: {
+            _id: itemId,
+          },
+        },
+      },
+      {
+        $pull: {
+          items: {
+            _id: itemId,
+          },
+        },
+      },
+      {
+        new: false
+      }
+    ).lean();
+
+    return !!updated;
   }
 }

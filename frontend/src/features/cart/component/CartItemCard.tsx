@@ -1,11 +1,13 @@
 import { Minus, Plus, Trash2 } from "lucide-react";
-import type { CartItemView } from "../type/cart.type";
+import type { ActionType, CartItemView } from "../type/cart.type";
 
 type CartItemCardProps = {
     item: CartItemView;
+    handleUpdateCartItem: (action: ActionType, itemId: string) => void;
+    handleRemoveCartItem: (itemId: string) => void;
 };
 
-const CartItemCard = ({ item }: CartItemCardProps) => {
+const CartItemCard = ({ item, handleUpdateCartItem, handleRemoveCartItem }: CartItemCardProps) => {
     return (
         <article className="rounded-2xl bg-[var(--card)] border border-[var(--bg-secondary)] p-4 sm:p-5 shadow-sm hover:shadow-md transition">
             <div className="flex gap-4">
@@ -35,7 +37,9 @@ const CartItemCard = ({ item }: CartItemCardProps) => {
                     {/* Controls */}
                     <div className="flex flex-wrap items-center justify-between gap-3 mt-4">
                         <div className="flex items-center border border-[var(--bg-secondary)] rounded-xl overflow-hidden">
-                            <button className="px-3 py-1.5 hover:bg-[var(--bg-secondary)] transition">
+                            <button
+                                onClick={() => handleUpdateCartItem("decrement", item.itemId)}
+                                className="px-3 py-1.5 hover:bg-[var(--bg-secondary)] transition cursor-pointer">
                                 <Minus size={14} />
                             </button>
 
@@ -43,12 +47,16 @@ const CartItemCard = ({ item }: CartItemCardProps) => {
                                 {item.quantity}
                             </span>
 
-                            <button className="px-3 py-1.5 hover:bg-[var(--bg-secondary)] transition">
+                            <button
+                                onClick={() => handleUpdateCartItem("increment", item.itemId)}
+                                className="px-3 py-1.5 hover:bg-[var(--bg-secondary)] transition cursor-pointer">
                                 <Plus size={14} />
                             </button>
                         </div>
 
-                        <button className="flex items-center gap-1 text-red-500 text-sm hover:opacity-80 transition">
+                        <button
+                            onClick={() => handleRemoveCartItem(item.itemId)}
+                            className="flex items-center gap-1 text-red-500 text-sm hover:opacity-80 transition cursor-pointer">
                             <Trash2 size={14} />
                             Remove
                         </button>

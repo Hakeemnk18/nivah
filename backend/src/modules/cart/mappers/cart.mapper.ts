@@ -54,27 +54,26 @@ export class CartMapper {
   }
 
   /* ================= VIEW ================= */
-
-  static toView(cartModelData: any): CartView | null {
-    if (!cartModelData) return null;
-
-    const id =
-      cartModelData._id?.toString() || cartModelData.id?.toString();
-
-    if (!id) {
-      console.error("Cart data missing ID:", cartModelData);
-      return null;
-    }
-
+  static toView(raw: any): CartView {
     return {
-      id,
-      items:
-        cartModelData.items?.map((item: any): CartItemView => ({
-          itemId: item._id.toString(),
-          productId: item.productId?.toString(),
-          variantId: item.variantId?.toString(),
-          quantity: item.quantity,
-        })) ?? [],
+      id: raw._id?.toString() || raw.id,
+      guestId: raw.guestId,
+
+      items: raw.items.map((item: any) => ({
+        itemId: item.id?.toString(),
+        variantId: item.variantId?.toString(),
+        quantity: item.quantity,
+
+        product: {
+          name: item.product.name,
+          image: item.product.image,
+          price: item.product.price,
+        },
+      })),
+
+      totalItems: raw.totalItems,
+      totalPrice: raw.totalPrice,
     };
   }
+
 }
