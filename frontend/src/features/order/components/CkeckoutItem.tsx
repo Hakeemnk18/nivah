@@ -18,7 +18,7 @@ const CheckoutItem = ({ item }: { item: CheckoutItemView }) => {
             </div>
 
             <p className="text-sm font-semibold whitespace-nowrap">
-                ${item.price}
+                ₹{item.price}
             </p>
         </div>
     );

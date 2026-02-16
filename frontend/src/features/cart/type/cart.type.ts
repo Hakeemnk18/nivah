@@ -58,6 +58,8 @@ export type CheckoutItemView = {
 }
 
 export type CheckoutView = {
+    cartId: string;
+    totalItems: number;
     items: CheckoutItemView[];
     subTotal: number;
     deliveryCharge: number;

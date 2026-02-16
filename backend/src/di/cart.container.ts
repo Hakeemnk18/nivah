@@ -9,6 +9,8 @@ import type { IRemoveCartItemUseCase } from "../modules/cart/use-cases/interface
 import { RemoveCartItemUseCase } from "../modules/cart/use-cases/remove.cart.item.use-case.js";
 import type { IUpdateCartCountUseCase } from "../modules/cart/use-cases/interfaces/update.cart.count.use-case.interface.js";
 import { UpdateCartCountUseCase } from "../modules/cart/use-cases/update.cart.count.use-case.js";
+import type { IGetCheckoutItemUseCase } from "../modules/cart/use-cases/interfaces/get.checkout.item.use-case.interface.js";
+import { GetCheckoutItemUseCase } from "../modules/cart/use-cases/get.checkout.item.use-case.js";
 
 export const registerCartDependencies = () => {
     container.register<ICartRepository>("ICartRepository", {
@@ -29,6 +31,10 @@ export const registerCartDependencies = () => {
 
     container.register<IUpdateCartCountUseCase>("IUpdateCartCountUseCase", {
         useClass: UpdateCartCountUseCase,
+    });
+
+    container.register<IGetCheckoutItemUseCase>("IGetCheckoutItemUseCase", {
+        useClass: GetCheckoutItemUseCase,
     });
 
 };

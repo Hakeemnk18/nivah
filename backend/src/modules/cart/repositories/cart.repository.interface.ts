@@ -1,5 +1,5 @@
 import { Cart } from "../entities/cart.entity.js";
-import type { AddCartItemPayload, CartView, FindSameItemInCartPayload, PushNewItemPayload, RemoveCartItemPayload } from "../types/cart.type.js";
+import type { AddCartItemPayload, CartView, CheckoutView, FindSameItemInCartPayload, PushNewItemPayload, RemoveCartItemPayload } from "../types/cart.type.js";
 
 export interface ICartRepository {
   create(cartEntity: Cart): Promise<Cart>;
@@ -25,4 +25,6 @@ export interface ICartRepository {
   decrementItemQuantity(
     dto: AddCartItemPayload
   ): Promise<boolean>;
+
+  getCheckoutViewByGuestId(guestId: string): Promise<CheckoutView | null>;
 }

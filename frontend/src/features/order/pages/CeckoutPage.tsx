@@ -1,16 +1,20 @@
 import { useState } from "react";
 import SectionTitle from "../../../shared/components/SectionTitle";
-import { checkoutData } from "../../../shared/data/sample.checkout";
 import CheckoutError from "../components/CheckooutError";
 import CheckoutForm from "../components/CheckoutForm";
 import CheckoutSkeleton from "../components/CheckoutSckelton";
 import CheckoutSummary from "../components/CheckoutSummery";
 import type { OrderFormData, OrderFormErrors } from "../types/order.type";
 import { validateCheckoutForm } from "../utils/checkout.form.validation";
-import CartErrorState from "../../cart/component/CartErrorState";
 import EmptyCart from "../../cart/component/EmptyCart";
+import { useGetCheckoutItems } from "../../cart/hooks/use.get.checkout.item";
+import { getGuestId } from "../../../shared/utils/guest";
 
 const CheckoutPage = () => {
+    const guestId = getGuestId()
+    const { data: checkoutData, isLoading: isCheckoutLoading, isError: isCheckoutError } = useGetCheckoutItems(guestId);
+    const checkoutSummary = checkoutData?.data;
+    const checkoutItems = checkoutSummary?.items || [];
     const [formData, setFormData] = useState<OrderFormData>({
         name: "",
         email: "",
@@ -23,8 +27,6 @@ const CheckoutPage = () => {
     });
 
     const [errors, setErrors] = useState<OrderFormErrors>({});
-    const isLoading = false;
-    const isError = false;
 
     const handleChange = (
         field: keyof OrderFormData,
@@ -55,15 +57,15 @@ const CheckoutPage = () => {
 
                 <SectionTitle label="Checkout" />
                 {/* LOADING */}
-                {isLoading && <CheckoutSkeleton />}
+                {isCheckoutLoading && <CheckoutSkeleton />}
 
                 {/* ERROR */}
-                {!isLoading && isError && <CheckoutError />}
+                {!isCheckoutLoading && isCheckoutError && <CheckoutError />}
 
-                {!isLoading && !isError && checkoutData.items.length === 0 && <EmptyCart />}
+                {!isCheckoutLoading && !isCheckoutError && checkoutItems.length === 0 && <EmptyCart />}
 
                 {/* SUCCESS */}
-                {!isLoading && !isError && checkoutData.items.length > 0 && (
+                {!isCheckoutLoading && !isCheckoutError && checkoutItems.length > 0 && checkoutSummary && (
                     <div className="grid lg:grid-cols-[1fr_380px] gap-8 items-start">
                         {/* LEFT — FORM */}
                         <CheckoutForm
@@ -75,7 +77,7 @@ const CheckoutPage = () => {
                         {/* RIGHT — SUMMARY */}
                         <CheckoutSummary
                             onPlaceOrder={handleSubmit}
-                            checkout={checkoutData} />
+                            checkout={checkoutSummary} />
                     </div>
                 )}
             </div>
