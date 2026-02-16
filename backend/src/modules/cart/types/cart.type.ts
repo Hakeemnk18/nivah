@@ -69,3 +69,20 @@ export type CartView = {
   totalItems: number;
   totalPrice: number;
 }
+
+export type CheckoutItemView = {
+  name: string;
+  size: string;
+  quantity: number;
+  price: number;
+  image: string;
+}
+
+export type CheckoutView = {
+  cartId: string;
+  totalItems: number;
+  items: CheckoutItemView[];
+  subTotal: number;
+  deliveryCharge: number;
+  total: number;
+}

@@ -23,18 +23,18 @@ const CheckoutSummary = ({ checkout, onPlaceOrder }: CheckoutSummaryProps) => {
 
                 {/* TOTAL SECTION - FIXED */}
                 <div className="pt-4 border-t border-[var(--footer-border)] space-y-2 mt-4">
-                    <Row label="Subtotal" value={`$${checkout.subTotal}`} />
+                    <Row label="Subtotal" value={`₹${checkout.subTotal}`} />
                     <Row
                         label="Shipping"
                         value={
                             checkout.deliveryCharge === 0
                                 ? "Free"
-                                : `$${checkout.deliveryCharge}`
+                                : `₹${checkout.deliveryCharge}`
                         }
                     />
                     <Row
                         label="Total"
-                        value={`$${checkout.total}`}
+                        value={`₹${checkout.total}`}
                         strong
                     />
 

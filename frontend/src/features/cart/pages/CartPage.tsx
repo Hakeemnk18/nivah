@@ -9,13 +9,14 @@ import { useGetCartItems } from "../hooks/use.get.cart.item";
 import { useRemoveCartItem } from "../hooks/use.remove.cart.item";
 import { useUpdateCartItem } from "../hooks/use.update.cart.item";
 import type { ActionType } from "../type/cart.type";
-
+import { useNavigate } from "react-router-dom";
 
 const CartPage: React.FC = () => {
     const guestId = getGuestId();
     const { data: cartData, isLoading: cartLoading, isError: cartError } = useGetCartItems(guestId);
     const { mutate: updateCartItem } = useUpdateCartItem();
     const { mutate: removeCartItem } = useRemoveCartItem();
+    const navigate = useNavigate();
     const cart = cartData?.data;
 
     const handleUpdateCartItem = async (action: ActionType, itemId: string) => {
@@ -37,6 +38,7 @@ const CartPage: React.FC = () => {
             itemId,
         });
     };
+
 
     return (
         <section className="bg-[var(--bg)] text-[var(--text)] min-h-screen py-10">
@@ -75,6 +77,7 @@ const CartPage: React.FC = () => {
 
                         {/* RIGHT — STICKY SUMMARY */}
                         <CheckoutSummary
+                            onCheckout={() => navigate("/checkout")}
                             totalItems={cart.totalItems}
                             totalPrice={cart.totalPrice}
                         />

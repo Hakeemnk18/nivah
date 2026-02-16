@@ -35,4 +35,10 @@ router.patch(
   (req, res) => cartController.removeCartItem(req, res),
 );
 
+/* ---------- GET CHECKOUT ITEM ---------- */
+router.get(
+  "/checkout-item/:guestId",
+  (req, res) => cartController.getCheckoutItem(req, res),
+);
+
 export default router;

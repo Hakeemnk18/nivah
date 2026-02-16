@@ -7,7 +7,8 @@ import { Cart } from "../entities/cart.entity.js";
 import { CartModel } from "../infrastructure/cart.schema.js";
 import { CartMapper } from "../mappers/cart.mapper.js";
 import type { ICartRepository } from "./cart.repository.interface.js";
-import type { AddCartItemPayload, CartView, FindSameItemInCartPayload, PushNewItemPayload, RemoveCartItemPayload } from "../types/cart.type.js";
+import type { AddCartItemPayload, CartView, CheckoutView, FindSameItemInCartPayload, PushNewItemPayload, RemoveCartItemPayload } from "../types/cart.type.js";
+const DELIVERY_CHARGE = Number(process.env.DELIVERY_CHARGE)
 
 const { ObjectId } = Types;
 
@@ -255,7 +256,7 @@ export class CartRepository implements ICartRepository {
     ]);
 
     if (!result.length) return null;
-    console.log(result[0].items[0].variantId)
+
     return CartMapper.toView(result[0]);
 
   }
@@ -323,5 +324,93 @@ export class CartRepository implements ICartRepository {
     ).lean();
 
     return !!updated;
+  }
+
+  async getCheckoutViewByGuestId(guestId: string): Promise<CheckoutView | null> {
+
+
+    const result = await CartModel.aggregate([
+      {
+        $match: { guestId, isActive: true }
+      },
+
+      { $unwind: "$items" },
+
+      {
+        $lookup: {
+          from: "products",
+          localField: "items.productId",
+          foreignField: "_id",
+          as: "product"
+        }
+      },
+
+      { $unwind: "$product" },
+
+      // find selected variant
+      {
+        $addFields: {
+          selectedVariant: {
+            $first: {
+              $filter: {
+                input: "$product.variants",
+                as: "v",
+                cond: { $eq: ["$$v._id", "$items.variantId"] }
+              }
+            }
+          }
+        }
+      },
+
+      {
+        $project: {
+          cartId: "$_id",
+          quantity: "$items.quantity",
+          variantId: {
+            size: "$selectedVariant.size"
+          },
+
+          product: {
+            name: "$product.name",
+            image: { $arrayElemAt: ["$product.images.url", 0] },
+            price: "$selectedVariant.price"
+          }
+        }
+      },
+
+      {
+        $group: {
+          _id: "$cartId",
+          items: {
+            $push: {
+              product: "$product",
+              variantId: "$variantId",
+              quantity: "$quantity"
+            }
+          },
+          totalItems: { $sum: "$quantity" },
+          totalPrice: {
+            $sum: {
+              $multiply: ["$quantity", "$product.price"]
+            }
+          }
+        }
+      }
+    ]);
+
+
+    if (!result.length) return null;
+
+    const raw = result[0];
+
+    const subTotal = raw.totalPrice;
+    const total = subTotal + DELIVERY_CHARGE;
+
+    return CartMapper.toCheckoutView({
+      ...raw,
+      subTotal,
+      deliveryCharge: DELIVERY_CHARGE,
+      total
+    });
   }
 }

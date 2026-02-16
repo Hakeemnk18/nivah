@@ -1,6 +1,6 @@
 import api from "../../../api/axios.instance";
 import type { ApiResponse, GetIdNameResponse, } from "../../../shared/types/api.types";
-import type { AddCartItemPayload, GetCartResponse, RemoveCartItemPayload, UpdateCartCountPayload } from "../type/cart.type";
+import type { AddCartItemPayload, CheckoutResponse, GetCartResponse, RemoveCartItemPayload, UpdateCartCountPayload } from "../type/cart.type";
 
 
 
@@ -33,6 +33,13 @@ export const removeCartItemApi = async (
     data: RemoveCartItemPayload
 ): Promise<ApiResponse> => {
     const response = await api.patch<ApiResponse>(`/cart/remove-cart-item`, data);
+    return response.data;
+};
+
+export const getCheckoutApi = async (
+    guestId: string
+): Promise<CheckoutResponse> => {
+    const response = await api.get<CheckoutResponse>(`/cart/checkout-item/${guestId}`);
     return response.data;
 };
 

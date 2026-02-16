@@ -2,11 +2,13 @@
 type CheckoutSummaryProps = {
     totalItems: number;
     totalPrice: number;
+    onCheckout: () => void;
 };
 
 const CheckoutSummary = ({
     totalItems,
     totalPrice,
+    onCheckout,
 }: CheckoutSummaryProps) => {
     return (
         <aside className="lg:sticky lg:top-24 self-start">
@@ -32,7 +34,9 @@ const CheckoutSummary = ({
                     </div>
                 </div>
 
-                <button className="mt-6 w-full py-3.5 rounded-xl bg-[var(--accent)] text-black font-semibold hover:opacity-90 transition shadow">
+                <button
+                    onClick={onCheckout}
+                    className="mt-6 w-full py-3.5 rounded-xl bg-[var(--accent)] text-black font-semibold hover:opacity-90 transition shadow">
                     Checkout
                 </button>
             </div>

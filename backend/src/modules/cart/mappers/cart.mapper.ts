@@ -2,6 +2,7 @@ import { Cart } from "../entities/cart.entity.js";
 import type {
   CartView,
   CartItemView,
+  CheckoutView,
 } from "../types/cart.type.js";
 
 export class CartMapper {
@@ -76,6 +77,23 @@ export class CartMapper {
 
       totalItems: raw.totalItems,
       totalPrice: raw.totalPrice,
+    };
+  }
+
+  static toCheckoutView(raw: any): CheckoutView {
+    return {
+      cartId: raw._id?.toString() || raw.id,
+      items: raw.items.map((item: any) => ({
+        name: item.product.name,
+        size: item.variantId.size,
+        quantity: item.quantity,
+        price: item.product.price,
+        image: item.product.image,
+      })),
+      totalItems: raw.totalItems,
+      subTotal: raw.subTotal,
+      deliveryCharge: raw.deliveryCharge,
+      total: raw.total,
     };
   }
 

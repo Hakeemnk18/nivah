@@ -3,6 +3,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import Logo from "./Logo";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 type NavbarProps = {
   mode?: "landing" | "default";
@@ -11,6 +12,7 @@ type NavbarProps = {
 export default function Navbar({ mode = "default" }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => {
@@ -21,16 +23,17 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+
+
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-          mode === "landing"
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${mode === "landing"
             ? scrolled
               ? "backdrop-blur bg-black/30"
               : "bg-transparent"
             : "bg-[var(--card)]"
-        }`}
+          }`}
         style={{
           borderColor: scrolled ? "var(--card)" : "transparent",
           color: "var(--text)",
@@ -40,12 +43,11 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
           {/* Mobile menu button */}
           <button
             className={`md:hidden 
-              ${
-                mode === "landing"
-                  ? scrolled
-                    ? "text-[var(--text)]"
-                    : "text-white"
-                  : "text-[var(--text)]"
+              ${mode === "landing"
+                ? scrolled
+                  ? "text-[var(--text)]"
+                  : "text-white"
+                : "text-[var(--text)]"
               }`}
             onClick={() => setIsOpen((v) => !v)}
             aria-label="Toggle menu"
@@ -60,13 +62,12 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
           {/* Desktop nav */}
           <ul
             className={`hidden md:flex gap-8 text-sm font-medium
-               ${
-                 mode === "landing"
-                   ? scrolled
-                     ? "text-[var(--text)]"
-                     : "text-white"
-                   : "text-[var(--text)]"
-               }`}
+               ${mode === "landing"
+                ? scrolled
+                  ? "text-[var(--text)]"
+                  : "text-white"
+                : "text-[var(--text)]"
+              }`}
           >
             <li>Home</li>
             <li>Shop</li>
@@ -74,15 +75,16 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
           </ul>
 
           <div
-            className={`flex items-center gap-4 md:flex-1 md:justify-end ${
-              mode === "landing"
+            className={`flex items-center gap-4 md:flex-1 md:justify-end ${mode === "landing"
                 ? scrolled
                   ? "text-[var(--text)]"
                   : "text-white"
                 : "text-[var(--text)]"
-            }`}
+              }`}
           >
-            <ShoppingCart size={20} />
+            <ShoppingCart
+              onClick={() => navigate("/cart")}
+              size={20} />
             <ThemeToggle />
           </div>
         </div>
