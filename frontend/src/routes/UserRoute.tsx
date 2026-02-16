@@ -7,6 +7,7 @@ import { DefaultUserLayout } from "../shared/layouts/DefualtUserLayout";
 const ProductlisingPage = lazy(() => import("../features/products/component/productList/productListng"));
 const ProductDetailsPage = lazy(() => import("../features/products/pages/ProductDetailsPage"));
 const CartPage = lazy(() => import("../features/cart/pages/CartPage"));
+const CheckoutPage = lazy(() => import("../features/order/pages/CeckoutPage"));
 const userRoutes = [
     {
         element: <LandingLayout />,
@@ -31,6 +32,10 @@ const userRoutes = [
             {
                 path: "cart",
                 element: <CartPage />,
+            },
+            {
+                path: "checkout",
+                element: <CheckoutPage />,
             },
         ],
     },

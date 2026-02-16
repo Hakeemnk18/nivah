@@ -1,3 +1,5 @@
+import type { IdName } from "../../../core/shared/types/id.name.type.js";
+
 export type CartItem = {
   productId: string;
   variantId: string;
@@ -50,10 +52,14 @@ export type ProductView = {
   name: string
 }
 
+export type VariantView = {
+  id: string;
+  size: string;
+}
 export type CartItemView = {
   itemId: string;
   product: ProductView;
-  variantId: string;
+  variant: VariantView;
   quantity: number;
 }
 export type CartView = {
