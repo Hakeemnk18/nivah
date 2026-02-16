@@ -17,7 +17,7 @@ export class UserRefreshTokenUseCase implements IUserRefreshTokenUseCase {
 
     @inject("IUserRepository")
     private readonly _userRepository: IUserRepository
-  ) {}
+  ) { }
 
   async execute(
     refresh_Token: string
@@ -26,16 +26,16 @@ export class UserRefreshTokenUseCase implements IUserRefreshTokenUseCase {
     accessToken: string;
     refreshToken: string;
   }> {
-     console.log("inside refresh token use case")
+
     if (!refresh_Token) {
       console.log("no refresh token")
-        throw new CustomError(
-            ResponseMessages.REFRESH_TOKEN_REQUIRED,
-            HttpStatusCode.BAD_REQUEST
-        )
+      throw new CustomError(
+        ResponseMessages.REFRESH_TOKEN_REQUIRED,
+        HttpStatusCode.BAD_REQUEST
+      )
     }
 
-   
+
     const decoded = (await this._tokenService.verifyRefreshToken(
       refresh_Token
     )) as {
@@ -47,30 +47,30 @@ export class UserRefreshTokenUseCase implements IUserRefreshTokenUseCase {
     const user = await this._userRepository.findById(decoded.id);
 
     if (!user) {
-        throw new CustomError(
-            ResponseMessages.USER_NOT_FOUND,
-            HttpStatusCode.FORBIDDEN
-        )
+      throw new CustomError(
+        ResponseMessages.USER_NOT_FOUND,
+        HttpStatusCode.FORBIDDEN
+      )
     }
 
-    if(user.tokenVersion !== decoded.tokenVersion){
-        throw new CustomError(
-            ResponseMessages.REFRESH_TOKEN_INVALID,
-            HttpStatusCode.FORBIDDEN
-        )
+    if (user.tokenVersion !== decoded.tokenVersion) {
+      throw new CustomError(
+        ResponseMessages.REFRESH_TOKEN_INVALID,
+        HttpStatusCode.FORBIDDEN
+      )
     }
 
-    if(user.isBlocked){
-         throw new CustomError(
-            ResponseMessages.USER_NOT_VERIFIED,
-            HttpStatusCode.FORBIDDEN
-        )
+    if (user.isBlocked) {
+      throw new CustomError(
+        ResponseMessages.USER_NOT_VERIFIED,
+        HttpStatusCode.FORBIDDEN
+      )
     }
     const updateUser = user.incrementTokenVersion()
     const newUser = await this._userRepository.save(updateUser)
 
     const tokenPayload = { id: newUser.id!, role: newUser.role };
-    const refreshTokenPlayLoad = {id: newUser.id!, role: newUser.role,tokenVersion: newUser.tokenVersion}
+    const refreshTokenPlayLoad = { id: newUser.id!, role: newUser.role, tokenVersion: newUser.tokenVersion }
     const accessToken = await this._tokenService.signAccessToken(tokenPayload);
     const refreshToken = await this._tokenService.signRefreshToken(refreshTokenPlayLoad);
 
@@ -83,6 +83,6 @@ export class UserRefreshTokenUseCase implements IUserRefreshTokenUseCase {
       },
     };
 
-    return { userData: responseData, accessToken, refreshToken}
+    return { userData: responseData, accessToken, refreshToken }
   }
 }

@@ -1,4 +1,4 @@
-import type { ApiResponse } from "../../../shared/types/api.types";
+import type { ApiResponse, IdName } from "../../../shared/types/api.types";
 
 export type AddCartItemPayload = {
     guestId: string;
@@ -13,10 +13,15 @@ export type ProductView = {
     name: string
 }
 
+export type VariantView = {
+    id: string;
+    size: string;
+}
+
 export type CartItemView = {
     itemId: string;
     product: ProductView;
-    variantId: string;
+    variant: VariantView;
     quantity: number;
 }
 export type CartView = {
@@ -42,5 +47,23 @@ export type RemoveCartItemPayload = {
 }
 
 export type GetCartResponse = ApiResponse<CartView>
+
+
+export type CheckoutItemView = {
+    name: string;
+    size: string;
+    quantity: number;
+    price: number;
+    image: string;
+}
+
+export type CheckoutView = {
+    items: CheckoutItemView[];
+    subTotal: number;
+    deliveryCharge: number;
+    total: number;
+}
+
+export type CheckoutResponse = ApiResponse<CheckoutView>
 
 

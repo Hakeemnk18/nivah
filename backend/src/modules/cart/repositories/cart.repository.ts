@@ -219,7 +219,10 @@ export class CartRepository implements ICartRepository {
           guestId: 1,
           itemId: "$items._id",
           quantity: "$items.quantity",
-          variantId: "$items.variantId",
+          variantId: {
+            id: "$items.variantId",
+            size: "$selectedVariant.size"
+          },
 
           product: {
             name: "$product.name",
@@ -252,7 +255,7 @@ export class CartRepository implements ICartRepository {
     ]);
 
     if (!result.length) return null;
-
+    console.log(result[0].items[0].variantId)
     return CartMapper.toView(result[0]);
 
   }

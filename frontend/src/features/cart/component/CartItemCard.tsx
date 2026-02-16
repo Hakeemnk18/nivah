@@ -27,7 +27,7 @@ const CartItemCard = ({ item, handleUpdateCartItem, handleRemoveCartItem }: Cart
                     </h3>
 
                     <p className="text-[var(--muted)] text-xs mt-1">
-                        Variant: {item.variantId}
+                        Size: {item.variant.size}
                     </p>
 
                     <p className="text-[var(--accent)] font-semibold mt-2">

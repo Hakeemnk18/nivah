@@ -61,7 +61,10 @@ export class CartMapper {
 
       items: raw.items.map((item: any) => ({
         itemId: item.id?.toString(),
-        variantId: item.variantId?.toString(),
+        variant: {
+          id: item.variantId?.id?.toString(),
+          size: item.variantId?.size
+        },
         quantity: item.quantity,
 
         product: {
