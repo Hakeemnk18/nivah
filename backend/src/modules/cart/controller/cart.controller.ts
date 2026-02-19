@@ -87,11 +87,11 @@ export class CartController implements ICartController {
         try {
             const guestId = req.params.guestId;
             const dto = GuestIdSchema.parse(guestId);
-            // const checkoutItem = await this._getCheckoutItemUseCase.execute(dto);
+            const checkoutItem = await this._getCheckoutItemUseCase.execute(dto);
             res.status(HttpStatusCode.OK).json({
                 success: true,
                 message: ResponseMessages.SUCCESS,
-                data: [],
+                data: checkoutItem,
             });
         } catch (error) {
             handleError(res, error)
