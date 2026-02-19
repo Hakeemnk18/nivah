@@ -7,6 +7,7 @@ import registerUserModule from "./modules/user/user.module.js";
 import registerCategoryModule from "./modules/category/category.module.js";
 import registerProductModule from "./modules/product/product.module.js";
 import registerCartModule from "./modules/cart/cart.module.js";
+import registerOrderModule from "./modules/order/order.module.js";
 
 
 const PORT = env.PORT
@@ -25,6 +26,7 @@ const startServer = async () => {
         registerCategoryModule(expressApp)
         registerProductModule(expressApp)
         registerCartModule(expressApp)
+        registerOrderModule(expressApp)
 
 
 

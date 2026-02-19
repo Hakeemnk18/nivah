@@ -1,15 +1,15 @@
-import { Schema, model, Document } from "mongoose"; 
+import { Schema, model, Document } from "mongoose";
 export type UserRole = "admin" | "user";
 
-export interface IUser extends Document{
+export interface IUser extends Document {
   name: string;
   email: string;
+  phone?: string;
   password?: string;
-
   role: UserRole;
   tokenVersion: number;
   isBlocked: boolean;
-
+  isGuest: boolean;
   isVerified?: boolean;
   googleId?: string;
 }
@@ -53,7 +53,7 @@ const userSchema = new Schema<IUser>(
     googleId: {
       type: String,
       index: true,
-      sparse: true, 
+      sparse: true,
     },
 
     tokenVersion: {

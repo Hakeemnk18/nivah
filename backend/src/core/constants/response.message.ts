@@ -151,4 +151,74 @@ export const ResponseMessages = {
   ITEM_NOT_FOUND: "Cart item not found.",
   CART_COUNT_UPDATED_SUCCESS: "Cart count updated successfully",
 
+
+  ORDER_NOT_FOUND: "Order not found",
+  ORDER_FETCH_FAILED: "Failed to fetch order",
+  ORDER_LIST_FETCH_FAILED: "Failed to fetch orders",
+  ORDER_CREATE_FAILED: "Failed to create order",
+  ORDER_ALREADY_EXISTS: "Order already exists",
+
+  INVALID_ORDER_ID: "Invalid order ID",
+  INVALID_ORDER_OWNER: "Invalid order owner",
+
+  /* ================= ORDER VALIDATION ================= */
+
+  ORDER_EMPTY_ITEMS: "Order must contain at least one item",
+  ORDER_INVALID_TOTAL: "Invalid order total amount",
+  ORDER_INVALID_STATUS: "Invalid order status",
+  ORDER_CANNOT_BE_MODIFIED: "Order cannot be modified",
+
+  ORDER_ALREADY_CANCELLED: "Order is already cancelled",
+  ORDER_ALREADY_DISPATCHED: "Order already dispatched",
+  ORDER_CANNOT_CANCEL_DISPATCHED: "Dispatched order cannot be cancelled",
+
+  ORDER_STATUS_TRANSITION_INVALID: "Invalid order status transition",
+
+  /* ================= ORDER STATUS SUCCESS ================= */
+
+  ORDER_CREATED_SUCCESS: "Order created successfully",
+  ORDER_CONFIRMED_SUCCESS: "Order confirmed successfully",
+  ORDER_ACCEPTED_SUCCESS: "Order accepted successfully",
+  ORDER_DISPATCHED_SUCCESS: "Order dispatched successfully",
+  ORDER_CANCELLED_SUCCESS: "Order cancelled successfully",
+
+  ORDER_STATUS_UPDATED_SUCCESS: "Order status updated successfully",
+
+  /* ================= PAYMENT ================= */
+
+  PAYMENT_NOT_FOUND: "Payment not found",
+  PAYMENT_CREATE_FAILED: "Failed to create payment",
+  PAYMENT_VERIFICATION_FAILED: "Payment verification failed",
+  PAYMENT_ALREADY_VERIFIED: "Payment already verified",
+
+  INVALID_PAYMENT_ID: "Invalid payment ID",
+  INVALID_PAYMENT_SIGNATURE: "Invalid payment signature",
+
+  PAYMENT_PENDING: "Payment is pending",
+  PAYMENT_FAILED: "Payment failed",
+  PAYMENT_SUCCESS: "Payment successful",
+
+  PAYMENT_CAPTURE_FAILED: "Failed to capture payment",
+
+  /* ================= CHECKOUT ================= */
+
+  CHECKOUT_FAILED: "Failed to process checkout",
+  CHECKOUT_INVALID_CART: "Invalid cart for checkout",
+  CHECKOUT_CART_EMPTY: "Cart is empty",
+  CHECKOUT_OUT_OF_STOCK: "Some items are out of stock",
+  CART_IS_EMPTY: "Cart is empty",
+  PRODUCT_PRICE_CHANGED: "Product price has changed. Please review your cart.",
+
+  /* ================= STOCK / ORDER FLOW ================= */
+
+  ORDER_STOCK_VALIDATION_FAILED: "Stock validation failed",
+  ORDER_ITEM_OUT_OF_STOCK: "One or more items are out of stock",
+  ORDER_STOCK_UPDATED_SUCCESS: "Stock updated successfully",
+  INVALID_ORDER_TOTAL: "Invalid order total",
+  FAILED_TO_CREATE_ORDER: "Failed to create order",
+
+  /* ================= ORDER NUMBER ================= */
+
+  ORDER_NUMBER_GENERATION_FAILED: "Failed to generate order number",
+
 }
