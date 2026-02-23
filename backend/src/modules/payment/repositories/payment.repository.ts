@@ -7,7 +7,8 @@ import { PaymentModel } from "../infrastructure/payment.schema.js";
 import { PaymentMapper } from "../mappers/payment.mapper.js";
 
 import type { IPaymentRepository } from "./payment.repository.interface.js";
-import type { PaymentStatus } from "../types/payment.type.js";
+import type { ChangeStatusPayload, PaymentStatus } from "../types/payment.type.js";
+import type { ClientSession } from "mongoose";
 
 export class PaymentRepository implements IPaymentRepository {
 
@@ -37,7 +38,7 @@ export class PaymentRepository implements IPaymentRepository {
     }
 
     /* ---------- SAVE FULL ENTITY ---------- */
-    async save(paymentEntity: Payment): Promise<Payment> {
+    async save(paymentEntity: Payment, session?: ClientSession): Promise<Payment> {
         if (!paymentEntity.id) {
             throw new CustomError(
                 ResponseMessages.ID_MISSING,
@@ -50,7 +51,7 @@ export class PaymentRepository implements IPaymentRepository {
         const updatedDocument = await PaymentModel.findByIdAndUpdate(
             paymentEntity.id,
             { $set: persistenceData },
-            { new: true },
+            { new: true, session: session ?? null },
         ).lean();
 
         if (!updatedDocument) {
@@ -74,31 +75,45 @@ export class PaymentRepository implements IPaymentRepository {
 
     /* ---------- CHANGE STATUS ONLY ---------- */
     async changeStatus(
-        id: string,
-        status: PaymentStatus,
-    ): Promise<Payment> {
-        const updatedDocument = await PaymentModel.findByIdAndUpdate(
-            id,
-            { $set: { status } },
-            { new: true },
-        ).lean();
+        payload: ChangeStatusPayload
+    ): Promise<void> {
+        const { orderId, status, session, reason } = payload;
 
-        if (!updatedDocument) {
-            throw new CustomError(
-                ResponseMessages.PAYMENT_NOT_FOUND,
-                HttpStatusCode.NOT_FOUND,
-            );
+        const result = await PaymentModel.updateOne(
+            { orderId: orderId },
+            { $set: { status, failureReason: reason } },
+            session ? { session } : {}
+        );
+
+        if (result.matchedCount === 0) {
+            throw new Error("Payment not found");
         }
+    }
 
-        const domainPayment = PaymentMapper.toDomain(updatedDocument);
-
-        if (!domainPayment) {
-            throw new CustomError(
-                ResponseMessages.FAILED_TO_MAP,
-                HttpStatusCode.INTERNAL_SERVER_ERROR,
-            );
+    async findByProviderOrderId(providerOrderId: string, session?: ClientSession): Promise<Payment | null> {
+        const query = PaymentModel.findOne({ providerOrderId });
+        if (session) {
+            query.session(session);
         }
+        const foundDocument = await query.lean();
 
-        return domainPayment;
+        return PaymentMapper.toDomain(foundDocument);
+    }
+
+    async autoCancelPayment(orderIds: string[], session?: ClientSession): Promise<void> {
+        const result = await PaymentModel.updateMany(
+            { orderId: { $in: orderIds }, status: "created" },
+            {
+                $set: {
+                    status: "failed",
+                    failureReason: "Auto cancelled due to payment timeout",
+                }
+            },
+            session ? { session } : {}
+        );
+
+        if (result.matchedCount === 0) {
+            throw new Error("Payment not found");
+        }
     }
 }

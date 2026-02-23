@@ -8,6 +8,7 @@ import registerCategoryModule from "./modules/category/category.module.js";
 import registerProductModule from "./modules/product/product.module.js";
 import registerCartModule from "./modules/cart/cart.module.js";
 import registerOrderModule from "./modules/order/order.module.js";
+import { startCronJobs } from "./core/scheduler/cron.manager.js";
 
 
 const PORT = env.PORT
@@ -18,7 +19,7 @@ const startServer = async () => {
         console.log("Connecting to database...");
         await connectDB();
         console.log("Database connected successfully.");
-
+        startCronJobs()
 
         const expressApp: Application = app;
 

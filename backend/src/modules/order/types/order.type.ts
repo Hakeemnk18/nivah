@@ -1,3 +1,5 @@
+import type { ClientSession } from "mongoose";
+
 export const ORDER_STATUS = [
   "created",
   "confirmed",
@@ -92,4 +94,39 @@ export interface IRazorpayPayment {
   error_description?: string | undefined;
   created_at: number;
 }
+
+export interface HandlePaymentFailureRequestDto {
+  razorpay_order_id: string;
+  razorpay_payment_id?: string;
+  failure_reason?: string;
+}
+
+export type AutoCancelPayload = {
+  date: Date;
+  orderIds: string[];
+  reason: string;
+  session?: ClientSession;
+}
+
+
+
+export interface RazorpayWebhookEvent {
+  id: string;
+  event: string;
+  payload: {
+    payment: {
+      entity: {
+        id: string;
+        order_id: string;
+        status: string;
+        amount: number;
+        currency: string;
+        method?: string;
+      };
+    };
+  };
+}
+
+
+
 

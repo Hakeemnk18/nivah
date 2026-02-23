@@ -10,9 +10,11 @@ import type { IOrderRepository } from "./order.repository.interface.js";
 
 import type { IGetAllDocDB } from "../../../core/shared/interfaces/get.all.doc.interface.js";
 import type {
+  AutoCancelPayload,
   OrderListView,
 } from "../types/order.type.js";
 import type { OrderStatus } from "../types/order.type.js";
+import type { ClientSession } from "mongoose";
 
 const { ObjectId } = Types;
 
@@ -79,13 +81,14 @@ export class OrderRepository implements IOrderRepository {
   async changeStatus(
     orderId: string,
     status: OrderStatus,
+    session?: ClientSession,
   ): Promise<Order | null> {
     if (!ObjectId.isValid(orderId)) return null;
 
     const updated = await OrderModel.findByIdAndUpdate(
       orderId,
       { $set: { orderStatus: status } },
-      { new: true },
+      { new: true, session: session ?? null },
     ).lean();
 
     return OrderMapper.toDomain(updated);
@@ -93,10 +96,16 @@ export class OrderRepository implements IOrderRepository {
 
   /* ================= FIND BY ID ================= */
 
-  async findById(id: string): Promise<Order | null> {
+  async findById(id: string, session?: ClientSession): Promise<Order | null> {
     if (!ObjectId.isValid(id)) return null;
 
-    const document = await OrderModel.findById(id).lean();
+    const query = OrderModel.findById(id).lean();
+
+    if (session) {
+      query.session(session);
+    }
+
+    const document = await query;
 
     return OrderMapper.toDomain(document);
   }
@@ -118,5 +127,43 @@ export class OrderRepository implements IOrderRepository {
     return documents
       .map(OrderMapper.toAdminListView)
       .filter((o): o is OrderListView => o !== null);
+  }
+
+  async getOrderStatus(orderId: string): Promise<OrderStatus> {
+    const document = await OrderModel.findById(orderId).lean();
+    return document?.orderStatus ?? "created";
+  }
+
+  async findPendingOlderThan(date: Date): Promise<Order[]> {
+    const documents = await OrderModel.find({
+      orderStatus: "created",
+      createdAt: { $lt: date },
+    }).lean();
+
+    return documents.map(OrderMapper.toDomain)
+      .filter((o): o is Order => o !== null);
+  }
+
+  async autoCancelOlderThan(orderIds: string[], session?: ClientSession): Promise<void> {
+    const result = await OrderModel.updateMany(
+      {
+        orderStatus: "created",
+        _id: { $in: orderIds }
+      },
+      {
+        $set: {
+          orderStatus: "cancelled",
+          cancelledAt: new Date(),
+          cancelReason: "Auto cancelled due to payment timeout"
+        }
+      },
+      session ? { session } : {}
+    );
+
+    if (result.modifiedCount === 0) {
+      throw new Error(
+        ResponseMessages.ORDER_NOT_FOUND,
+      )
+    }
   }
 }

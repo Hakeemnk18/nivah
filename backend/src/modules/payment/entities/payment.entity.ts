@@ -15,7 +15,6 @@ export type PaymentProps = {
     provider: string | undefined;
     providerOrderId: string;
     providerPaymentId?: string | undefined;
-    providerSignature?: string | undefined;
     amount: number;
     currency: string;
     status: PaymentStatus;
@@ -33,7 +32,6 @@ export class Payment {
     public readonly provider: string | undefined;
     public readonly providerOrderId: string;
     public readonly providerPaymentId?: string | undefined;
-    public readonly providerSignature?: string | undefined;
     public readonly amount: number;
     public readonly currency: string;
     public readonly status: PaymentStatus;
@@ -43,9 +41,9 @@ export class Payment {
 
     constructor(props: PaymentProps) {
         /* ---------- VALIDATIONS ---------- */
-        console.log("props", props)
+
         if (!props.orderId) {
-            throw new Error("Order ID is required");
+            throw new Error("Order ID is required in payment");
         }
 
         if (!props.userId && !props.guestId) {
@@ -73,16 +71,12 @@ export class Payment {
         /* ---------- ASSIGN ---------- */
 
         this.id = props.id ?? null;
-
         this.orderId = props.orderId;
         this.userId = props.userId;
         this.guestId = props.guestId;
-
         this.provider = props.provider?.trim() || "razorpay";
-
         this.providerOrderId = props.providerOrderId.trim();
         this.providerPaymentId = props.providerPaymentId?.trim();
-        this.providerSignature = props.providerSignature?.trim();
         this.amount = props.amount;
         this.currency = (props.currency ?? "INR").toUpperCase();
         this.status = status;

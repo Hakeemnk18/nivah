@@ -1,0 +1,158 @@
+import crypto from "crypto";
+import { inject, injectable } from "tsyringe";
+import type { IPaymentRepository } from "../../payment/repositories/payment.repository.interface.js";
+import type { IOrderRepository } from "../repositories/order.repository.interface.js";
+import type { IPaymentGateway } from "../../../core/ports/payment.service.interface.js";
+import type { ICartRepository } from "../../cart/repositories/cart.repository.interface.js";
+import type { IProductRepository } from "../../product/repositories/product.repository.interface.js";
+import { CustomError } from "../../../core/errors/custom.error.js";
+import { HttpStatusCode } from "../../../core/constants/http.status.codes.js";
+import { ResponseMessages } from "../../../core/constants/response.message.js";
+import { mapRazorpayStatus } from "../../../core/utils/payment.status.helper.js";
+import { Payment } from "../../payment/entities/payment.entity.js";
+import { mapPaymentMode } from "../../../core/utils/get.payment.method.js";
+import mongoose from "mongoose";
+import type { VerifyPaymentRequestDto } from "../dtos/verify.payment.dto.js";
+import type { IVerifyPaymentUseCase } from "./interfaces/verify.payment.use-case.interface.js";
+
+@injectable()
+export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
+    constructor(
+        @inject("IPaymentRepository")
+        private readonly _paymentRepository: IPaymentRepository,
+
+        @inject("IOrderRepository")
+        private readonly _orderRepository: IOrderRepository,
+
+        @inject("IPaymentGateway")
+        private readonly _paymentGateway: IPaymentGateway,
+
+        @inject("ICartRepository")
+        private readonly _cartRepository: ICartRepository,
+
+        @inject("IProductRepository")
+        private readonly _productRepository: IProductRepository,
+    ) { }
+
+    async execute(dto: VerifyPaymentRequestDto): Promise<void> {
+
+        //  LOAD PAYMENT RECORD
+
+        const payment = await this._paymentRepository.findByProviderOrderId(
+            dto.razorpay_order_id
+        );
+
+        if (!payment) {
+            throw new CustomError(
+                ResponseMessages.PAYMENT_NOT_FOUND,
+                HttpStatusCode.NOT_FOUND
+            );
+        }
+
+        if (payment.status === "captured") {
+            return;
+        }
+
+        // VERIFY SIGNATURE (CRITICAL SECURITY)
+
+        const body = `${dto.razorpay_order_id}|${dto.razorpay_payment_id}`;
+
+        const expectedSignature = crypto
+            .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
+            .update(body)
+            .digest("hex");
+
+        if (expectedSignature !== dto.razorpay_signature) {
+            throw new CustomError(
+                ResponseMessages.INVALID_PAYMENT_SIGNATURE,
+                HttpStatusCode.BAD_REQUEST
+            );
+        }
+
+
+        // FETCH PAYMENT FROM RAZORPAY (SERVER TRUST)
+        const razorpayPayment = await this._paymentGateway.fetchPayment(
+            dto.razorpay_payment_id
+        );
+
+        if (razorpayPayment.order_id !== dto.razorpay_order_id) {
+            throw new CustomError(
+                ResponseMessages.INVALID_PAYMENT_ORDER_ID,
+                HttpStatusCode.BAD_REQUEST
+            );
+        }
+
+        if (!razorpayPayment || razorpayPayment.status !== "captured") {
+            throw new CustomError(
+                ResponseMessages.PAYMENT_NOT_CAPTURED,
+                HttpStatusCode.BAD_REQUEST
+            );
+        }
+
+        // LOAD ORDER
+        const order = await this._orderRepository.findById(payment.orderId);
+
+        if (!order) {
+            throw new CustomError(
+                ResponseMessages.ORDER_NOT_FOUND,
+                HttpStatusCode.NOT_FOUND
+            );
+        }
+
+
+        // AMOUNT VALIDATION
+        // (Razorpay returns amount in paise)
+
+
+        const expectedAmount = order.totalAmount * 100;
+
+        if (razorpayPayment.amount !== expectedAmount) {
+            throw new CustomError(
+                ResponseMessages.INVALID_PAYMENT_AMOUNT,
+                HttpStatusCode.BAD_REQUEST
+            );
+        }
+
+        if (order.orderStatus === "confirmed") {
+            throw new CustomError(
+                ResponseMessages.ORDER_ALREADY_CONFIRMED,
+                HttpStatusCode.BAD_REQUEST
+            );
+        }
+
+
+        //  UPDATE PAYMENT
+
+        const newPayment = new Payment({
+            id: payment.id,
+            orderId: payment.orderId,
+            userId: payment.userId,
+            guestId: payment.guestId,
+            provider: "razorpay",
+            providerOrderId: razorpayPayment.id,
+            amount: razorpayPayment.amount,
+            currency: razorpayPayment.currency,
+            status: mapRazorpayStatus(razorpayPayment.status),
+            paymentMode: mapPaymentMode(razorpayPayment.method),
+        })
+        const session = await mongoose.startSession();
+        try {
+            session.startTransaction();
+            await this._paymentRepository.save(newPayment, session);
+
+            //  UPDATE ORDER STATUS
+            // await this._orderRepository.changeStatus(payment.orderId, "confirmed", session)
+
+            //empty cart
+            await this._cartRepository.emptyCart(payment.guestId!, session)
+
+            await session.commitTransaction();
+        } catch (error) {
+            await session.abortTransaction();
+            throw error;
+        } finally {
+            session.endSession();
+        }
+
+    }
+}
