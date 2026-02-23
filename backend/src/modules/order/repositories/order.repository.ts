@@ -166,4 +166,34 @@ export class OrderRepository implements IOrderRepository {
       )
     }
   }
+
+  // confirm order
+  async confirmOrder(orderId: string, session?: ClientSession): Promise<void> {
+    const result = await OrderModel.updateOne(
+      { _id: orderId, orderStatus: "created" },
+      { $set: { orderStatus: "confirmed", confirmedAt: new Date() } },
+      session ? { session } : {}
+    );
+
+    if (result.modifiedCount === 0) {
+      throw new Error(
+        ResponseMessages.ORDER_NOT_FOUND,
+      )
+    }
+  }
+
+  // cancel order
+  async cancelOrder(orderId: string, session?: ClientSession): Promise<void> {
+    const result = await OrderModel.updateOne(
+      { _id: orderId, orderStatus: "created" },
+      { $set: { orderStatus: "cancelled", cancelledAt: new Date(), cancelReason: "Payment failed" } },
+      session ? { session } : {}
+    );
+
+    if (result.modifiedCount === 0) {
+      throw new Error(
+        ResponseMessages.ORDER_NOT_FOUND,
+      )
+    }
+  }
 }

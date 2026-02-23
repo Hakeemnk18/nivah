@@ -11,6 +11,8 @@ import type { IGetOrderStatusUseCase } from "../modules/order/use-cases/interfac
 import { GetOrderStatusUseCase } from "../modules/order/use-cases/get.order.status.use-case.js";
 import type { IAutoCancelOrderUseCase } from "../modules/order/use-cases/interfaces/auto.cancel-order.use-case.js";
 import { AutoCancelOrderUseCase } from "../modules/order/use-cases/auto-cancel-order.use-case.js";
+import type { IHandlePaymentFailureUseCase } from "../modules/order/use-cases/interfaces/failure.payment.use-case.interface.js";
+import { HandlePaymentFailureUseCase } from "../modules/order/use-cases/failure.payment.use-case.js";
 
 export const registerOrderDependencies = () => {
     container.register<IOrderRepository>("IOrderRepository", {
@@ -35,6 +37,10 @@ export const registerOrderDependencies = () => {
 
     container.register<IAutoCancelOrderUseCase>("IAutoCancelOrderUseCase", {
         useClass: AutoCancelOrderUseCase,
+    });
+
+    container.register<IHandlePaymentFailureUseCase>("IHandlePaymentFailureUseCase", {
+        useClass: HandlePaymentFailureUseCase,
     });
 
 };

@@ -26,4 +26,6 @@ export interface IOrderRepository {
   getOrderStatus(orderId: string): Promise<OrderStatus>;
   findPendingOlderThan(date: Date): Promise<Order[]>;
   autoCancelOlderThan(orderIds: string[], session?: ClientSession): Promise<void>;
+  confirmOrder(orderId: string, session?: ClientSession): Promise<void>;
+  cancelOrder(orderId: string, session?: ClientSession): Promise<void>;
 }

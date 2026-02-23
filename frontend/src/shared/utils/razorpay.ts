@@ -20,7 +20,7 @@ export const openRazorpayCheckout = (options: IRazorpayOptions) => {
 
 export const openRazorpayCheckoutFunction = (
     order: IRazorpayOrder,
-    URL: string
+    onHandle: (orderId: string, response: any) => {}
 ) => {
     if (!keyId) {
         toast.error("Payment configuration error");
@@ -35,23 +35,7 @@ export const openRazorpayCheckoutFunction = (
         order_id: order.id,
         notes: order.notes,
         handler: async (response: any) => {
-            try {
-
-                const res = await api.post<ApiResponse>(URL, {
-                    ...response,
-                    planId: order.notes?.planId,
-                    billing: order.notes?.billing
-                });
-                if (res.data.success) {
-
-                    toast.success("payment successfull")
-                }
-            } catch (error) {
-                handleApiError(error)
-                console.log("error inside verify subscription payment ", error)
-            }
-
-
+            onHandle(order.notes.appOrderId, response)
         },
         prefill: {
             email: "user@example.com",

@@ -28,3 +28,21 @@ export type ChangeStatusPayload = {
   session?: ClientSession;
   reason?: string;
 }
+
+export type FailPaymentPayload = {
+  paymentId: string;
+  providerPaymentId: string;
+  reason: string;
+  session?: ClientSession;
+}
+
+export type ConfirmPaymentPayload = {
+  paymentId: string;
+  paymentMode: PaymentMode;
+  providerOrderId: string;
+  providerPaymentId: string;
+  currency: string;
+  amount: number;
+  session?: ClientSession;
+}
+

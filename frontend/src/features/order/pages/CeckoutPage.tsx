@@ -12,12 +12,15 @@ import { getGuestId } from "../../../shared/utils/guest";
 import { useCreateOrder } from "../hooks/use.create.order";
 import { handleApiError } from "../../../shared/utils/handle.api.error";
 import { openRazorpayCheckoutFunction } from "../../../shared/utils/razorpay";
+import { useNavigate } from "react-router-dom";
+import type { ApiResponse } from "../../../shared/types/api.types";
+import api from '../../../api/axios.instance'
 
 const CheckoutPage = () => {
     const guestId = getGuestId()
     const { data: checkoutData, isLoading: isCheckoutLoading, isError: isCheckoutError } = useGetCheckoutItems(guestId);
     const { mutateAsync: createOrder } = useCreateOrder();
-
+    const navigate = useNavigate()
     const checkoutSummary = checkoutData?.data;
     const checkoutItems = checkoutSummary?.items || [];
     const [formData, setFormData] = useState<OrderFormData>({
@@ -42,9 +45,19 @@ const CheckoutPage = () => {
         setErrors((prev) => ({ ...prev, [field]: undefined }));
     };
 
-    // const handlePaymentProcessing = (orderId: string) => {
-    //     navigate(`/order-status/${orderId}`)
-    // }
+    const handlePaymentProcessing = async (orderId: string, response: any) => {
+        try {
+
+            const res = await api.post<ApiResponse>("/orders/verify-payment", {
+                ...response,
+            });
+            navigate(`/order-status/${orderId}`)
+        } catch (error) {
+            handleApiError(error)
+            console.log("error inside verify subscription payment ", error)
+        }
+
+    }
 
     const handleSubmit = async () => {
         const newErrors = validateCheckoutForm(formData);
@@ -68,7 +81,7 @@ const CheckoutPage = () => {
                 guestId: guestId,
             });
 
-            openRazorpayCheckoutFunction(res?.data!, "/orders/verify-payment")
+            openRazorpayCheckoutFunction(res?.data!, handlePaymentProcessing)
 
         } catch (error) {
             const validateError = handleApiError(error);

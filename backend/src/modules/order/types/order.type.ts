@@ -95,11 +95,7 @@ export interface IRazorpayPayment {
   created_at: number;
 }
 
-export interface HandlePaymentFailureRequestDto {
-  razorpay_order_id: string;
-  razorpay_payment_id?: string;
-  failure_reason?: string;
-}
+
 
 export type AutoCancelPayload = {
   date: Date;

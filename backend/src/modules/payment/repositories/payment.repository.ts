@@ -7,7 +7,7 @@ import { PaymentModel } from "../infrastructure/payment.schema.js";
 import { PaymentMapper } from "../mappers/payment.mapper.js";
 
 import type { IPaymentRepository } from "./payment.repository.interface.js";
-import type { ChangeStatusPayload, PaymentStatus } from "../types/payment.type.js";
+import type { ChangeStatusPayload, ConfirmPaymentPayload, FailPaymentPayload, PaymentStatus } from "../types/payment.type.js";
 import type { ClientSession } from "mongoose";
 
 export class PaymentRepository implements IPaymentRepository {
@@ -109,6 +109,36 @@ export class PaymentRepository implements IPaymentRepository {
                     failureReason: "Auto cancelled due to payment timeout",
                 }
             },
+            session ? { session } : {}
+        );
+
+        if (result.matchedCount === 0) {
+            throw new Error("Payment not found");
+        }
+    }
+
+    //fail payment
+    async failPayment(payload: FailPaymentPayload): Promise<void> {
+        const { paymentId, reason, providerPaymentId, session } = payload;
+
+        const result = await PaymentModel.updateOne(
+            { _id: paymentId, status: "created" },
+            { $set: { status: "failed", failureReason: reason, providerPaymentId } },
+            session ? { session } : {}
+        );
+
+        if (result.matchedCount === 0) {
+            throw new Error("Payment not found");
+        }
+    }
+
+    //confirm payment
+    async confirmPayment(payload: ConfirmPaymentPayload): Promise<void> {
+        const { paymentId, providerPaymentId, currency, amount, session, paymentMode } = payload;
+
+        const result = await PaymentModel.updateOne(
+            { _id: paymentId, status: { $in: ["created", "authorized"] } },
+            { $set: { status: "captured", providerPaymentId, currency, amount, paymentMode } },
             session ? { session } : {}
         );
 

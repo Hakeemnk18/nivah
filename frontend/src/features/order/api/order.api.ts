@@ -1,5 +1,4 @@
 import api from "../../../api/axios.instance";
-import type { ApiResponse } from "../../../shared/types/api.types";
 import type { CreateOrderResponse, OrderPlacementPayload } from "../types/order.type";
 
 

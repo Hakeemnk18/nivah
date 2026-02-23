@@ -115,7 +115,7 @@ export class Payment {
         });
     }
 
-    fail(reason: string): Payment {
+    fail(reason: string, paymentId: string): Payment {
         if (!reason.trim()) {
             throw new Error("Failure reason is required");
         }
@@ -127,6 +127,7 @@ export class Payment {
         return new Payment({
             ...this,
             status: "failed",
+            providerPaymentId: paymentId,
             failureReason: reason.trim(),
         });
     }

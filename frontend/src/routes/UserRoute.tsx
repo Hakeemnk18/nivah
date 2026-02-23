@@ -9,6 +9,7 @@ const ProductDetailsPage = lazy(() => import("../features/products/pages/Product
 const CartPage = lazy(() => import("../features/cart/pages/CartPage"));
 const CheckoutPage = lazy(() => import("../features/order/pages/CeckoutPage"));
 const OrderStatusPage = lazy(() => import("../features/order/pages/PaymentProcessing"));
+const OrderSuccessPage = lazy(() => import("../features/order/pages/OrderSuccessPage"));
 const userRoutes = [
     {
         element: <LandingLayout />,
@@ -41,6 +42,10 @@ const userRoutes = [
             {
                 path: "order-status/:orderId",
                 element: <OrderStatusPage />,
+            },
+            {
+                path: "order-success",
+                element: <OrderSuccessPage />,
             },
         ],
     },

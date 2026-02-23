@@ -1,6 +1,6 @@
 import type { ApiResponse } from "../../../shared/types/api.types";
 
-export type OrderStatus = "pending" | "completed" | "cancelled";
+
 
 export type OrderView = {
     orderId: string;
@@ -138,4 +138,90 @@ export interface IRazorpayPayment {
     error_description?: string | undefined;
     created_at: number;
 }
+
+
+export type OrderStatus =
+    | "created"
+    | "confirmed"
+    | "accepted"
+    | "dispatched"
+    | "cancelled";
+
+export interface OrderItemView {
+    productId: string;
+    variantId: string;
+    size: string;
+    name: string;
+    price: number;
+    quantity: number;
+}
+
+export interface UserSnapshotView {
+    name: string;
+    email: string;
+    phone: string;
+    addressLine1: string;
+    addressLine2?: string;
+    city: string;
+    state: string;
+    pincode: string;
+}
+
+export interface OrderSummaryView {
+    id: string;
+    orderNumber: string;
+    userSnapshot: UserSnapshotView;
+    subtotal: number;
+    shippingFee: number;
+    totalAmount: number;
+    orderStatus: OrderStatus;
+    createdAt: string;
+    items: OrderItemView[];
+}
+
+export const mockOrder: OrderSummaryView = {
+    id: "ord_123456",
+    orderNumber: "NVH-2026-0001",
+    orderStatus: "confirmed",
+    createdAt: new Date().toISOString(),
+    subtotal: 3200,
+    shippingFee: 100,
+    totalAmount: 3300,
+    userSnapshot: {
+        name: "Muhammed Hakeem",
+        email: "hakeem@email.com",
+        phone: "9876543210",
+        addressLine1: "Iruvallur PO",
+        addressLine2: "Chellannur",
+        city: "Calicut",
+        state: "Kerala",
+        pincode: "673616",
+    },
+    items: [
+        {
+            productId: "p1",
+            variantId: "v1",
+            name: "Zero Gravity Hoodie",
+            size: "L",
+            price: 1600,
+            quantity: 2,
+        },
+        {
+            productId: "p1",
+            variantId: "v1",
+            name: "Zero Gravity Hoodie",
+            size: "L",
+            price: 1600,
+            quantity: 2,
+        },
+        {
+            productId: "p1",
+            variantId: "v1",
+            name: "Zero Gravity Hoodie",
+            size: "L",
+            price: 1600,
+            quantity: 2,
+        },
+    ],
+};
 

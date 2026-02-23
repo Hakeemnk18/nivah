@@ -2,11 +2,13 @@ import { AlertTriangle, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 
 type CheckoutErrorProps = {
+    title?: string;
     message?: string;
     onRetry?: () => void;
 };
 
 const CheckoutError = ({
+    title = "Checkout unavailable",
     message = "We couldn’t load your checkout details. Please try again.",
     onRetry,
 }: CheckoutErrorProps) => {
@@ -32,7 +34,7 @@ const CheckoutError = ({
 
             {/* Title */}
             <h2 className="text-xl font-semibold mb-2">
-                Checkout unavailable
+                {title}
             </h2>
 
             {/* Message */}

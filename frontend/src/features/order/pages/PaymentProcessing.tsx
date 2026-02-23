@@ -26,8 +26,9 @@ export default function PaymentProcessing() {
         const startPolling = () => {
             interval = setInterval(async () => {
                 try {
-                    const res = await api.get(`/orders/${orderId}/status`);
-                    const currentStatus: OrderStatus = res.data.status;
+
+                    const res = await api.get(`/orders/${orderId}/order-status`);
+                    const currentStatus: OrderStatus = res.data.data;
 
                     setStatus(currentStatus);
 
