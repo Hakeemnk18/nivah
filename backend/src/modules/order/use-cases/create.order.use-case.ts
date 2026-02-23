@@ -40,21 +40,21 @@ export class CreateOrderUseCase implements ICreateOrderUseCase {
    ========================================================= */
 
 
-        const cart = await this._cartRepository.findByGuestId(
-            data.guestId,
+        const cart = await this._cartRepository.findById(
+            data.cartId,
         );
 
 
-        if (!cart || cart.items.length === 0) {
+        if (!cart || cart.guestId !== data.guestId) {
             throw new CustomError(
-                ResponseMessages.CART_IS_EMPTY,
+                ResponseMessages.CART_NOT_FOUND,
                 HttpStatusCode.BAD_REQUEST,
             );
         }
 
-        if (cart.guestId !== data.guestId) {
+        if (cart.items.length === 0) {
             throw new CustomError(
-                ResponseMessages.CART_NOT_FOUND,
+                ResponseMessages.CART_IS_EMPTY,
                 HttpStatusCode.BAD_REQUEST,
             );
         }
@@ -117,6 +117,12 @@ export class CreateOrderUseCase implements ICreateOrderUseCase {
                 quantity: cartItem.quantity,
                 price: latestPrice,
             });
+
+            await this._productRepository.decrementStock({
+                productId: cartItem.productId,
+                variantId: cartItem.variantId,
+                quantity: cartItem.quantity,
+            });
         }
 
         /* =========================================================
@@ -167,7 +173,6 @@ export class CreateOrderUseCase implements ICreateOrderUseCase {
             paymentId: null,
         });
 
-        console.log("orderEntity", orderEntity)
         /* =========================================================
            STEP 5 — SAVE ORDER
         ========================================================= */
@@ -181,14 +186,13 @@ export class CreateOrderUseCase implements ICreateOrderUseCase {
             );
         }
 
-        console.log("order created ")
         /* =========================================================
            CREATE RAZORPAY ORDER
            Amount must be in paise
         ========================================================= */
 
         const razorpayOrder = await this._paymentGateway.createOrder({
-            amount: totalRupees,
+            amount: totalRupees * 100,
             currency: 'INR',
             receipt: `rcpt_${Date.now()}`,
         })
@@ -206,9 +210,11 @@ export class CreateOrderUseCase implements ICreateOrderUseCase {
             status: mapRazorpayStatus(razorpayOrder.status),
             paymentMode: "upi",
         })
-        console.log("new payment ", newPayment)
+
         await this._paymentRepository.create(newPayment);
-        console.log("payment created")
+
+
+
 
         return razorpayOrder
     }

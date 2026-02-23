@@ -14,11 +14,13 @@ import type {
   PaginatedUserProductList,
   ProductListView,
   ProductView,
+  StockUpdateProps,
   UpdateVariantParams,
   UserProductListView,
   UserProductView,
 } from "../types/product.type.js";
 import type { AddVariantRequestDto } from "../dtos/variant.dto.js";
+import type { ClientSession } from "mongoose";
 
 const { ObjectId } = Types;
 
@@ -39,12 +41,17 @@ export class ProductRepository implements IProductRepository {
     return domainProduct;
   }
 
-  async findById(id: string): Promise<Product | null> {
+  async findById(id: string, session: ClientSession): Promise<Product | null> {
     if (!ObjectId.isValid(id)) {
       return null;
     }
+    const query = ProductModel.findById(id).lean();
 
-    const foundDocument = await ProductModel.findOne({ _id: id }).lean();
+    if (session) {
+      query.session(session);
+    }
+
+    const foundDocument = await query;
     return ProductMapper.toDomain(foundDocument);
   }
 
@@ -252,5 +259,46 @@ export class ProductRepository implements IProductRepository {
     return documents
       .map(ProductMapper.toUserListView)
       .filter((p): p is UserProductListView => p !== null);
+  }
+
+  async decrementStock(params: StockUpdateProps): Promise<void> {
+    const { productId, variantId, quantity, session } = params;
+
+    await ProductModel.updateOne(
+      {
+        _id: new Types.ObjectId(productId),
+      },
+      {
+        $inc: {
+          "variants.$[variant].stock": -quantity,
+        },
+      },
+      {
+        arrayFilters: [{ "variant._id": new Types.ObjectId(variantId) }],
+        ...(session && { session }),
+      },
+    );
+  }
+
+  async incrementStock(params: StockUpdateProps): Promise<void> {
+
+    const { productId, variantId, quantity, session } = params;
+
+    await ProductModel.updateOne(
+      {
+        _id: new Types.ObjectId(productId),
+      },
+      {
+        $inc: {
+          "variants.$[variant].stock": quantity,
+        },
+      },
+      {
+        arrayFilters: [
+          { "variant._id": new Types.ObjectId(variantId) },
+        ],
+        ...(session && { session }),
+      },
+    );
   }
 }

@@ -216,9 +216,13 @@ export const ResponseMessages = {
   ORDER_STOCK_UPDATED_SUCCESS: "Stock updated successfully",
   INVALID_ORDER_TOTAL: "Invalid order total",
   FAILED_TO_CREATE_ORDER: "Failed to create order",
+  PAYMENT_NOT_CAPTURED: "Payment no captured",
 
   /* ================= ORDER NUMBER ================= */
 
   ORDER_NUMBER_GENERATION_FAILED: "Failed to generate order number",
+  INVALID_PAYMENT_AMOUNT: "Invalid payment amount",
+  INVALID_PAYMENT_ORDER_ID: "Invalid payment order ID",
+  ORDER_ALREADY_CONFIRMED: "Order is already confirmed",
 
 }

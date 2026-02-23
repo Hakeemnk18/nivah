@@ -1,3 +1,4 @@
+import type { ClientSession } from "mongoose";
 
 export const PAYMENT_STATUS = [
   "created",
@@ -20,3 +21,10 @@ export const PAYMENT_MODE = [
 
 export type PaymentMode =
   (typeof PAYMENT_MODE)[number];
+
+export type ChangeStatusPayload = {
+  orderId: string;
+  status: PaymentStatus;
+  session?: ClientSession;
+  reason?: string;
+}

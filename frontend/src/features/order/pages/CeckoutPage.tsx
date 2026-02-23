@@ -9,23 +9,27 @@ import { validateCheckoutForm } from "../utils/checkout.form.validation";
 import EmptyCart from "../../cart/component/EmptyCart";
 import { useGetCheckoutItems } from "../../cart/hooks/use.get.checkout.item";
 import { getGuestId } from "../../../shared/utils/guest";
+import { useCreateOrder } from "../hooks/use.create.order";
+import { handleApiError } from "../../../shared/utils/handle.api.error";
+import { openRazorpayCheckoutFunction } from "../../../shared/utils/razorpay";
 
 const CheckoutPage = () => {
     const guestId = getGuestId()
     const { data: checkoutData, isLoading: isCheckoutLoading, isError: isCheckoutError } = useGetCheckoutItems(guestId);
+    const { mutateAsync: createOrder } = useCreateOrder();
+
     const checkoutSummary = checkoutData?.data;
     const checkoutItems = checkoutSummary?.items || [];
     const [formData, setFormData] = useState<OrderFormData>({
-        name: "",
-        email: "",
-        phone: "",
-        addressLine1: "",
-        addressLine2: "",
-        city: "",
-        state: "",
-        pincode: "",
+        name: "lalu",
+        email: "lalu@gmail.com",
+        phone: "9856256545",
+        addressLine1: "iruvallur, iruvallur po",
+        addressLine2: "chellannur",
+        city: "kannur",
+        state: "kerala",
+        pincode: "670641",
     });
-
     const [errors, setErrors] = useState<OrderFormErrors>({});
 
     const handleChange = (
@@ -38,7 +42,11 @@ const CheckoutPage = () => {
         setErrors((prev) => ({ ...prev, [field]: undefined }));
     };
 
-    const handleSubmit = () => {
+    // const handlePaymentProcessing = (orderId: string) => {
+    //     navigate(`/order-status/${orderId}`)
+    // }
+
+    const handleSubmit = async () => {
         const newErrors = validateCheckoutForm(formData);
 
         if (Object.keys(newErrors).length) {
@@ -46,8 +54,29 @@ const CheckoutPage = () => {
             return;
         }
 
-        // 🔥 PLACE ORDER LOGIC LATER
-        console.log("valid form", formData);
+        try {
+            const res = await createOrder({
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                addressLine1: formData.addressLine1,
+                addressLine2: formData.addressLine2,
+                city: formData.city,
+                state: formData.state,
+                pincode: formData.pincode,
+                cartId: checkoutSummary?.cartId!,
+                guestId: guestId,
+            });
+
+            openRazorpayCheckoutFunction(res?.data!, "/orders/verify-payment")
+
+        } catch (error) {
+            const validateError = handleApiError(error);
+            if (validateError) {
+                setErrors(validateError);
+            }
+        }
+
     };
 
     return (

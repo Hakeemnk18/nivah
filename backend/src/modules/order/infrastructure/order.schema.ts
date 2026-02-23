@@ -33,6 +33,7 @@ export interface IOrder extends Document {
   shippingFee: number;
   totalAmount: number;
   orderStatus: OrderStatus;
+  cancelReason?: string;
   createdAt?: Date;
   confirmedAt?: Date;
   acceptedAt?: Date;
@@ -106,6 +107,11 @@ const orderSchema = new Schema<IOrder>(
       index: true,
     },
 
+    cancelReason: {
+      type: String,
+      trim: true,
+    },
+
     confirmedAt: Date,
     acceptedAt: Date,
     dispatchedAt: Date,
@@ -165,7 +171,7 @@ const orderSchema = new Schema<IOrder>(
     },
   },
   {
-    timestamps: true, // createdAt + updatedAt
+    timestamps: true,
   }
 );
 

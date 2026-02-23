@@ -1,5 +1,6 @@
 import { Cart } from "../entities/cart.entity.js";
 import type { AddCartItemPayload, CartView, CheckoutView, FindSameItemInCartPayload, PushNewItemPayload, RemoveCartItemPayload } from "../types/cart.type.js";
+import type { ClientSession } from "mongoose";
 
 export interface ICartRepository {
   create(cartEntity: Cart): Promise<Cart>;
@@ -27,4 +28,6 @@ export interface ICartRepository {
   ): Promise<boolean>;
 
   getCheckoutViewByGuestId(guestId: string): Promise<CheckoutView | null>;
+
+  emptyCart(guestId: string, session?: ClientSession): Promise<void>;
 }

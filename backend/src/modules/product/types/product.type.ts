@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { Types, type ClientSession } from "mongoose";
 import type { Product } from "../entities/product.entity.js";
 import type { IdName } from "../../../core/shared/types/id.name.type.js";
 
@@ -89,3 +89,10 @@ export type PaginatedUserProductList = {
   nextPage: number | null;
   hasMore: boolean;
 };
+
+export type StockUpdateProps = {
+  productId: string;
+  variantId: string;
+  quantity: number;
+  session?: ClientSession;
+}

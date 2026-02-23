@@ -9,11 +9,13 @@ import type {
   UpdateVariantParams,
   UserProductListView,
   UserProductView,
+  StockUpdateProps
 } from "../types/product.type.js";
+import type { ClientSession } from "mongoose";
 
 export interface IProductRepository {
   create(productEntity: Product): Promise<Product>;
-  findById(id: string): Promise<Product | null>;
+  findById(id: string, session?: ClientSession): Promise<Product | null>;
   save(productEntity: Product): Promise<Product>;
   findAllForAdmin(allDoc: IGetAllDocDB): Promise<ProductListView[]>;
   countDocument(query: Record<string, any>): Promise<number>;
@@ -25,7 +27,6 @@ export interface IProductRepository {
     productId: string,
     dto: AddVariantProps[]
   ): Promise<Product | null>;
-
   updateVariantById(
     params: UpdateVariantParams,
   ): Promise<Product | null>
@@ -34,4 +35,6 @@ export interface IProductRepository {
   ): Promise<PaginatedUserProductList>
 
   findRelatedProducts(categoryId: string): Promise<UserProductListView[]>
+  decrementStock(params: StockUpdateProps): Promise<void>
+  incrementStock(params: StockUpdateProps): Promise<void>
 }

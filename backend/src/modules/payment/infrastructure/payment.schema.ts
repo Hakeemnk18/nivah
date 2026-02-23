@@ -10,22 +10,14 @@ export interface IPayment extends Document {
   orderId: Types.ObjectId;
   userId: Types.ObjectId;
   guestId: string;
-
   provider: string;
-
   providerOrderId: string;
   providerPaymentId?: string;
-  providerSignature?: string;
-
   amount: number;
   currency: string;
-
-  status: PaymentStatus;
-
+  status: PaymentStatus
   paymentMode?: PaymentMode;
-
   failureReason?: string;
-
   createdAt: Date;
   updatedAt: Date;
 }
@@ -40,7 +32,6 @@ const paymentSchema = new Schema<IPayment>(
       required: true,
       index: true,
     },
-
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -73,10 +64,6 @@ const paymentSchema = new Schema<IPayment>(
       trim: true,
     },
 
-    providerSignature: {
-      type: String,
-      trim: true,
-    },
 
     amount: {
       type: Number,

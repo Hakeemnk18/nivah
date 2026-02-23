@@ -34,6 +34,7 @@ export type OrderProps = {
   shippingFee: number;
   totalAmount: number;
   orderStatus?: OrderStatus;
+  cancelReason?: string | undefined;
   paymentId?: string | null;
   items: OrderItem[];
   createdAt?: Date | undefined;
@@ -55,6 +56,7 @@ export class Order {
   public readonly shippingFee: number;
   public readonly totalAmount: number;
   public readonly orderStatus: OrderStatus;
+  public readonly cancelReason?: string | undefined;
   public readonly paymentId?: string | null;
   public readonly items: OrderItem[];
   public readonly createdAt?: Date | undefined;
@@ -139,6 +141,7 @@ export class Order {
     this.totalAmount = props.totalAmount;
 
     this.orderStatus = props.orderStatus ?? "created";
+    this.cancelReason = props.cancelReason ?? undefined;
 
     this.paymentId = props.paymentId ?? null;
 

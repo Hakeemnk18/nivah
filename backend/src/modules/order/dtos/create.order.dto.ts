@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { GuestIdSchema } from "../../../core/utils/guest.id.validation.js";
+import { ObjectIdSchema } from "../../../core/utils/object.id.validation.js";
 
 /* ---------- ALLOWED STATES ---------- */
 
@@ -31,6 +32,7 @@ const cityRegex = /^[A-Za-z\s.-]+$/;
 export const CreateOrderSchema = z
     .object({
         guestId: GuestIdSchema,
+        cartId: ObjectIdSchema,
         name: cleanString("Name", 2, 60)
             .regex(/^[A-Za-z\s.'-]+$/, "Invalid name format"),
 

@@ -7,8 +7,17 @@ import { Cart } from "../entities/cart.entity.js";
 import { CartModel } from "../infrastructure/cart.schema.js";
 import { CartMapper } from "../mappers/cart.mapper.js";
 import type { ICartRepository } from "./cart.repository.interface.js";
-import type { AddCartItemPayload, CartView, CheckoutView, FindSameItemInCartPayload, PushNewItemPayload, RemoveCartItemPayload } from "../types/cart.type.js";
+import type {
+  AddCartItemPayload,
+  CartView,
+  CheckoutView,
+  FindSameItemInCartPayload,
+  PushNewItemPayload,
+  RemoveCartItemPayload
+} from "../types/cart.type.js";
+import type { ClientSession } from "mongoose";
 const DELIVERY_CHARGE = Number(process.env.DELIVERY_CHARGE)
+
 
 const { ObjectId } = Types;
 
@@ -412,5 +421,26 @@ export class CartRepository implements ICartRepository {
       deliveryCharge: DELIVERY_CHARGE,
       total
     });
+  }
+
+  async emptyCart(guestId: string, session?: ClientSession): Promise<void> {
+    const options = session
+      ? { session }
+      : {};
+
+    await CartModel.updateOne(
+      {
+        guestId,
+        isActive: true,
+      },
+      {
+        $set: {
+          items: [],
+        },
+      },
+      options
+    )
+
+
   }
 }
