@@ -1,5 +1,5 @@
 import { Payment } from "../entities/payment.entity.js";
-import type { ChangeStatusPayload, PaymentStatus } from "../types/payment.type.js";
+import type { ChangeStatusPayload, ConfirmPaymentPayload, FailPaymentPayload, PaymentStatus } from "../types/payment.type.js";
 import type { ClientSession } from "mongoose";
 
 
@@ -10,4 +10,6 @@ export interface IPaymentRepository {
     changeStatus(payload: ChangeStatusPayload): Promise<void>;
     findByProviderOrderId(providerOrderId: string, session?: ClientSession): Promise<Payment | null>;
     autoCancelPayment(orderIds: string[], session?: ClientSession): Promise<void>;
+    failPayment(payload: FailPaymentPayload): Promise<void>;
+    confirmPayment(payload: ConfirmPaymentPayload): Promise<void>;
 }

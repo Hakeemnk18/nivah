@@ -212,10 +212,11 @@ export class CreateOrderUseCase implements ICreateOrderUseCase {
         })
 
         await this._paymentRepository.create(newPayment);
-
-
-
-
-        return razorpayOrder
+        return {
+            ...razorpayOrder,
+            notes: {
+                appOrderId: createdOrder.id,
+            }
+        }
     }
 }

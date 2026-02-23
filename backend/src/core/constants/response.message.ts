@@ -224,5 +224,6 @@ export const ResponseMessages = {
   INVALID_PAYMENT_AMOUNT: "Invalid payment amount",
   INVALID_PAYMENT_ORDER_ID: "Invalid payment order ID",
   ORDER_ALREADY_CONFIRMED: "Order is already confirmed",
+  PAYMENT_ALREADY_CAPTURED: "Payment already captured",
 
 }

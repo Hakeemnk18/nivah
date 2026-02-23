@@ -1,11 +1,12 @@
 import { Toaster } from "react-hot-toast"
 import { Outlet } from "react-router-dom"
 import { useAuthUser } from "./features/auth/hooks/useAuthUser";
+import ScrollToTop from "./shared/components/ScrollToTop";
 
 function App() {
-  const { isLoading} = useAuthUser();
-  if(isLoading) return <h1>Loading.....</h1>
-  
+  const { isLoading } = useAuthUser();
+  if (isLoading) return <h1>Loading.....</h1>
+
   return (
     <>
       <Toaster
@@ -17,6 +18,7 @@ function App() {
           },
         }}
       />
+      <ScrollToTop />
       <Outlet />
     </>
   )

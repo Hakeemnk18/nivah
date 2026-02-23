@@ -41,9 +41,7 @@ export default function ProductDetailsPage() {
 
   const selectedVariant = variantData?.data;
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [productId]);
+
 
   useEffect(() => {
     if (product) {

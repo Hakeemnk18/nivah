@@ -30,6 +30,8 @@ router.post('/verify-payment',
 
 router.get('/:orderId/order-status',
   (req, res) => orderController.getOrderStatus(req, res))
-
+router.post('/payment-failure',
+  (req, res) => orderController.handlePaymentFailure(req, res)
+)
 
 export default router

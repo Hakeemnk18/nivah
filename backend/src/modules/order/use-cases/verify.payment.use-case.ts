@@ -121,27 +121,22 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
         }
 
 
-        //  UPDATE PAYMENT
 
-        const newPayment = new Payment({
-            id: payment.id,
-            orderId: payment.orderId,
-            userId: payment.userId,
-            guestId: payment.guestId,
-            provider: "razorpay",
-            providerOrderId: razorpayPayment.id,
-            amount: razorpayPayment.amount,
-            currency: razorpayPayment.currency,
-            status: mapRazorpayStatus(razorpayPayment.status),
-            paymentMode: mapPaymentMode(razorpayPayment.method),
-        })
         const session = await mongoose.startSession();
         try {
             session.startTransaction();
-            await this._paymentRepository.save(newPayment, session);
+            await this._paymentRepository.confirmPayment({
+                paymentId: payment.id!,
+                providerOrderId: razorpayPayment.order_id,
+                providerPaymentId: razorpayPayment.id,
+                currency: razorpayPayment.currency,
+                amount: razorpayPayment.amount,
+                paymentMode: mapPaymentMode(razorpayPayment.method),
+                session,
+            });
 
             //  UPDATE ORDER STATUS
-            // await this._orderRepository.changeStatus(payment.orderId, "confirmed", session)
+            await this._orderRepository.confirmOrder(payment.orderId, session)
 
             //empty cart
             await this._cartRepository.emptyCart(payment.guestId!, session)
