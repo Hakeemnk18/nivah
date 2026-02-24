@@ -9,12 +9,14 @@ import { useUserProducts } from "../../hook/use.user.products";
 import ProductEmptyState from "./ProductEmptyState";
 import { useParentCategories } from "../../../category/hooks/use.parent.categories";
 import { useSubCategoriesByIdForUser } from "../../../category/hooks/use.sub.categories.by.id";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function ProductListing() {
+  const [searchParams] = useSearchParams();
+  const parentCategoryId = searchParams.get("parentCategoryId");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
-  const [parentId, setParentId] = useState<string | undefined>();
+  const [parentId, setParentId] = useState<string | undefined>(parentCategoryId || undefined);
   const [childId, setChildId] = useState<string | undefined>();
   const [firstParentId, setFirstParentId] = useState<string | undefined>();
   const navigate = useNavigate();

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { OrderSummaryView } from "../types/order.type";
 
 interface OrderSummaryCardProps {
@@ -64,6 +65,12 @@ const OrderSummaryCard = ({ order, onDownloadInvoice, isDownloading }: OrderSumm
                     Invoice includes tax breakdown & order details
                 </p>
 
+                <Link
+                    to="/products"
+                    className="w-full mt-4 border border-[var(--accent)] text-[var(--accent)] font-semibold rounded-xl py-3 text-center hover:bg-[var(--accent)] hover:text-black transition"
+                >
+                    Continue Shopping
+                </Link>
             </div>
         </aside>
     );

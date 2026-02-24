@@ -11,6 +11,7 @@ export const useAdminProducts = (
   sort: string,
   filters: Record<string, any>
 ) => {
+
   const queryKey: AdminProductQueryKey = [
     "admin-products",
     { currentPage, search, sort, filters },
@@ -25,10 +26,10 @@ export const useAdminProducts = (
     });
 
   return useQuery<
-    GetProductListResponse, 
-    Error,                  
-    GetProductListResponse, 
-    AdminProductQueryKey    
+    GetProductListResponse,
+    Error,
+    GetProductListResponse,
+    AdminProductQueryKey
   >({
     queryKey,
     queryFn,
