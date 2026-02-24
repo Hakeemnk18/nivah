@@ -35,7 +35,7 @@ export default function PaymentProcessing() {
                     if (currentStatus === "confirmed") {
                         clearInterval(interval);
                         clearTimeout(timer);
-                        navigate(`/order-success/${orderId}`);
+                        navigate(`/order-success?orderId=${orderId}`);
                     }
 
                     if (currentStatus === "cancelled") {

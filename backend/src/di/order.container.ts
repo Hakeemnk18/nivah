@@ -13,6 +13,10 @@ import type { IAutoCancelOrderUseCase } from "../modules/order/use-cases/interfa
 import { AutoCancelOrderUseCase } from "../modules/order/use-cases/auto-cancel-order.use-case.js";
 import type { IHandlePaymentFailureUseCase } from "../modules/order/use-cases/interfaces/failure.payment.use-case.interface.js";
 import { HandlePaymentFailureUseCase } from "../modules/order/use-cases/failure.payment.use-case.js";
+import type { IGetOrderSummaryUseCase } from "../modules/order/use-cases/interfaces/get.order.summery.use-case.interface.js";
+import { GetOrderSummaryUseCase } from "../modules/order/use-cases/get.order.summery.use-case.js";
+import type { IDownloadInvoiceUseCase } from "../modules/order/use-cases/interfaces/download.invoice.use-case.interface.js";
+import { DownloadInvoiceUseCase } from "../modules/order/use-cases/download.invoice.use-case.js";
 
 export const registerOrderDependencies = () => {
     container.register<IOrderRepository>("IOrderRepository", {
@@ -41,6 +45,14 @@ export const registerOrderDependencies = () => {
 
     container.register<IHandlePaymentFailureUseCase>("IHandlePaymentFailureUseCase", {
         useClass: HandlePaymentFailureUseCase,
+    });
+
+    container.register<IGetOrderSummaryUseCase>("IGetOrderSummaryUseCase", {
+        useClass: GetOrderSummaryUseCase,
+    });
+
+    container.register<IDownloadInvoiceUseCase>("IDownloadInvoiceUseCase", {
+        useClass: DownloadInvoiceUseCase,
     });
 
 };

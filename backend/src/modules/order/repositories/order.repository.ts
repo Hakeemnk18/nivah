@@ -12,6 +12,7 @@ import type { IGetAllDocDB } from "../../../core/shared/interfaces/get.all.doc.i
 import type {
   AutoCancelPayload,
   OrderListView,
+  OrderSummaryView,
 } from "../types/order.type.js";
 import type { OrderStatus } from "../types/order.type.js";
 import type { ClientSession } from "mongoose";
@@ -195,5 +196,11 @@ export class OrderRepository implements IOrderRepository {
         ResponseMessages.ORDER_NOT_FOUND,
       )
     }
+  }
+
+  // get order summary
+  async getSummary(orderId: string, guestId: string): Promise<OrderSummaryView | null> {
+    const document = await OrderModel.findOne({ _id: orderId, guestId }).lean();
+    return OrderMapper.toSummaryView(document);
   }
 }

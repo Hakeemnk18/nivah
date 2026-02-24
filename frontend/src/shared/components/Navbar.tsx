@@ -29,10 +29,10 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
     <>
       <nav
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${mode === "landing"
-            ? scrolled
-              ? "backdrop-blur bg-black/30"
-              : "bg-transparent"
-            : "bg-[var(--card)]"
+          ? scrolled
+            ? "backdrop-blur bg-black/30"
+            : "bg-transparent"
+          : "bg-[var(--card)]"
           }`}
         style={{
           borderColor: scrolled ? "var(--card)" : "transparent",
@@ -70,16 +70,16 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
               }`}
           >
             <li>Home</li>
-            <li>Shop</li>
+            <li onClick={() => navigate("/products")} className="cursor-pointer">Shop</li>
             <li>About</li>
           </ul>
 
           <div
             className={`flex items-center gap-4 md:flex-1 md:justify-end ${mode === "landing"
-                ? scrolled
-                  ? "text-[var(--text)]"
-                  : "text-white"
-                : "text-[var(--text)]"
+              ? scrolled
+                ? "text-[var(--text)]"
+                : "text-white"
+              : "text-[var(--text)]"
               }`}
           >
             <ShoppingCart

@@ -5,6 +5,8 @@ import type { ITokenService } from "../core/ports/token.service.interface.js";
 import { JwtService } from "../infrastructure/services/jwt.service.js";
 import type { IPaymentGateway } from "../core/ports/payment.service.interface.js";
 import { RazorpayService } from "../infrastructure/services/payment.service.js";
+import type { IInvoiceService } from "../core/ports/invoice.service.interface.js";
+import { InvoiceService } from "../infrastructure/services/Invoice.service.js";
 
 
 
@@ -18,6 +20,10 @@ export const registerCommonDependencies = () => {
 
     container.register<IPaymentGateway>("IPaymentGateway", {
         useClass: RazorpayService,
+    });
+
+    container.register<IInvoiceService>("IInvoiceService", {
+        useClass: InvoiceService,
     });
 
 };

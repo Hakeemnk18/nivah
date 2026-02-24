@@ -148,8 +148,8 @@ export type OrderStatus =
     | "cancelled";
 
 export interface OrderItemView {
+    itemId: string;
     productId: string;
-    variantId: string;
     size: string;
     name: string;
     price: number;
@@ -179,6 +179,8 @@ export interface OrderSummaryView {
     items: OrderItemView[];
 }
 
+export type OrderSummaryResponse = ApiResponse<OrderSummaryView>
+
 export const mockOrder: OrderSummaryView = {
     id: "ord_123456",
     orderNumber: "NVH-2026-0001",
@@ -200,23 +202,23 @@ export const mockOrder: OrderSummaryView = {
     items: [
         {
             productId: "p1",
-            variantId: "v1",
+            itemId: "i1",
             name: "Zero Gravity Hoodie",
             size: "L",
             price: 1600,
             quantity: 2,
         },
         {
-            productId: "p1",
-            variantId: "v1",
+            productId: "p2",
+            itemId: "i2",
             name: "Zero Gravity Hoodie",
             size: "L",
             price: 1600,
             quantity: 2,
         },
         {
-            productId: "p1",
-            variantId: "v1",
+            productId: "p3",
+            itemId: "i3",
             name: "Zero Gravity Hoodie",
             size: "L",
             price: 1600,
