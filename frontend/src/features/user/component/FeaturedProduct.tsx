@@ -4,13 +4,13 @@ import FeaturedProductSkeleton from "./FeaturedProductSkeleton";
 import { useFeaturedProducts } from "../../products/hook/use.featured.product";
 import type { UserProductListItem } from "../../products/type/product.type";
 import { getGridClass } from "../../../shared/utils/grid.style";
-
+import { useNavigate } from "react-router-dom";
 
 
 
 
 export default function FeaturedProducts() {
-
+    const navigate = useNavigate();
     const { data, isLoading, isError } = useFeaturedProducts();
     let products: UserProductListItem[] = [];
     //const isLoading = false;
@@ -64,7 +64,9 @@ export default function FeaturedProducts() {
                     <div className={getGridWrapperClass(products.length)}>
                         <ul className={getGridClass(products.length)}>
                             {products.map((product) => (
-                                <li key={product.id} className="text-center">
+                                <li
+                                    onClick={() => navigate(`/productDetails?productId=${product.id}`)}
+                                    key={product.id} className="text-center cursor-pointer">
                                     <figure>
                                         <img
                                             src={product.image}

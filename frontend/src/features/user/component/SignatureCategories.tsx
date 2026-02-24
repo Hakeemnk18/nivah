@@ -2,7 +2,7 @@ import EmptyState from "../../../shared/components/EmptyState";
 import SectionTitle from "../../../shared/components/SectionTitle";
 import { getGridClass } from "../../../shared/utils/grid.style";
 import { useSignatureCategories } from "../../category/hooks/use.signature.categories";
-
+import { useNavigate } from "react-router-dom";
 
 type SignatureCategory = {
   id: string;
@@ -14,8 +14,9 @@ type SignatureCategory = {
 
 export default function SignatureCategories() {
 
-  
+
   const { data, isLoading, isError } = useSignatureCategories();
+  const navigate = useNavigate();
   let categories: SignatureCategory[] = [];
   if (data?.data) {
     categories = data.data;
@@ -44,7 +45,9 @@ export default function SignatureCategories() {
         {!isLoading && categories.length > 0 && (
           <ul className={getGridClass(categories.length)}>
             {categories.map((category) => (
-              <li key={category.id} className="text-center">
+              <li
+                onClick={() => navigate(`/products?parentCategoryId=${category.id}`)}
+                key={category.id} className="text-center cursor-pointer">
                 <figure>
                   <img
                     src={category.image}

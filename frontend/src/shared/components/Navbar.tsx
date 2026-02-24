@@ -69,9 +69,9 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
                 : "text-[var(--text)]"
               }`}
           >
-            <li>Home</li>
+            <li onClick={() => navigate('/')} className="cursor-pointer">Home</li>
             <li onClick={() => navigate("/products")} className="cursor-pointer">Shop</li>
-            <li>About</li>
+            <li onClick={() => navigate('/about')} className="cursor-pointer">About</li>
           </ul>
 
           <div
@@ -83,6 +83,7 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
               }`}
           >
             <ShoppingCart
+              className="cursor-pointer"
               onClick={() => navigate("/cart")}
               size={20} />
             <ThemeToggle />

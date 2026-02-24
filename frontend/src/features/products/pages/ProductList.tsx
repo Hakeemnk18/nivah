@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaTrash, FaUnlock, FaEye } from "react-icons/fa";
+import { FaTrash, FaUnlock, } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 import TableSearch from "../../admin/components/table/Search";
@@ -94,6 +94,7 @@ const ProductTable = () => {
     useBlockProduct();
   const { mutateAsync: unblockProduct, isPending: isUnblocking } =
     useUnblockProduct();
+
 
   const { data, isLoading, isFetching, isError, refetch } = useAdminProducts(
     currentPage,
