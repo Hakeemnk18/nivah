@@ -1,5 +1,5 @@
 import { Order } from "../entities/order.entity.js";
-import type { OrderListView } from "../types/order.type.js";
+import type { OrderListView, OrderSummaryView } from "../types/order.type.js";
 
 
 export class OrderMapper {
@@ -107,6 +107,46 @@ export class OrderMapper {
       acceptedAt: orderEntity.acceptedAt,
       dispatchedAt: orderEntity.dispatchedAt,
       cancelledAt: orderEntity.cancelledAt,
+    };
+  }
+
+  static toSummaryView(orderModelData: any): OrderSummaryView | null {
+    if (!orderModelData) return null;
+
+    const id =
+      orderModelData._id?.toString() ||
+      orderModelData.id?.toString();
+
+    if (!id) {
+      console.error("Order data missing ID:", orderModelData);
+      return null;
+    }
+
+    return {
+      id,
+      orderNumber: orderModelData.orderNumber,
+      userSnapshot: {
+        name: orderModelData.userSnapshot.name,
+        email: orderModelData.userSnapshot.email,
+        phone: orderModelData.userSnapshot.phone,
+        addressLine1: orderModelData.userSnapshot.addressLine1,
+        addressLine2: orderModelData.userSnapshot.addressLine2,
+        city: orderModelData.userSnapshot.city,
+        state: orderModelData.userSnapshot.state,
+        pincode: orderModelData.userSnapshot.pincode,
+      },
+      subtotal: orderModelData.subtotal,
+      shippingFee: orderModelData.shippingFee,
+      totalAmount: orderModelData.totalAmount,
+      orderStatus: orderModelData.orderStatus,
+      createdAt: orderModelData.createdAt,
+      items: orderModelData.items.map((item: any) => ({
+        itemId: item._id.toString(),
+        productId: item.productId,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+      })),
     };
   }
 

@@ -17,6 +17,7 @@ export type OrderItemView = {
   productId: string;
   name: string;
   price: number;
+  size: string;
   quantity: number;
 };
 
@@ -121,6 +122,30 @@ export interface RazorpayWebhookEvent {
       };
     };
   };
+}
+
+
+export interface UserSnapshotView {
+  name: string;
+  email: string;
+  phone: string;
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  state: string;
+  pincode: string;
+}
+
+export interface OrderSummaryView {
+  id: string;
+  orderNumber: string;
+  userSnapshot: UserSnapshotView;
+  subtotal: number;
+  shippingFee: number;
+  totalAmount: number;
+  orderStatus: OrderStatus;
+  createdAt: string;
+  items: OrderItemView[];
 }
 
 

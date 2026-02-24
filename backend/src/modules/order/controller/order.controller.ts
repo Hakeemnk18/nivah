@@ -12,6 +12,9 @@ import type { IGetOrderStatusUseCase } from "../use-cases/interfaces/get.order.s
 import { validateObjectId } from "../../../core/utils/validate.object.id.helper.js";
 import type { IHandlePaymentFailureUseCase } from "../use-cases/interfaces/failure.payment.use-case.interface.js";
 import { HandlePaymentFailureSchema } from "../dtos/failure.order.dto.js";
+import type { IGetOrderSummaryUseCase } from "../use-cases/interfaces/get.order.summery.use-case.interface.js";
+import { GuestIdSchema } from "../../../core/utils/guest.id.validation.js";
+import type { IDownloadInvoiceUseCase } from "../use-cases/interfaces/download.invoice.use-case.interface.js";
 
 @injectable()
 export class OrderController implements IOrderController {
@@ -27,6 +30,12 @@ export class OrderController implements IOrderController {
 
         @inject("IHandlePaymentFailureUseCase")
         private readonly _handlePaymentFailureUseCase: IHandlePaymentFailureUseCase,
+
+        @inject("IGetOrderSummaryUseCase")
+        private readonly _getOrderSummaryUseCase: IGetOrderSummaryUseCase,
+
+        @inject("IDownloadInvoiceUseCase")
+        private readonly _downloadInvoiceUseCase: IDownloadInvoiceUseCase,
     ) { }
 
     async createOrder(req: Request, res: Response): Promise<void> {
@@ -94,6 +103,47 @@ export class OrderController implements IOrderController {
         } catch (error) {
             handleError(res, error);
             console.log("error in handle payment failure controller ", error)
+        }
+    }
+
+    async getOrderSummary(req: Request, res: Response): Promise<void> {
+        try {
+            const orderId = req.params.orderId;
+            const guestId = GuestIdSchema.parse(req.query.guestId as string);
+            validateObjectId(orderId);
+            const orderSummary = await this._getOrderSummaryUseCase.execute(orderId!, guestId);
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: ResponseMessages.SUCCESS,
+                data: orderSummary,
+            });
+        } catch (error) {
+            handleError(res, error);
+            console.log("error in get order summary controller ", error)
+        }
+    }
+
+    async downloadInvoice(req: Request, res: Response): Promise<void> {
+        try {
+            console.log("inside download invoice controller")
+            const orderId = req.params.orderId;
+            validateObjectId(orderId);
+            const guestId = GuestIdSchema.parse(req.query.guestId as string);
+            const pdfBuffer =
+                await this._downloadInvoiceUseCase.execute(orderId!, guestId);
+
+            res.setHeader("Content-Type", "application/pdf");
+            res.setHeader(
+                "Content-Disposition",
+                `attachment; filename=invoice-${orderId}.pdf`
+            );
+
+            res.status(200).send(pdfBuffer);
+
+        } catch (error) {
+            handleError(res, error);
+            console.log("error in download invoice controller ", error)
         }
     }
 }

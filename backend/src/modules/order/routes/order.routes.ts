@@ -34,4 +34,10 @@ router.post('/payment-failure',
   (req, res) => orderController.handlePaymentFailure(req, res)
 )
 
+router.get('/:orderId/order-summary',
+  (req, res) => orderController.getOrderSummary(req, res))
+
+router.get("/:orderId/invoice",
+  (req, res) => orderController.downloadInvoice(req, res));
+
 export default router

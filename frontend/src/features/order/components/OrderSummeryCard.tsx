@@ -2,13 +2,11 @@ import type { OrderSummaryView } from "../types/order.type";
 
 interface OrderSummaryCardProps {
     order: OrderSummaryView;
+    onDownloadInvoice: () => void;
+    isDownloading: boolean;
 }
 
-const OrderSummaryCard = ({ order }: OrderSummaryCardProps) => {
-
-    const handleDownloadInvoice = () => {
-        alert("Invoice download triggered");
-    };
+const OrderSummaryCard = ({ order, onDownloadInvoice, isDownloading }: OrderSummaryCardProps) => {
 
     return (
         <aside className="lg:sticky lg:top-6">
@@ -55,10 +53,11 @@ const OrderSummaryCard = ({ order }: OrderSummaryCardProps) => {
 
                 {/* ACTION */}
                 <button
-                    onClick={handleDownloadInvoice}
+                    onClick={onDownloadInvoice}
+                    disabled={isDownloading}
                     className="w-full mt-6 bg-[var(--accent)] text-black font-semibold rounded-xl py-3 hover:opacity-90 transition"
                 >
-                    Download Invoice
+                    {isDownloading ? "Downloading..." : "Download Invoice"}
                 </button>
 
                 <p className="text-xs text-center text-[var(--muted)] mt-3">

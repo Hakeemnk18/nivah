@@ -1,8 +1,8 @@
 import type { IGetAllDocDB } from "../../../core/shared/interfaces/get.all.doc.interface.js";
 import { Order } from "../entities/order.entity.js";
 import type {
-  AutoCancelPayload,
   OrderListView,
+  OrderSummaryView,
 } from "../types/order.type.js";
 import type { OrderStatus } from "../types/order.type.js";
 import type { ClientSession } from "mongoose";
@@ -28,4 +28,5 @@ export interface IOrderRepository {
   autoCancelOlderThan(orderIds: string[], session?: ClientSession): Promise<void>;
   confirmOrder(orderId: string, session?: ClientSession): Promise<void>;
   cancelOrder(orderId: string, session?: ClientSession): Promise<void>;
+  getSummary(orderId: string, guestId: string): Promise<OrderSummaryView | null>;
 }
