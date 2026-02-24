@@ -181,49 +181,65 @@ export interface OrderSummaryView {
 
 export type OrderSummaryResponse = ApiResponse<OrderSummaryView>
 
-export const mockOrder: OrderSummaryView = {
-    id: "ord_123456",
-    orderNumber: "NVH-2026-0001",
-    orderStatus: "confirmed",
-    createdAt: new Date().toISOString(),
-    subtotal: 3200,
-    shippingFee: 100,
-    totalAmount: 3300,
-    userSnapshot: {
-        name: "Muhammed Hakeem",
-        email: "hakeem@email.com",
-        phone: "9876543210",
-        addressLine1: "Iruvallur PO",
-        addressLine2: "Chellannur",
-        city: "Calicut",
-        state: "Kerala",
-        pincode: "673616",
-    },
-    items: [
-        {
-            productId: "p1",
-            itemId: "i1",
-            name: "Zero Gravity Hoodie",
-            size: "L",
-            price: 1600,
-            quantity: 2,
-        },
-        {
-            productId: "p2",
-            itemId: "i2",
-            name: "Zero Gravity Hoodie",
-            size: "L",
-            price: 1600,
-            quantity: 2,
-        },
-        {
-            productId: "p3",
-            itemId: "i3",
-            name: "Zero Gravity Hoodie",
-            size: "L",
-            price: 1600,
-            quantity: 2,
-        },
-    ],
+export type AdminOrderListItem = {
+    id: string;
+    orderNumber: string;
+    customerName: string;
+    customerPhone: string;
+    totalAmount: number;
+    orderStatus: OrderStatus;
+    createdAt: string;
+    itemsCount: number;
 };
+
+export type AdminOrderFullView = {
+    id: string;
+    orderNumber: string;
+
+    user: {
+        name: string;
+        email: string;
+        phone: string;
+
+        addressLine1: string;
+        addressLine2?: string;
+        city: string;
+        state: string;
+        pincode: string;
+    };
+
+    pricing: {
+        subtotal: number;
+        shippingFee: number;
+        totalAmount: number;
+    };
+
+    orderStatus: OrderStatus;
+    cancelReason?: string;
+
+    timeline: {
+        createdAt: string;
+        confirmedAt?: string;
+        acceptedAt?: string;
+        dispatchedAt?: string;
+        cancelledAt?: string;
+    };
+
+    payment?: {
+        paymentId: string;
+        status: string;
+        method?: string;
+        paidAt?: string;
+    };
+
+    items: {
+        productId: string;
+        variantId: string;
+        name: string;
+        size: string;
+        price: number;
+        quantity: number;
+    }[];
+};
+
 

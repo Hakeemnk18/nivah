@@ -149,5 +149,67 @@ export interface OrderSummaryView {
 }
 
 
+export type AdminOrderListItem = {
+  id: string;
+  orderNumber: string;
+  customerName: string;
+  customerPhone: string;
+  totalAmount: number;
+  orderStatus: OrderStatus;
+  createdAt: string;
+  itemsCount: number;
+};
+
+export type AdminOrderFullView = {
+  id: string;
+  orderNumber: string;
+
+  user: {
+    name: string;
+    email: string;
+    phone: string;
+
+    addressLine1: string;
+    addressLine2?: string;
+    city: string;
+    state: string;
+    pincode: string;
+  };
+
+  pricing: {
+    subtotal: number;
+    shippingFee: number;
+    totalAmount: number;
+  };
+
+  orderStatus: OrderStatus;
+  cancelReason?: string;
+
+  timeline: {
+    createdAt: string;
+    confirmedAt?: string;
+    acceptedAt?: string;
+    dispatchedAt?: string;
+    cancelledAt?: string;
+  };
+
+  payment?: {
+    paymentId: string;
+    status: string;
+    method?: string;
+    paidAt?: string;
+  };
+
+  items: {
+    productId: string;
+    variantId: string;
+    name: string;
+    size: string;
+    price: number;
+    quantity: number;
+  }[];
+};
+
+
 
 

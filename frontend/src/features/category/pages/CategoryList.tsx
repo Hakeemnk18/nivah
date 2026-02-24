@@ -38,9 +38,9 @@ const CategoryTable = () => {
     useUnblockCategory();
   const crumbs = parentId
     ? [
-        { label: "Categories", to: "/admin/categoryManagement" },
-        { label: "Subcategories" },
-      ]
+      { label: "Categories", to: "/admin/categoryManagement" },
+      { label: "Subcategories" },
+    ]
     : [{ label: "Categories" }];
 
   const [filters, setFilters] = useState<{
@@ -241,16 +241,15 @@ const CategoryTable = () => {
                     key={item.id}
                     className="border-t border-[#2c2e4a] hover:bg-[#232447]"
                   >
-                    
+
                     <td className="py-3 font-medium">{item.name}</td>
                     <td className="text-gray-300">{item.description || "-"}</td>
                     <td>
                       <span
-                        className={`px-2 py-1 rounded-full text-xs ${
-                          item.isActive
+                        className={`px-2 py-1 rounded-full text-xs ${item.isActive
                             ? "bg-[#1f3b7a] text-blue-300"
                             : "bg-[#3e3f5c] text-gray-300"
-                        }`}
+                          }`}
                       >
                         {item.isActive ? "Active" : "Inactive"}
                       </span>

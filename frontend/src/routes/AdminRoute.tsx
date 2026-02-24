@@ -22,6 +22,8 @@ const CreateCategoryPage = lazy(
 const ProductTable = lazy(() => import("../features/products/pages/ProductList"))
 const CreateProductPage = lazy(() => import("../features/products/pages/CreateProduct"))
 const EditProductPage = lazy(() => import("../features/products/pages/EditProduct"))
+const OrderTable = lazy(() => import("../features/order/pages/AdminOrdersTable"))
+const AdminOrderDetailsPage = lazy(() => import("../features/order/pages/AdminOrderDetailsPage"))
 
 /* ---------- fallback loader ---------- */
 const Loader = () => (
@@ -131,6 +133,22 @@ const adminRoutes = [
         <EditProductPage />
 
 
+      </Suspense>
+    ),
+  },
+  {
+    path: "orderManagement",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <OrderTable />
+      </Suspense>
+    ),
+  },
+  {
+    path: "orderDetails",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <AdminOrderDetailsPage />
       </Suspense>
     ),
   }
