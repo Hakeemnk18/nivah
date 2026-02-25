@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
-import { useLogin } from "../hooks/useLogin"; 
+import { useLogin } from "../hooks/useLogin";
 import { useForgotPassword } from "../hooks/useForgotPassword";
 import { handleApiError } from "../../../shared/utils/handle.api.error";
 import GoogleLogin from "../components/GoogleLogin";
@@ -16,8 +16,8 @@ const LoginPage = ({ role }: LoginPageProps) => {
   const from = location.state?.from || "/";
 
   const [showPassword, setShowPassword] = useState(false);
-  const { mutateAsync: loginMutate } = useLogin();
-//   const { mutateAsync: forgotPasswordMutate } = useForgotPassword();
+  const { mutateAsync: loginMutate, isPending } = useLogin();
+  //   const { mutateAsync: forgotPasswordMutate } = useForgotPassword();
 
   const [isForgotPsd, setIsForgotPsd] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -51,11 +51,7 @@ const LoginPage = ({ role }: LoginPageProps) => {
     try {
       await loginMutate({ data: formData, role });
 
-      if (role === "admin") {
-        navigate("/admin/dashboard");
-      } else {
-        navigate(from, { replace: true });
-      }
+
     } catch (err: any) {
       const fieldErrors = handleApiError(err);
       if (fieldErrors) setErrors(fieldErrors);
@@ -81,11 +77,10 @@ const LoginPage = ({ role }: LoginPageProps) => {
               placeholder="Email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                errors.email
-                  ? "border-red-500 focus:ring-red-300"
-                  : "border-gray-300 focus:ring-blue-300"
-              }`}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.email
+                ? "border-red-500 focus:ring-red-300"
+                : "border-gray-300 focus:ring-blue-300"
+                }`}
             />
             {errors.email && (
               <p className="text-sm text-red-500 mt-1">{errors.email}</p>
@@ -100,11 +95,10 @@ const LoginPage = ({ role }: LoginPageProps) => {
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                errors.password
-                  ? "border-red-500 focus:ring-red-300"
-                  : "border-gray-300 focus:ring-blue-300"
-              }`}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.password
+                ? "border-red-500 focus:ring-red-300"
+                : "border-gray-300 focus:ring-blue-300"
+                }`}
             />
             <button
               type="button"
@@ -133,10 +127,11 @@ const LoginPage = ({ role }: LoginPageProps) => {
 
           {/* Submit */}
           <button
+            disabled={isPending}
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
           >
-            Sign In
+            {isPending ? "Signing In..." : "Sign In"}
           </button>
         </form>
 

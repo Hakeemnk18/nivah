@@ -10,6 +10,7 @@ import type { IOrderRepository } from "./order.repository.interface.js";
 
 import type { IGetAllDocDB } from "../../../core/shared/interfaces/get.all.doc.interface.js";
 import type {
+  AdminOrderListItem,
   AutoCancelPayload,
   OrderListView,
   OrderSummaryView,
@@ -111,24 +112,8 @@ export class OrderRepository implements IOrderRepository {
     return OrderMapper.toDomain(document);
   }
 
-  /* ================= ADMIN LIST ================= */
 
-  async findAllForAdmin(
-    allDoc: IGetAllDocDB,
-  ): Promise<OrderListView[]> {
-    const { query, page, limit, sort } = allDoc;
-    const skip = (page - 1) * limit;
 
-    const documents = await OrderModel.find(query)
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .lean();
-
-    return documents
-      .map(OrderMapper.toAdminListView)
-      .filter((o): o is OrderListView => o !== null);
-  }
 
   async getOrderStatus(orderId: string): Promise<OrderStatus> {
     const document = await OrderModel.findById(orderId).lean();
@@ -186,7 +171,7 @@ export class OrderRepository implements IOrderRepository {
   // cancel order
   async cancelOrder(orderId: string, session?: ClientSession): Promise<void> {
     const result = await OrderModel.updateOne(
-      { _id: orderId, orderStatus: "created" },
+      { _id: orderId, orderStatus: { $nin: ["cancelled", "delivered"] } },
       { $set: { orderStatus: "cancelled", cancelledAt: new Date(), cancelReason: "Payment failed" } },
       session ? { session } : {}
     );
@@ -202,5 +187,70 @@ export class OrderRepository implements IOrderRepository {
   async getSummary(orderId: string, guestId: string): Promise<OrderSummaryView | null> {
     const document = await OrderModel.findOne({ _id: orderId, guestId }).lean();
     return OrderMapper.toSummaryView(document);
+  }
+
+  async getAdminOrderList(allDoc: IGetAllDocDB): Promise<AdminOrderListItem[]> {
+    const { query, page, limit, sort } = allDoc;
+    const skip = (page - 1) * limit;
+
+
+    const documents = await OrderModel.find(query)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    return documents
+      .map(OrderMapper.toAdminOrderListItem)
+      .filter((o): o is AdminOrderListItem => o !== null);
+  }
+
+  async countDocuments(query: Record<string, any>): Promise<number> {
+    return OrderModel.countDocuments(query);
+  }
+
+  // dispatch order
+  async dispatchOrder(orderId: string, session?: ClientSession): Promise<void> {
+    const result = await OrderModel.updateOne(
+      { _id: orderId, orderStatus: "accepted" },
+      { $set: { orderStatus: "dispatched", dispatchedAt: new Date() } },
+      session ? { session } : {}
+    );
+
+    if (result.modifiedCount === 0) {
+      throw new Error(
+        ResponseMessages.ORDER_NOT_FOUND,
+      )
+    }
+  }
+
+  // deliver order
+  async deliverOrder(orderId: string, session?: ClientSession): Promise<void> {
+    const result = await OrderModel.updateOne(
+      { _id: orderId, orderStatus: "dispatched" },
+      { $set: { orderStatus: "delivered", deliveredAt: new Date() } },
+      session ? { session } : {}
+    );
+
+    if (result.modifiedCount === 0) {
+      throw new Error(
+        ResponseMessages.ORDER_NOT_FOUND,
+      )
+    }
+  }
+
+  // accept order
+  async acceptOrder(orderId: string, session?: ClientSession): Promise<void> {
+    const result = await OrderModel.updateOne(
+      { _id: orderId, orderStatus: "confirmed" },
+      { $set: { orderStatus: "accepted", acceptedAt: new Date() } },
+      session ? { session } : {}
+    );
+
+    if (result.modifiedCount === 0) {
+      throw new Error(
+        ResponseMessages.ORDER_NOT_FOUND,
+      )
+    }
   }
 }

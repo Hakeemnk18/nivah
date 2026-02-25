@@ -2,7 +2,7 @@ export interface ApiResponse<T = unknown> {
   success: boolean;
   message: string;
   data?: T;
-  errors?: unknown;  
+  errors?: unknown;
 }
 
 export interface GetAllDocResponse<T = unknown> {
@@ -12,7 +12,7 @@ export interface GetAllDocResponse<T = unknown> {
   currentPage: number;
   totalPages: number;
   data?: T;
-  errors?: unknown; 
+  errors?: unknown;
 }
 
 export type IdName = {
@@ -21,3 +21,7 @@ export type IdName = {
 }
 
 export type GetIdNameResponse = ApiResponse<IdName[]>
+
+
+
+

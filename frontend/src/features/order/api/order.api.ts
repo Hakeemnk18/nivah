@@ -1,6 +1,6 @@
 import api from "../../../api/axios.instance";
 import type { ApiResponse } from "../../../shared/types/api.types";
-import type { CreateOrderResponse, OrderPlacementPayload, OrderSummaryResponse } from "../types/order.type";
+import type { AdminOrderListResponse, CreateOrderResponse, OrderPlacementPayload, OrderSummaryResponse } from "../types/order.type";
 
 
 /* ---------- CREATE ORDER ---------- */
@@ -32,3 +32,48 @@ export const downloadInvoiceApi = async (
         });
     return response.data;
 };
+
+/* ---------- GET ADMIN ORDER LIST ---------- */
+export const getAdminOrderListApi = async (
+    query: Record<string, any>
+): Promise<AdminOrderListResponse> => {
+    const response = await api.get<AdminOrderListResponse>(`/orders`, {
+        params: query
+    });
+    return response.data;
+};
+
+/* ---------- DISPATCH ORDER ---------- */
+export const dispatchOrderApi = async (
+    orderId: string
+): Promise<ApiResponse> => {
+    const response = await api.patch<ApiResponse>(`/orders/${orderId}/dispatch`);
+    return response.data;
+};
+
+/* ---------- DELIVER ORDER ---------- */
+export const deliverOrderApi = async (
+    orderId: string
+): Promise<ApiResponse> => {
+    const response = await api.patch<ApiResponse>(`/orders/${orderId}/deliver`);
+    return response.data;
+};
+
+/* ---------- ACCEPT ORDER ---------- */
+export const acceptOrderApi = async (
+    orderId: string
+): Promise<ApiResponse> => {
+    const response = await api.patch<ApiResponse>(`/orders/${orderId}/accept`);
+    return response.data;
+};
+
+/* ---------- CANCEL ORDER ---------- */
+export const cancelOrderApi = async (
+    orderId: string
+): Promise<ApiResponse> => {
+    const response = await api.patch<ApiResponse>(`/orders/${orderId}/cancel`);
+    return response.data;
+};
+
+
+

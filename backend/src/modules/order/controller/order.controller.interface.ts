@@ -7,7 +7,12 @@ export interface IOrderController {
     handlePaymentFailure(req: Request, res: Response): Promise<void>;
     getOrderSummary(req: Request, res: Response): Promise<void>;
     downloadInvoice(req: Request, res: Response): Promise<void>;
-    // getOrderById(req: Request, res: Response): Promise<void>;
+    getAdminOrders(req: Request, res: Response): Promise<void>;
+    dispatchOrder(req: Request, res: Response): Promise<void>;
+    deliverOrder(req: Request, res: Response): Promise<void>;
+    acceptOrder(req: Request, res: Response): Promise<void>;
+    cancelOrder(req: Request, res: Response): Promise<void>;
+
+    // getOrderById(req: Request, res: Response): Promise<void>;    
     // getOrdersByGuestId(req: Request, res: Response): Promise<void>;
-    // cancelOrder(req: Request, res: Response): Promise<void>;
 }

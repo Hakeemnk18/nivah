@@ -17,6 +17,16 @@ import type { IGetOrderSummaryUseCase } from "../modules/order/use-cases/interfa
 import { GetOrderSummaryUseCase } from "../modules/order/use-cases/get.order.summery.use-case.js";
 import type { IDownloadInvoiceUseCase } from "../modules/order/use-cases/interfaces/download.invoice.use-case.interface.js";
 import { DownloadInvoiceUseCase } from "../modules/order/use-cases/download.invoice.use-case.js";
+import type { IGetAdminOrdersUseCase } from "../modules/order/use-cases/interfaces/get.admin.orders.use-case.interface.js";
+import { GetAdminOrdersUseCase } from "../modules/order/use-cases/get.admin.orders.use-case.js";
+import type { IDispatchOrderUseCase } from "../modules/order/use-cases/interfaces/dispatch.order.use-case.interface.js";
+import { DispatchOrderUseCase } from "../modules/order/use-cases/dispatch.order.use-case.js";
+import type { IDeliverOrderUseCase } from "../modules/order/use-cases/interfaces/deliver.order.use-case.interface.js";
+import { DeliverOrderUseCase } from "../modules/order/use-cases/deliver.order.use-case.js";
+import type { IAcceptOrderUseCase } from "../modules/order/use-cases/interfaces/accept.order.use-case.interface.js";
+import { AcceptOrderUseCase } from "../modules/order/use-cases/accept.order.use-case.js";
+import type { ICancelOrderUseCase } from "../modules/order/use-cases/interfaces/cancel.order.use-case.interface.js";
+import { CancelOrderUseCase } from "../modules/order/use-cases/cancel.order.use-case.js";
 
 export const registerOrderDependencies = () => {
     container.register<IOrderRepository>("IOrderRepository", {
@@ -53,6 +63,26 @@ export const registerOrderDependencies = () => {
 
     container.register<IDownloadInvoiceUseCase>("IDownloadInvoiceUseCase", {
         useClass: DownloadInvoiceUseCase,
+    });
+
+    container.register<IGetAdminOrdersUseCase>("IGetAdminOrdersUseCase", {
+        useClass: GetAdminOrdersUseCase,
+    });
+
+    container.register<IDispatchOrderUseCase>("IDispatchOrderUseCase", {
+        useClass: DispatchOrderUseCase,
+    });
+
+    container.register<IDeliverOrderUseCase>("IDeliverOrderUseCase", {
+        useClass: DeliverOrderUseCase,
+    });
+
+    container.register<IAcceptOrderUseCase>("IAcceptOrderUseCase", {
+        useClass: AcceptOrderUseCase,
+    });
+
+    container.register<ICancelOrderUseCase>("ICancelOrderUseCase", {
+        useClass: CancelOrderUseCase,
     });
 
 };

@@ -20,7 +20,7 @@ const navItems = [
   { label: "Dashboard", path: "/admin/dashboard", icon: FaTachometerAlt },
   { label: "Categories", path: "/admin/categoryManagement", icon: FaList },
   { label: "Products", path: "/admin/productManagement", icon: FaBox },
-  { label: "Orders", path: "/admin/orders", icon: FaShoppingCart },
+  { label: "Orders", path: "/admin/orderManagement", icon: FaShoppingCart },
   { label: "Users", path: "/admin/users", icon: FaUsers },
 ];
 

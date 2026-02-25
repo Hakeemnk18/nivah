@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 
+
 type AdminLoaderProps = {
     label?: string;
     fullScreen?: boolean;
@@ -15,6 +16,7 @@ const AdminLoader = ({
     label = "Processing...",
     fullScreen = false,
 }: AdminLoaderProps) => {
+
     return (
         <div
             className={`${fullScreen ? "fixed inset-0 z-50" : "w-full"

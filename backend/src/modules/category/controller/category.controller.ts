@@ -158,8 +158,6 @@ export class CategoryController implements ICategoryController {
     try {
 
       const dto = GetAllQuerySchema.parse(parseReq(req, ["isActive"]));
-
-
       const { data, total } =
         await this._getAllCategoryUseCase.execute(dto, null);
 
@@ -217,9 +215,9 @@ export class CategoryController implements ICategoryController {
 
   async getSubCategories(req: Request, res: Response): Promise<void> {
     try {
-      
+
       const { parentId } = req.params;
-      
+
       validateObjectId(parentId);
 
       const categories =

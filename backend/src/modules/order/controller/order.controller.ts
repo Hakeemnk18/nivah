@@ -15,6 +15,13 @@ import { HandlePaymentFailureSchema } from "../dtos/failure.order.dto.js";
 import type { IGetOrderSummaryUseCase } from "../use-cases/interfaces/get.order.summery.use-case.interface.js";
 import { GuestIdSchema } from "../../../core/utils/guest.id.validation.js";
 import type { IDownloadInvoiceUseCase } from "../use-cases/interfaces/download.invoice.use-case.interface.js";
+import type { IGetAdminOrdersUseCase } from "../use-cases/interfaces/get.admin.orders.use-case.interface.js";
+import { GetAllQuerySchema } from "../../../core/shared/dtos/get.all.doc.dto.js";
+import { parseReq } from "../../../core/utils/parse.query.helper.js";
+import type { IDispatchOrderUseCase } from "../use-cases/interfaces/dispatch.order.use-case.interface.js";
+import type { IDeliverOrderUseCase } from "../use-cases/interfaces/deliver.order.use-case.interface.js";
+import type { IAcceptOrderUseCase } from "../use-cases/interfaces/accept.order.use-case.interface.js";
+import type { ICancelOrderUseCase } from "../use-cases/interfaces/cancel.order.use-case.interface.js";
 
 @injectable()
 export class OrderController implements IOrderController {
@@ -36,6 +43,21 @@ export class OrderController implements IOrderController {
 
         @inject("IDownloadInvoiceUseCase")
         private readonly _downloadInvoiceUseCase: IDownloadInvoiceUseCase,
+
+        @inject("IGetAdminOrdersUseCase")
+        private readonly _getAdminOrdersUseCase: IGetAdminOrdersUseCase,
+
+        @inject("IDispatchOrderUseCase")
+        private readonly _dispatchOrderUseCase: IDispatchOrderUseCase,
+
+        @inject("IDeliverOrderUseCase")
+        private readonly _deliverOrderUseCase: IDeliverOrderUseCase,
+
+        @inject("IAcceptOrderUseCase")
+        private readonly _acceptOrderUseCase: IAcceptOrderUseCase,
+
+        @inject("ICancelOrderUseCase")
+        private readonly _cancelOrderUseCase: ICancelOrderUseCase,
     ) { }
 
     async createOrder(req: Request, res: Response): Promise<void> {
@@ -126,7 +148,7 @@ export class OrderController implements IOrderController {
 
     async downloadInvoice(req: Request, res: Response): Promise<void> {
         try {
-            console.log("inside download invoice controller")
+
             const orderId = req.params.orderId;
             validateObjectId(orderId);
             const guestId = GuestIdSchema.parse(req.query.guestId as string);
@@ -144,6 +166,87 @@ export class OrderController implements IOrderController {
         } catch (error) {
             handleError(res, error);
             console.log("error in download invoice controller ", error)
+        }
+    }
+
+    async getAdminOrders(req: Request, res: Response): Promise<void> {
+        try {
+
+            const dto = GetAllQuerySchema.parse(parseReq(req, ["orderStatus"]));
+            const { data, total } = await this._getAdminOrdersUseCase.execute(dto);
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: ResponseMessages.SUCCESS,
+                data: data,
+                totalPages: Math.ceil(total / dto.limit),
+            });
+        } catch (error) {
+            handleError(res, error);
+            console.log("error in get admin orders controller ", error)
+        }
+    }
+
+    async dispatchOrder(req: Request, res: Response): Promise<void> {
+        try {
+            const orderId = req.params.orderId;
+            validateObjectId(orderId);
+            await this._dispatchOrderUseCase.execute(orderId!);
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: ResponseMessages.ORDER_DISPATCHED_SUCCESS,
+            });
+        } catch (error) {
+            handleError(res, error);
+            console.log("error in dispatch order controller ", error)
+        }
+    }
+
+    async deliverOrder(req: Request, res: Response): Promise<void> {
+        try {
+            const orderId = req.params.orderId;
+            validateObjectId(orderId);
+            await this._deliverOrderUseCase.execute(orderId!);
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: ResponseMessages.ORDER_DELIVERED_SUCCESS,
+            });
+        } catch (error) {
+            handleError(res, error);
+            console.log("error in deliver order controller ", error)
+        }
+    }
+
+    async acceptOrder(req: Request, res: Response): Promise<void> {
+        try {
+            const orderId = req.params.orderId;
+            validateObjectId(orderId);
+            await this._acceptOrderUseCase.execute(orderId!);
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: ResponseMessages.ORDER_ACCEPTED_SUCCESS,
+            });
+        } catch (error) {
+            handleError(res, error);
+            console.log("error in accept order controller ", error)
+        }
+    }
+
+    async cancelOrder(req: Request, res: Response): Promise<void> {
+        try {
+            const orderId = req.params.orderId;
+            validateObjectId(orderId);
+            await this._cancelOrderUseCase.execute(orderId!);
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: ResponseMessages.ORDER_CANCELLED_SUCCESS,
+            });
+        } catch (error) {
+            handleError(res, error);
+            console.log("error in cancel order controller ", error)
         }
     }
 }
