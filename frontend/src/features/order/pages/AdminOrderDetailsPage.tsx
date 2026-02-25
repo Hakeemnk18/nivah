@@ -1,4 +1,6 @@
 import React from "react";
+import AdminErrorState from "../../admin/components/AdminErrorState";
+import AdminOrderDetailsSkeleton from "../components/AdminOrderDetailsSkelton";
 
 /* ---------------- TYPES ---------------- */
 
@@ -60,7 +62,7 @@ export type AdminOrderFullView = {
 
 /* ---------------- MOCK DATA ---------------- */
 
-const isLoading = false;
+const isLoading = true;
 const isError = false;
 
 const mockOrder: AdminOrderFullView | null = {
@@ -166,21 +168,9 @@ const getStatusColor = (status: OrderStatus) => {
 /* ---------------- COMPONENT ---------------- */
 
 const AdminOrderDetailsPage = () => {
-    if (isLoading) {
-        return (
-            <div className="py-20 text-center text-gray-400">
-                Loading order details...
-            </div>
-        );
-    }
 
-    if (isError) {
-        return (
-            <div className="py-20 text-center text-red-400">
-                Failed to load order
-            </div>
-        );
-    }
+
+
 
     if (!mockOrder) {
         return (
@@ -196,166 +186,174 @@ const AdminOrderDetailsPage = () => {
         <div className="pb-16 px-4">
             <div className="bg-[#1d1e33] p-6 rounded-xl text-white w-full max-w-6xl mx-auto space-y-8">
 
-                {/* HEADER */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-[#2c2e4a] pb-4">
+                {isLoading && !isError && <AdminOrderDetailsSkeleton />}
+                {!isLoading && isError && <AdminErrorState />}
 
-                    <div>
-                        <h2 className="text-xl font-semibold">
-                            Order {order.orderNumber}
-                        </h2>
-                        <p className="text-sm text-gray-400">
-                            Created: {formatDate(order.timeline.createdAt)}
-                        </p>
-                    </div>
+                {!isLoading && !isError &&
 
-                    <div className="flex items-center gap-3">
+                    <>
 
-                        {/* Download Invoice Button */}
-                        <button
-                            onClick={() => console.log("Download invoice")}
-                            className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-4 py-2 rounded-lg transition"
-                        >
-                            Download Invoice
-                        </button>
+                        {/* HEADER */}
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-[#2c2e4a] pb-4">
 
-                        {/* Status Badge */}
-                        <span
-                            className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                                order.orderStatus
-                            )}`}
-                        >
-                            {order.orderStatus}
-                        </span>
-
-                    </div>
-                </div>
-                {/* CUSTOMER + PAYMENT */}
-                <div className="grid md:grid-cols-2 gap-6">
-
-                    {/* CUSTOMER */}
-                    <div className="bg-[#232447] p-4 rounded-lg space-y-2">
-                        <h3 className="text-sm font-semibold text-gray-300">
-                            Customer Information
-                        </h3>
-                        <p>{order.user.name}</p>
-                        <p className="text-gray-400 text-sm">{order.user.email}</p>
-                        <p className="text-gray-400 text-sm">{order.user.phone}</p>
-
-                        <div className="pt-2 text-sm text-gray-400">
-                            <p>{order.user.addressLine1}</p>
-                            {order.user.addressLine2 && <p>{order.user.addressLine2}</p>}
-                            <p>
-                                {order.user.city}, {order.user.state} - {order.user.pincode}
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* PAYMENT */}
-                    <div className="bg-[#232447] p-4 rounded-lg space-y-2">
-                        <h3 className="text-sm font-semibold text-gray-300">
-                            Payment Details
-                        </h3>
-
-                        {order.payment ? (
-                            <>
-                                <p className="text-sm">ID: {order.payment.paymentId}</p>
+                            <div>
+                                <h2 className="text-xl font-semibold">
+                                    Order {order.orderNumber}
+                                </h2>
                                 <p className="text-sm text-gray-400">
-                                    Method: {order.payment.method || "-"}
-                                </p>
-                                <p className="text-sm text-green-400">
-                                    Status: {order.payment.status}
-                                </p>
-                                <p className="text-sm text-gray-400">
-                                    Paid At: {formatDate(order.payment.paidAt)}
-                                </p>
-                            </>
-                        ) : (
-                            <p className="text-gray-400 text-sm">
-                                No payment information
-                            </p>
-                        )}
-                    </div>
-                </div>
-
-                {/* ITEMS */}
-                <div>
-                    <h3 className="text-sm font-semibold text-gray-300 mb-3">
-                        Order Items
-                    </h3>
-
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm min-w-[600px]">
-                            <thead>
-                                <tr className="text-left text-gray-400 border-b border-[#2c2e4a]">
-                                    <th className="py-2">Product</th>
-                                    <th>Size</th>
-                                    <th>Price</th>
-                                    <th>Qty</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {order.items.map((item) => (
-                                    <tr
-                                        key={item.variantId}
-                                        className="border-t border-[#2c2e4a]"
-                                    >
-                                        <td className="py-2">{item.name}</td>
-                                        <td>{item.size}</td>
-                                        <td>₹{item.price}</td>
-                                        <td>{item.quantity}</td>
-                                        <td className="font-medium">
-                                            ₹{item.price * item.quantity}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {/* PRICING */}
-                <div className="bg-[#232447] p-4 rounded-lg space-y-2 text-sm">
-                    <div className="flex justify-between">
-                        <span className="text-gray-400">Subtotal</span>
-                        <span>₹{order.pricing.subtotal}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="text-gray-400">Shipping</span>
-                        <span>₹{order.pricing.shippingFee}</span>
-                    </div>
-                    <div className="flex justify-between font-semibold text-base pt-2 border-t border-[#2c2e4a]">
-                        <span>Total</span>
-                        <span>₹{order.pricing.totalAmount}</span>
-                    </div>
-                </div>
-
-                {/* TIMELINE */}
-                <div>
-                    <h3 className="text-sm font-semibold text-gray-300 mb-3">
-                        Order Timeline
-                    </h3>
-
-                    <div className="space-y-4 border-l-2 border-[#2c2e4a] pl-4">
-                        {[
-                            ["Created", order.timeline.createdAt],
-                            ["Confirmed", order.timeline.confirmedAt],
-                            ["Accepted", order.timeline.acceptedAt],
-                            ["Dispatched", order.timeline.dispatchedAt],
-                            ["Cancelled", order.timeline.cancelledAt],
-                        ].map(([label, date]) => (
-                            <div key={label} className="relative">
-                                <div className="absolute -left-[11px] top-1 w-3 h-3 rounded-full bg-blue-400"></div>
-                                <p className="text-sm font-medium">{label}</p>
-                                <p className="text-xs text-gray-400">
-                                    {formatDate(date as string | undefined)}
+                                    Created: {formatDate(order.timeline.createdAt)}
                                 </p>
                             </div>
-                        ))}
-                    </div>
-                </div>
 
+                            <div className="flex items-center gap-3">
+
+                                {/* Download Invoice Button */}
+                                <button
+                                    onClick={() => console.log("Download invoice")}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-4 py-2 rounded-lg transition"
+                                >
+                                    Download Invoice
+                                </button>
+
+                                {/* Status Badge */}
+                                <span
+                                    className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                                        order.orderStatus
+                                    )}`}
+                                >
+                                    {order.orderStatus}
+                                </span>
+
+                            </div>
+                        </div>
+                        {/* CUSTOMER + PAYMENT */}
+                        <div className="grid md:grid-cols-2 gap-6">
+
+                            {/* CUSTOMER */}
+                            <div className="bg-[#232447] p-4 rounded-lg space-y-2">
+                                <h3 className="text-sm font-semibold text-gray-300">
+                                    Customer Information
+                                </h3>
+                                <p>{order.user.name}</p>
+                                <p className="text-gray-400 text-sm">{order.user.email}</p>
+                                <p className="text-gray-400 text-sm">{order.user.phone}</p>
+
+                                <div className="pt-2 text-sm text-gray-400">
+                                    <p>{order.user.addressLine1}</p>
+                                    {order.user.addressLine2 && <p>{order.user.addressLine2}</p>}
+                                    <p>
+                                        {order.user.city}, {order.user.state} - {order.user.pincode}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* PAYMENT */}
+                            <div className="bg-[#232447] p-4 rounded-lg space-y-2">
+                                <h3 className="text-sm font-semibold text-gray-300">
+                                    Payment Details
+                                </h3>
+
+                                {order.payment ? (
+                                    <>
+                                        <p className="text-sm">ID: {order.payment.paymentId}</p>
+                                        <p className="text-sm text-gray-400">
+                                            Method: {order.payment.method || "-"}
+                                        </p>
+                                        <p className="text-sm text-green-400">
+                                            Status: {order.payment.status}
+                                        </p>
+                                        <p className="text-sm text-gray-400">
+                                            Paid At: {formatDate(order.payment.paidAt)}
+                                        </p>
+                                    </>
+                                ) : (
+                                    <p className="text-gray-400 text-sm">
+                                        No payment information
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* ITEMS */}
+                        <div>
+                            <h3 className="text-sm font-semibold text-gray-300 mb-3">
+                                Order Items
+                            </h3>
+
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-sm min-w-[600px]">
+                                    <thead>
+                                        <tr className="text-left text-gray-400 border-b border-[#2c2e4a]">
+                                            <th className="py-2">Product</th>
+                                            <th>Size</th>
+                                            <th>Price</th>
+                                            <th>Qty</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {order.items.map((item) => (
+                                            <tr
+                                                key={item.variantId}
+                                                className="border-t border-[#2c2e4a]"
+                                            >
+                                                <td className="py-2">{item.name}</td>
+                                                <td>{item.size}</td>
+                                                <td>₹{item.price}</td>
+                                                <td>{item.quantity}</td>
+                                                <td className="font-medium">
+                                                    ₹{item.price * item.quantity}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        {/* PRICING */}
+                        <div className="bg-[#232447] p-4 rounded-lg space-y-2 text-sm">
+                            <div className="flex justify-between">
+                                <span className="text-gray-400">Subtotal</span>
+                                <span>₹{order.pricing.subtotal}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-400">Shipping</span>
+                                <span>₹{order.pricing.shippingFee}</span>
+                            </div>
+                            <div className="flex justify-between font-semibold text-base pt-2 border-t border-[#2c2e4a]">
+                                <span>Total</span>
+                                <span>₹{order.pricing.totalAmount}</span>
+                            </div>
+                        </div>
+
+                        {/* TIMELINE */}
+                        <div>
+                            <h3 className="text-sm font-semibold text-gray-300 mb-3">
+                                Order Timeline
+                            </h3>
+
+                            <div className="space-y-4 border-l-2 border-[#2c2e4a] pl-4">
+                                {[
+                                    ["Created", order.timeline.createdAt],
+                                    ["Confirmed", order.timeline.confirmedAt],
+                                    ["Accepted", order.timeline.acceptedAt],
+                                    ["Dispatched", order.timeline.dispatchedAt],
+                                    ["Cancelled", order.timeline.cancelledAt],
+                                ].map(([label, date]) => (
+                                    <div key={label} className="relative">
+                                        <div className="absolute -left-[11px] top-1 w-3 h-3 rounded-full bg-blue-400"></div>
+                                        <p className="text-sm font-medium">{label}</p>
+                                        <p className="text-xs text-gray-400">
+                                            {formatDate(date as string | undefined)}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </>
+                }
             </div>
         </div>
     );

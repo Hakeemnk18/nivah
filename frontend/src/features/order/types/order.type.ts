@@ -1,4 +1,4 @@
-import type { ApiResponse } from "../../../shared/types/api.types";
+import type { ApiResponse, GetAllDocResponse } from "../../../shared/types/api.types";
 
 
 
@@ -145,6 +145,7 @@ export type OrderStatus =
     | "confirmed"
     | "accepted"
     | "dispatched"
+    | "delivered"
     | "cancelled";
 
 export interface OrderItemView {
@@ -241,5 +242,19 @@ export type AdminOrderFullView = {
         quantity: number;
     }[];
 };
+
+export type AdminOrderFullResponse = ApiResponse<AdminOrderFullView>
+export type AdminOrderListResponse = GetAllDocResponse<AdminOrderListItem[]>
+
+export type AdminOrderQueryKey = [
+    "admin-orders",
+    {
+        currentPage: number;
+        search: string;
+        sort: string;
+        filters: Record<string, any>
+    }
+];
+
 
 

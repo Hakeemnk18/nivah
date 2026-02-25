@@ -181,6 +181,12 @@ export const ResponseMessages = {
   ORDER_ACCEPTED_SUCCESS: "Order accepted successfully",
   ORDER_DISPATCHED_SUCCESS: "Order dispatched successfully",
   ORDER_CANCELLED_SUCCESS: "Order cancelled successfully",
+  ORDER_DELIVERED_SUCCESS: "Order delivered successfully",
+  ORDER_NOT_DISPATCHED: "Order not dispatched",
+  ORDER_NOT_CONFIRMED: "Order not confirmed",
+  ORDER_NOT_ACCEPTED: "Order not accepted",
+  ORDER_DELIVERED: "Order already delivered",
+  ORDER_CANCELLED: "Order already cancelled",
 
   ORDER_STATUS_UPDATED_SUCCESS: "Order status updated successfully",
 

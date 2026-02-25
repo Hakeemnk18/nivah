@@ -6,6 +6,7 @@ export const ORDER_STATUS = [
   "accepted",
   "dispatched",
   "cancelled",
+  "delivered"
 ] as const;
 
 export type OrderStatus =

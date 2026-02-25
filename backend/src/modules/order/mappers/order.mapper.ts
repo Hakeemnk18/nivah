@@ -1,5 +1,5 @@
 import { Order } from "../entities/order.entity.js";
-import type { OrderListView, OrderSummaryView } from "../types/order.type.js";
+import type { AdminOrderListItem, OrderListView, OrderSummaryView } from "../types/order.type.js";
 
 
 export class OrderMapper {
@@ -197,9 +197,10 @@ export class OrderMapper {
 
   //   /* ================= ADMIN LIST VIEW ================= */
 
-  static toAdminListView(
-    orderModelData: any,
-  ): OrderListView | null {
+
+
+
+  static toAdminOrderListItem(orderModelData: any): AdminOrderListItem | null {
     if (!orderModelData) return null;
 
     const id =
@@ -219,6 +220,7 @@ export class OrderMapper {
       totalAmount: orderModelData.totalAmount,
       orderStatus: orderModelData.orderStatus,
       createdAt: orderModelData.createdAt,
+      itemsCount: orderModelData.items.length,
     };
   }
 

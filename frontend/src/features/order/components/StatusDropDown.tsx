@@ -1,20 +1,16 @@
 import { useState } from "react";
+import type { OrderStatus } from "../types/order.type";
 
-export type OrderStatus =
-    | "created"
-    | "confirmed"
-    | "accepted"
-    | "dispatched"
-    | "cancelled";
 
 /* ---------------- ALLOWED TRANSITIONS ---------------- */
 
 const STATUS_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
     created: ["cancelled"],
-    confirmed: ["dispatched", "cancelled"],
-    accepted: [],        // lock for now (you can extend later)
-    dispatched: [],      // no change allowed
-    cancelled: [],       // no change allowed
+    confirmed: ["accepted", "cancelled"],
+    accepted: ["dispatched", "cancelled"],
+    dispatched: ["delivered", "cancelled"],
+    cancelled: [],
+    delivered: []
 };
 
 type Props = {
