@@ -22,6 +22,8 @@ import type { IDispatchOrderUseCase } from "../use-cases/interfaces/dispatch.ord
 import type { IDeliverOrderUseCase } from "../use-cases/interfaces/deliver.order.use-case.interface.js";
 import type { IAcceptOrderUseCase } from "../use-cases/interfaces/accept.order.use-case.interface.js";
 import type { ICancelOrderUseCase } from "../use-cases/interfaces/cancel.order.use-case.interface.js";
+import type { IGetAdminFullViewUseCase } from "../use-cases/interfaces/get.admin.full.view.use-case.interface.js";
+import type { IAdminDownloadInvoiceUseCase } from "../use-cases/interfaces/admin.dowload.invoice.use-case.interface.js";
 
 @injectable()
 export class OrderController implements IOrderController {
@@ -58,6 +60,13 @@ export class OrderController implements IOrderController {
 
         @inject("ICancelOrderUseCase")
         private readonly _cancelOrderUseCase: ICancelOrderUseCase,
+
+        @inject("IGetAdminFullViewUseCase")
+        private readonly _getAdminFullViewUseCase: IGetAdminFullViewUseCase,
+
+        @inject("IAdminDownloadInvoiceUseCase")
+        private readonly _adminDownloadInvoiceUseCase: IAdminDownloadInvoiceUseCase,
+
     ) { }
 
     async createOrder(req: Request, res: Response): Promise<void> {
@@ -247,6 +256,45 @@ export class OrderController implements IOrderController {
         } catch (error) {
             handleError(res, error);
             console.log("error in cancel order controller ", error)
+        }
+    }
+
+    async getAdminFullView(req: Request, res: Response): Promise<void> {
+        try {
+            const orderId = req.params.orderId;
+            validateObjectId(orderId);
+            const order = await this._getAdminFullViewUseCase.execute(orderId!);
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: ResponseMessages.SUCCESS,
+                data: order,
+            });
+        } catch (error) {
+            handleError(res, error);
+            console.log("error in get admin full view controller ", error)
+        }
+    }
+
+    async adminDownloadInvoice(req: Request, res: Response): Promise<void> {
+        try {
+
+            const orderId = req.params.orderId;
+            validateObjectId(orderId);
+            const pdfBuffer =
+                await this._adminDownloadInvoiceUseCase.execute(orderId!);
+
+            res.setHeader("Content-Type", "application/pdf");
+            res.setHeader(
+                "Content-Disposition",
+                `attachment; filename=invoice-${orderId}.pdf`
+            );
+
+            res.status(200).send(pdfBuffer);
+
+        } catch (error) {
+            handleError(res, error);
+            console.log("error in download invoice controller ", error)
         }
     }
 }

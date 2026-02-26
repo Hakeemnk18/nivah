@@ -223,6 +223,7 @@ export type AdminOrderFullView = {
         confirmedAt?: string;
         acceptedAt?: string;
         dispatchedAt?: string;
+        deliveredAt?: string;
         cancelledAt?: string;
     };
 

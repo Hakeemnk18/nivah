@@ -1,3 +1,4 @@
+import type { Types } from "mongoose";
 import type { ClientSession } from "mongoose";
 
 export const ORDER_STATUS = [
@@ -191,6 +192,7 @@ export type AdminOrderFullView = {
     confirmedAt?: string;
     acceptedAt?: string;
     dispatchedAt?: string;
+    deliveredAt?: string;
     cancelledAt?: string;
   };
 
@@ -212,5 +214,47 @@ export type AdminOrderFullView = {
 };
 
 
+
+export interface IOrderLean {
+  _id: Types.ObjectId;
+  orderNumber: string;
+
+  userSnapshot: {
+    name: string;
+    email: string;
+    phone: string;
+    addressLine1: string;
+    addressLine2?: string;
+    city: string;
+    state: string;
+    pincode: string;
+  };
+  subtotal: number;
+  shippingFee: number;
+  totalAmount: number;
+  orderStatus: OrderStatus;
+  cancelReason?: string;
+  createdAt: Date;
+  confirmedAt?: Date;
+  acceptedAt?: Date;
+  deliveredAt?: Date;
+  dispatchedAt?: Date;
+  cancelledAt?: Date;
+  items: {
+    productId: Types.ObjectId;
+    variantId: Types.ObjectId;
+    name: string;
+    size: string;
+    price: number;
+    quantity: number;
+  }[];
+}
+
+export interface IPaymentLean {
+  _id: Types.ObjectId;
+  status: string;
+  paymentMode?: string;
+  createdAt: Date;
+}
 
 

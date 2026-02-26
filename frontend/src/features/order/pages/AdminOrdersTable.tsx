@@ -15,6 +15,7 @@ import { useDeliverOrder } from "../hooks/use.deliver.order";
 import { useAcceptOrder } from "../hooks/use.accept.order";
 import { useCancelOrder } from "../hooks/use.cancel.order";
 import ConfirmModal from "../../../shared/components/ConfirmModal";
+import { Link } from "react-router-dom";
 
 const sortOptions = [
     { label: "Newest", value: "newest" },
@@ -259,9 +260,18 @@ const AdminOrdersTable = () => {
                                     </td>
 
                                     <td className="flex justify-end py-3">
-                                        <button className="cursor-pointer">
-                                            <FaEye className="text-blue-400" />
-                                        </button>
+                                        <Link
+                                            to={`/admin/orderDetails/${order.id}`}
+                                            className="inline-flex items-center gap-2 px-3 py-1.5 
+                                            text-sm font-medium 
+                                            bg-[#1b2238] hover:bg-[#243056] 
+                                            text-blue-400 hover:text-blue-300
+                                            rounded-md transition-colors duration-200"
+                                        >
+                                            <FaEye className="text-base" />
+                                            Details
+                                        </Link>
+
                                     </td>
                                 </tr>
                             ))

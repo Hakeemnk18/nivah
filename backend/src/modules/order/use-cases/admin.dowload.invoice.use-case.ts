@@ -5,16 +5,17 @@ import type { IInvoiceService } from "../../../core/ports/invoice.service.interf
 import { CustomError } from "../../../core/errors/custom.error.js";
 import { ResponseMessages } from "../../../core/constants/response.message.js";
 import { HttpStatusCode } from "../../../core/constants/http.status.codes.js";
+import type { IAdminDownloadInvoiceUseCase } from "./interfaces/admin.dowload.invoice.use-case.interface.js";
 
 
 @injectable()
-export class DownloadInvoiceUseCase implements IDownloadInvoiceUseCase {
+export class AdminDownloadInvoiceUseCase implements IAdminDownloadInvoiceUseCase {
     constructor(
         @inject("IOrderRepository") private readonly orderRepository: IOrderRepository,
         @inject("IInvoiceService") private readonly invoiceService: IInvoiceService,
     ) { }
-    async execute(orderId: string, guestId: string): Promise<Buffer> {
-        const order = await this.orderRepository.getSummary(orderId, guestId);
+    async execute(orderId: string): Promise<Buffer> {
+        const order = await this.orderRepository.getAdminSummery(orderId);
         if (!order) {
             throw new CustomError(
                 ResponseMessages.ORDER_NOT_FOUND,

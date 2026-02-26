@@ -10,13 +10,17 @@ import type { IOrderRepository } from "./order.repository.interface.js";
 
 import type { IGetAllDocDB } from "../../../core/shared/interfaces/get.all.doc.interface.js";
 import type {
+  AdminOrderFullView,
   AdminOrderListItem,
   AutoCancelPayload,
+  IOrderLean,
+  IPaymentLean,
   OrderListView,
   OrderSummaryView,
 } from "../types/order.type.js";
 import type { OrderStatus } from "../types/order.type.js";
 import type { ClientSession } from "mongoose";
+import { PaymentModel } from "../../payment/infrastructure/payment.schema.js";
 
 const { ObjectId } = Types;
 
@@ -252,5 +256,17 @@ export class OrderRepository implements IOrderRepository {
         ResponseMessages.ORDER_NOT_FOUND,
       )
     }
+  }
+
+  async getAdminOrderFullView(orderId: string): Promise<AdminOrderFullView | null> {
+    const document = await OrderModel.findById(orderId).lean<IOrderLean>();
+    if (!document) return null;
+    const payment = await PaymentModel.findOne({ orderId: document._id }).lean<IPaymentLean>();
+    return OrderMapper.toAdminOrderFullView(document, payment);
+  }
+
+  async getAdminSummery(orderId: string): Promise<OrderSummaryView | null> {
+    const document = await OrderModel.findOne({ _id: orderId }).lean();
+    return OrderMapper.toSummaryView(document);
   }
 }
