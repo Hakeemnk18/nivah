@@ -278,7 +278,7 @@ export class OrderController implements IOrderController {
 
     async adminDownloadInvoice(req: Request, res: Response): Promise<void> {
         try {
-
+            console.log("admin download invoice controller called")
             const orderId = req.params.orderId;
             validateObjectId(orderId);
             const pdfBuffer =
