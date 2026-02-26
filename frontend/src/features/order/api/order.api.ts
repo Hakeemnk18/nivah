@@ -1,6 +1,6 @@
 import api from "../../../api/axios.instance";
 import type { ApiResponse } from "../../../shared/types/api.types";
-import type { AdminOrderListResponse, CreateOrderResponse, OrderPlacementPayload, OrderSummaryResponse } from "../types/order.type";
+import type { AdminOrderFullResponse, AdminOrderFullView, AdminOrderListResponse, CreateOrderResponse, OrderPlacementPayload, OrderSummaryResponse } from "../types/order.type";
 
 
 /* ---------- CREATE ORDER ---------- */
@@ -75,5 +75,13 @@ export const cancelOrderApi = async (
     return response.data;
 };
 
+/* ---------- GET ADMIN ORDER DETAILS ---------- */
+
+export const getAdminOrderDetailsApi = async (
+    orderId: string
+): Promise<AdminOrderFullResponse> => {
+    const response = await api.get<AdminOrderFullResponse>(`/orders/${orderId}`);
+    return response.data;
+};
 
 

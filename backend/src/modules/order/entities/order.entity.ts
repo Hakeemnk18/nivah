@@ -35,12 +35,12 @@ export type OrderProps = {
   totalAmount: number;
   orderStatus?: OrderStatus;
   cancelReason?: string | undefined;
-  paymentId?: string | null;
   items: OrderItem[];
   createdAt?: Date | undefined;
   confirmedAt?: Date | undefined;
   acceptedAt?: Date | undefined;
   dispatchedAt?: Date | undefined;
+  deliveredAt?: Date | undefined;
   cancelledAt?: Date | undefined;
 };
 
@@ -57,12 +57,12 @@ export class Order {
   public readonly totalAmount: number;
   public readonly orderStatus: OrderStatus;
   public readonly cancelReason?: string | undefined;
-  public readonly paymentId?: string | null;
   public readonly items: OrderItem[];
   public readonly createdAt?: Date | undefined;
   public readonly confirmedAt?: Date | undefined;
   public readonly acceptedAt?: Date | undefined;
   public readonly dispatchedAt?: Date | undefined;
+  public readonly deliveredAt?: Date | undefined;
   public readonly cancelledAt?: Date | undefined;
 
   constructor(props: OrderProps) {
@@ -142,16 +142,13 @@ export class Order {
 
     this.orderStatus = props.orderStatus ?? "created";
     this.cancelReason = props.cancelReason ?? undefined;
-
-    this.paymentId = props.paymentId ?? null;
-
     this.items = props.items;
-
     this.createdAt = props.createdAt;
     this.confirmedAt = props.confirmedAt;
     this.acceptedAt = props.acceptedAt;
     this.dispatchedAt = props.dispatchedAt;
     this.cancelledAt = props.cancelledAt;
+    this.deliveredAt = props.deliveredAt;
   }
 
   /* ---------- DOMAIN METHODS ---------- */

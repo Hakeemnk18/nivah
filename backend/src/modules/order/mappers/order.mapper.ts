@@ -1,5 +1,5 @@
 import { Order } from "../entities/order.entity.js";
-import type { AdminOrderListItem, OrderListView, OrderSummaryView } from "../types/order.type.js";
+import type { AdminOrderFullView, AdminOrderListItem, IOrderLean, IPaymentLean, OrderListView, OrderSummaryView } from "../types/order.type.js";
 
 
 export class OrderMapper {
@@ -40,12 +40,7 @@ export class OrderMapper {
       subtotal: orderModelData.subtotal,
       shippingFee: orderModelData.shippingFee,
       totalAmount: orderModelData.totalAmount,
-
       orderStatus: orderModelData.orderStatus,
-
-      paymentId:
-        orderModelData.paymentId?.toString() || null,
-
       items:
         orderModelData.items?.map((item: any) => ({
           id: item._id?.toString() || item.id?.toString(),
@@ -63,6 +58,7 @@ export class OrderMapper {
       acceptedAt: orderModelData.acceptedAt,
       dispatchedAt: orderModelData.dispatchedAt,
       cancelledAt: orderModelData.cancelledAt,
+      deliveredAt: orderModelData.deliveredAt,
     });
   }
 
@@ -84,15 +80,10 @@ export class OrderMapper {
         state: orderEntity.userSnapshot.state,
         pincode: orderEntity.userSnapshot.pincode,
       },
-
       subtotal: orderEntity.subtotal,
       shippingFee: orderEntity.shippingFee,
       totalAmount: orderEntity.totalAmount,
-
       orderStatus: orderEntity.orderStatus,
-
-      paymentId: orderEntity.paymentId ?? null,
-
       items: orderEntity.items.map((item) => ({
         _id: item.id,
         productId: item.productId,
@@ -107,6 +98,7 @@ export class OrderMapper {
       acceptedAt: orderEntity.acceptedAt,
       dispatchedAt: orderEntity.dispatchedAt,
       cancelledAt: orderEntity.cancelledAt,
+      deliveredAt: orderEntity.deliveredAt,
     };
   }
 
@@ -150,55 +142,9 @@ export class OrderMapper {
     };
   }
 
-  /* ================= ADMIN DETAIL VIEW ================= */
 
-  //   static toAdminView(orderModelData: any): OrderView | null {
-  //     if (!orderModelData) return null;
-
-  //     const id =
-  //       orderModelData._id?.toString() ||
-  //       orderModelData.id?.toString();
-
-  //     if (!id) {
-  //       console.error("Order data missing ID:", orderModelData);
-  //       return null;
-  //     }
-
-  //     return {
-  //       id,
-  //       orderNumber: orderModelData.orderNumber,
-  //       orderStatus: orderModelData.orderStatus,
-
-  //       user: {
-  //         id:
-  //           orderModelData.userId?._id?.toString() ||
-  //           orderModelData.userId?.toString(),
-  //         name: orderModelData.userSnapshot.name,
-  //         email: orderModelData.userSnapshot.email,
-  //       },
-
-  //       subtotal: orderModelData.subtotal,
-  //       shippingFee: orderModelData.shippingFee,
-  //       totalAmount: orderModelData.totalAmount,
-
-  //       createdAt: orderModelData.createdAt,
-
-  //       items: orderModelData.items.map((item: any) => ({
-  //         itemId: item._id.toString(),
-  //         productId:
-  //           item.productId?._id?.toString() ||
-  //           item.productId?.toString(),
-  //         name: item.name,
-  //         price: item.price,
-  //         quantity: item.quantity,
-  //       })),
-  //     };
-  //   }
 
   //   /* ================= ADMIN LIST VIEW ================= */
-
-
-
 
   static toAdminOrderListItem(orderModelData: any): AdminOrderListItem | null {
     if (!orderModelData) return null;
@@ -224,58 +170,74 @@ export class OrderMapper {
     };
   }
 
-  //   /* ================= USER DETAIL VIEW ================= */
+  /* ================= ADMIN DETAIL VIEW ================= */
+  static toAdminOrderFullView(
+    order: IOrderLean,
+    payment?: IPaymentLean | null
+  ): AdminOrderFullView {
+    return {
+      id: order._id.toString(),
 
-  //   static toUserView(orderModelData: any): UserOrderView | null {
-  //     if (!orderModelData) return null;
+      orderNumber: order.orderNumber,
 
-  //     const id =
-  //       orderModelData._id?.toString() ||
-  //       orderModelData.id?.toString();
+      user: {
+        name: order.userSnapshot.name,
+        email: order.userSnapshot.email,
+        phone: order.userSnapshot.phone,
+        addressLine1: order.userSnapshot.addressLine1,
+        addressLine2: order.userSnapshot.addressLine2 || "",
+        city: order.userSnapshot.city,
+        state: order.userSnapshot.state,
+        pincode: order.userSnapshot.pincode,
+      },
 
-  //     if (!id) {
-  //       console.error("Order data missing ID:", orderModelData);
-  //       return null;
-  //     }
+      pricing: {
+        subtotal: order.subtotal,
+        shippingFee: order.shippingFee,
+        totalAmount: order.totalAmount,
+      },
 
-  //     return {
-  //       id,
-  //       orderNumber: orderModelData.orderNumber,
-  //       orderStatus: orderModelData.orderStatus,
-  //       totalAmount: orderModelData.totalAmount,
-  //       createdAt: orderModelData.createdAt,
+      orderStatus: order.orderStatus,
+      ...(order.cancelReason && { cancelReason: order.cancelReason }),
 
-  //       items: orderModelData.items.map((item: any) => ({
-  //         itemId: item._id.toString(),
-  //         name: item.name,
-  //         price: item.price,
-  //         quantity: item.quantity,
-  //       })),
-  //     };
-  //   }
+      timeline: {
+        createdAt: order.createdAt.toISOString(),
+        ...(order.confirmedAt && {
+          confirmedAt: order.confirmedAt.toISOString(),
+        }),
+        ...(order.acceptedAt && {
+          acceptedAt: order.acceptedAt.toISOString(),
+        }),
+        ...(order.dispatchedAt && {
+          dispatchedAt: order.dispatchedAt.toISOString(),
+        }),
+        ...(order.cancelledAt && {
+          cancelledAt: order.cancelledAt.toISOString(),
+        }),
+        ...(order.deliveredAt && {
+          deliveredAt: order.deliveredAt.toISOString(),
+        }),
+      },
 
-  //   /* ================= USER LIST VIEW ================= */
+      ...(payment && {
+        payment: {
+          paymentId: payment._id.toString(),
+          status: payment.status,
+          ...(payment.paymentMode && { method: payment.paymentMode }),
+          ...(payment.createdAt && {
+            paidAt: payment.createdAt.toISOString(),
+          }),
+        },
+      }),
 
-  //   static toUserListView(
-  //     orderModelData: any,
-  //   ): UserOrderListView | null {
-  //     if (!orderModelData) return null;
-
-  //     const id =
-  //       orderModelData._id?.toString() ||
-  //       orderModelData.id?.toString();
-
-  //     if (!id) {
-  //       console.error("Order data missing ID:", orderModelData);
-  //       return null;
-  //     }
-
-  //     return {
-  //       id,
-  //       orderNumber: orderModelData.orderNumber,
-  //       totalAmount: orderModelData.totalAmount,
-  //       orderStatus: orderModelData.orderStatus,
-  //       createdAt: orderModelData.createdAt,
-  //     };
-  //   }
+      items: order.items.map((item) => ({
+        productId: item.productId.toString(),
+        variantId: item.variantId.toString(),
+        name: item.name,
+        size: item.size,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+    };
+  }
 }

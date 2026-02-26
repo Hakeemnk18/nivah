@@ -145,7 +145,7 @@ const adminRoutes = [
     ),
   },
   {
-    path: "orderDetails",
+    path: "orderDetails/:orderId",
     element: (
       <Suspense fallback={<Loader />}>
         <AdminOrderDetailsPage />

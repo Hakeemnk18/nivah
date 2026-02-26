@@ -1,9 +1,9 @@
 import type { IGetAllDocDB } from "../../../core/shared/interfaces/get.all.doc.interface.js";
 import { Order } from "../entities/order.entity.js";
 import type {
-  OrderListView,
   OrderSummaryView,
   AdminOrderListItem,
+  AdminOrderFullView,
 } from "../types/order.type.js";
 import type { OrderStatus } from "../types/order.type.js";
 import type { ClientSession } from "mongoose";
@@ -31,4 +31,6 @@ export interface IOrderRepository {
   dispatchOrder(orderId: string, session?: ClientSession): Promise<void>;
   deliverOrder(orderId: string, session?: ClientSession): Promise<void>;
   acceptOrder(orderId: string, session?: ClientSession): Promise<void>;
+  getAdminOrderFullView(orderId: string): Promise<AdminOrderFullView | null>;
+  getAdminSummery(orderId: string): Promise<OrderSummaryView | null>;
 }

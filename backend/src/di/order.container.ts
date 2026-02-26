@@ -27,6 +27,10 @@ import type { IAcceptOrderUseCase } from "../modules/order/use-cases/interfaces/
 import { AcceptOrderUseCase } from "../modules/order/use-cases/accept.order.use-case.js";
 import type { ICancelOrderUseCase } from "../modules/order/use-cases/interfaces/cancel.order.use-case.interface.js";
 import { CancelOrderUseCase } from "../modules/order/use-cases/cancel.order.use-case.js";
+import type { IGetAdminFullViewUseCase } from "../modules/order/use-cases/interfaces/get.admin.full.view.use-case.interface.js";
+import { GetAdminFullViewUseCase } from "../modules/order/use-cases/get.admin.full.view.use-case.js";
+import type { IAdminDownloadInvoiceUseCase } from "../modules/order/use-cases/interfaces/admin.dowload.invoice.use-case.interface.js";
+import { AdminDownloadInvoiceUseCase } from "../modules/order/use-cases/admin.dowload.invoice.use-case.js";
 
 export const registerOrderDependencies = () => {
     container.register<IOrderRepository>("IOrderRepository", {
@@ -83,6 +87,14 @@ export const registerOrderDependencies = () => {
 
     container.register<ICancelOrderUseCase>("ICancelOrderUseCase", {
         useClass: CancelOrderUseCase,
+    });
+
+    container.register<IGetAdminFullViewUseCase>("IGetAdminFullViewUseCase", {
+        useClass: GetAdminFullViewUseCase,
+    });
+
+    container.register<IAdminDownloadInvoiceUseCase>("IAdminDownloadInvoiceUseCase", {
+        useClass: AdminDownloadInvoiceUseCase,
     });
 
 };

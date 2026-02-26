@@ -170,7 +170,6 @@ export class CreateOrderUseCase implements ICreateOrderUseCase {
             shippingFee: SHIPPING_FEE,
             totalAmount: totalRupees,
             orderStatus: "created",
-            paymentId: null,
         });
 
         /* =========================================================

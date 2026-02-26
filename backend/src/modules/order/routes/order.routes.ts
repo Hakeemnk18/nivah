@@ -35,14 +35,20 @@ router.get('/',
 router.post('/verify-payment',
   (req, res) => orderController.verifyPayment(req, res))
 
-//get order status
-router.get('/:orderId/order-status',
-  (req, res) => orderController.getOrderStatus(req, res))
-
 //handle payment failure
 router.post('/payment-failure',
   (req, res) => orderController.handlePaymentFailure(req, res)
 )
+
+//get admin full view
+router.get('/:orderId',
+  (req, res) => orderController.getAdminFullView(req, res))
+
+//get order status
+router.get('/:orderId/order-status',
+  (req, res) => orderController.getOrderStatus(req, res))
+
+
 
 //get order summary
 router.get('/:orderId/order-summary',
@@ -50,6 +56,10 @@ router.get('/:orderId/order-summary',
 
 //download invoice
 router.get("/:orderId/invoice",
+  (req, res) => orderController.downloadInvoice(req, res));
+
+//admin download invoice
+router.get("/:orderId/invoice/download",
   (req, res) => orderController.downloadInvoice(req, res));
 
 //dispatch order

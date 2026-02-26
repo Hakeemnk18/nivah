@@ -38,8 +38,8 @@ export interface IOrder extends Document {
   confirmedAt?: Date;
   acceptedAt?: Date;
   dispatchedAt?: Date;
+  deliveredAt?: Date;
   cancelledAt?: Date;
-  paymentId?: Types.ObjectId;
   items: IOrderItem[];
 }
 
@@ -116,11 +116,7 @@ const orderSchema = new Schema<IOrder>(
     acceptedAt: Date,
     dispatchedAt: Date,
     cancelledAt: Date,
-
-    paymentId: {
-      type: Schema.Types.ObjectId,
-      ref: "Payment",
-    },
+    deliveredAt: Date,
 
     /* ---------- ITEMS SNAPSHOT ---------- */
     items: {
