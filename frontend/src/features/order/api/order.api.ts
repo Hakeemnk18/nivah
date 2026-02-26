@@ -25,7 +25,6 @@ export const downloadInvoiceApi = async (
     orderId: string,
     guestId: string
 ): Promise<Blob> => {
-    console.log("api called order id ", orderId)
     const response = await api.get<Blob>
         (`/orders/${orderId}/invoice?guestId=${guestId}`, {
             responseType: "blob",
@@ -81,6 +80,18 @@ export const getAdminOrderDetailsApi = async (
     orderId: string
 ): Promise<AdminOrderFullResponse> => {
     const response = await api.get<AdminOrderFullResponse>(`/orders/${orderId}`);
+    return response.data;
+};
+
+/* ---------- DOWNLOAD INVOICE ---------- */
+export const adminDownloadInvoiceApi = async (
+    orderId: string,
+): Promise<Blob> => {
+    
+    const response = await api.get<Blob>
+        (`/orders/${orderId}/invoice/download`, {
+            responseType: "blob",
+        });
     return response.data;
 };
 

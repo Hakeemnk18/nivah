@@ -22,6 +22,7 @@ export class AdminDownloadInvoiceUseCase implements IAdminDownloadInvoiceUseCase
                 HttpStatusCode.NOT_FOUND
             )
         }
+        console.log("Order found, generating invoice...", order);
         const pdfBuffer = await this.invoiceService.generateInvoice(order);
 
         return pdfBuffer;

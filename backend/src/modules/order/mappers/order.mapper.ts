@@ -138,6 +138,7 @@ export class OrderMapper {
         name: item.name,
         price: item.price,
         quantity: item.quantity,
+        size: item.size,
       })),
     };
   }

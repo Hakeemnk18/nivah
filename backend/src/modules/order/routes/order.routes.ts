@@ -54,13 +54,15 @@ router.get('/:orderId/order-status',
 router.get('/:orderId/order-summary',
   (req, res) => orderController.getOrderSummary(req, res))
 
+//admin download invoice
+router.get("/:orderId/invoice/download",
+  (req, res) => orderController.adminDownloadInvoice(req, res));
+
 //download invoice
 router.get("/:orderId/invoice",
   (req, res) => orderController.downloadInvoice(req, res));
 
-//admin download invoice
-router.get("/:orderId/invoice/download",
-  (req, res) => orderController.downloadInvoice(req, res));
+
 
 //dispatch order
 router.patch("/:orderId/dispatch",

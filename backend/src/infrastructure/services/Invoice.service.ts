@@ -220,7 +220,7 @@ export class InvoiceService implements IInvoiceService {
                 .text(
                     "End of Document",
                     50,
-                    footerY + 34,
+                    footerY + 25,
                     { align: "center", width: doc.page.width - 100 }
                 );
 
