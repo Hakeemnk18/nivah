@@ -4,9 +4,7 @@ import { lazy, Suspense } from "react";
 const AdminBootstrap = lazy(
   () => import("../features/admin/components/AdminBootstrap")
 );
-const AdminDashboard = lazy(
-  () => import("../features/admin/pages/Home")
-);
+
 
 const LoginPage = lazy(
   () => import("../features/auth/pages/LoginPage")
@@ -24,6 +22,7 @@ const CreateProductPage = lazy(() => import("../features/products/pages/CreatePr
 const EditProductPage = lazy(() => import("../features/products/pages/EditProduct"))
 const OrderTable = lazy(() => import("../features/order/pages/AdminOrdersTable"))
 const AdminOrderDetailsPage = lazy(() => import("../features/order/pages/AdminOrderDetailsPage"))
+const AdminDashboard = lazy(() => import("../features/admin/pages/AdminDashboard"))
 
 /* ---------- fallback loader ---------- */
 const Loader = () => (
@@ -47,9 +46,8 @@ const adminRoutes = [
     path: "dashboard",
     element: (
       <Suspense fallback={<Loader />}>
-        <AdminBootstrap>
           <AdminDashboard />
-        </AdminBootstrap>
+        
       </Suspense>
     ),
   },
