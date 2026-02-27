@@ -31,6 +31,11 @@ router.post('/',
 router.get('/',
   (req, res) => orderController.getAdminOrders(req, res))
 
+//get revenue chart
+// router.get('/revenue-chart', 
+//     (req, res) => orderController.getRevenueChart(req, res)
+// );
+
 //verify payment
 router.post('/verify-payment',
   (req, res) => orderController.verifyPayment(req, res))

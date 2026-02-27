@@ -1,14 +1,14 @@
-import type { RevenueChartData } from "../types/admin.type";
 import { useEffect, useMemo, useState } from "react";
+import type { RevenueChartData, RevenueRange } from "../types/admin.type";
 
 type Props = {
   data: RevenueChartData;
-  onRangeChange?: (range: string) => void;
+  onRangeChange?: (range: RevenueRange) => void;
 };
 
-const ranges = ["Year", "Month", "Week", "Daily"];
+const ranges: RevenueRange[] = ["Year", "Month", "Week", "Daily"];
 
-// 👇 Added: Helper to format Y-axis values cleanly (e.g., 240k, 1.5M)
+
 const formatYAxis = (value: number) => {
   if (value === 0) return "0";
   if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
