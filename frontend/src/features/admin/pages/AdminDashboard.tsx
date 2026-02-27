@@ -1,37 +1,38 @@
 import { useState } from "react";
 import AdminErrorState from "../../admin/components/AdminErrorState";
-
-import DashboardMotivationCard from "../components/MotivationCard";
 import DashboardSkeleton from "../components/DashboardSkelton";
 import {
   mockKpiCards,
   mockLowSellingProducts,
   mockMotivationSummary,
   mockOrderStatusDistribution,
-  mockRevenueChart,
   mockTopSellingCategories,
   mockTopSellingProducts,
+  type RevenueRange,
 } from "../types/admin.type";
-import DashboardKpiCard from "../components/KPICard";
-import OrderStatusCard from "../components/OrderStatusCard";
-import RevenueChartCard from "../components/RevanueChart";
-import RankingListCard from "../components/RankingListCard";
 import MotivationWidget from "../components/containers/MotivationWidget";
 import KpiWidget from "../components/containers/KpiWidget";
 import OrderStatusWidget from "../components/containers/OrderStatusWidget";
 import RevenueWidget from "../components/containers/RevenueWidget";
 import CategoryRankingWidget from "../components/containers/CategoryRankingWidget";
 import ProductRankingsWidget from "../components/containers/ProductRankingsWidget";
+import { useRevenueChart } from "../hooks/use.revenue.chart";
+
 
 const AdminDashboardPage = () => {
+
+  //revenue chart
+  const [chartRange, setChartRange] = useState<RevenueRange>("Month");
+  const {data: revenueChartData, isLoading: revenueChartIsLoading, isError: revenueChartIsError} = useRevenueChart(chartRange);
+  const revenueChart = revenueChartData?.data || null
+
+
   const dashboardMotivationIsLoading = false;
   const dashboardMotivationIsError = false;
   const dashboardKpisIsLoading = false;
   const dashboardKpisIsError = false;
   const orderStatusIsLoading = false;
   const orderStatusIsError = false;
-  const revenueChartIsLoading = false;
-  const revenueChartIsError = false;
   const productsIsLoading = false;
   const productsIsError = false;
   const categoriesIsLoading = false;
@@ -77,7 +78,8 @@ const AdminDashboardPage = () => {
             <RevenueWidget
               isLoading={revenueChartIsLoading}
               isError={revenueChartIsError}
-              data={mockRevenueChart}
+              data={revenueChart}
+              onRangeChange={(r: RevenueRange)=> setChartRange(r)}
             />
           </div>
         </div>

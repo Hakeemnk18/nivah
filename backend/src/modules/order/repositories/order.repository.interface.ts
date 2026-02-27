@@ -33,4 +33,5 @@ export interface IOrderRepository {
   acceptOrder(orderId: string, session?: ClientSession): Promise<void>;
   getAdminOrderFullView(orderId: string): Promise<AdminOrderFullView | null>;
   getAdminSummery(orderId: string): Promise<OrderSummaryView | null>;
+  getOrdersForRevenue(startDate: Date, endDate: Date): Promise<{ createdAt: Date; totalAmount: number }[]>;
 }

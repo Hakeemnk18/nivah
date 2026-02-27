@@ -1,3 +1,4 @@
+import type { ApiResponse } from "../../../shared/types/api.types";
 import type { OrderStatus } from "../../order/types/order.type";
 
 export type DashboardMotivationSummary = {
@@ -52,15 +53,7 @@ export type OrderStatusDistribution = {
   }[];
 };
 
-export type RevenueChartData = {
-  range: "7d" | "30d" | "6m" | "1y";
-  currency: "INR" | "USD";
-  series: {
-    label: string;      
-    data: number[];     
-  };
-  categories: string[]; 
-};
+
 
 export type TopAndLowSellingProductItem = {
   iconUrl:string
@@ -178,7 +171,7 @@ export const mockOrderStatusDistribution: OrderStatusDistribution = {
 };
 
 export const mockRevenueChart: RevenueChartData = {
-  range: "30d",
+  range: "Month",
   currency: "INR",
   categories: [
     "Week 1",
@@ -320,3 +313,18 @@ export const mockTopSellingCategories: TopSellingCategoriesResponse = {
     },
   ],
 };
+
+
+export type RevenueRange = "Year" | "Month" | "Week" | "Daily";
+
+export type RevenueChartData = {
+  range: RevenueRange;
+  currency: "INR" | "USD";
+  series: {
+    label: string;      
+    data: number[];     
+  };
+  categories: string[]; 
+};
+
+export type RevenueChartResponse = ApiResponse<RevenueChartData>

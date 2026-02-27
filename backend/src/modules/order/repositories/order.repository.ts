@@ -25,7 +25,6 @@ import { PaymentModel } from "../../payment/infrastructure/payment.schema.js";
 const { ObjectId } = Types;
 
 export class OrderRepository implements IOrderRepository {
-
   /* ================= CREATE ================= */
 
   async create(orderEntity: Order): Promise<Order> {
@@ -116,9 +115,6 @@ export class OrderRepository implements IOrderRepository {
     return OrderMapper.toDomain(document);
   }
 
-
-
-
   async getOrderStatus(orderId: string): Promise<OrderStatus> {
     const document = await OrderModel.findById(orderId).lean();
     return document?.orderStatus ?? "created";
@@ -130,30 +126,32 @@ export class OrderRepository implements IOrderRepository {
       createdAt: { $lt: date },
     }).lean();
 
-    return documents.map(OrderMapper.toDomain)
+    return documents
+      .map(OrderMapper.toDomain)
       .filter((o): o is Order => o !== null);
   }
 
-  async autoCancelOlderThan(orderIds: string[], session?: ClientSession): Promise<void> {
+  async autoCancelOlderThan(
+    orderIds: string[],
+    session?: ClientSession,
+  ): Promise<void> {
     const result = await OrderModel.updateMany(
       {
         orderStatus: "created",
-        _id: { $in: orderIds }
+        _id: { $in: orderIds },
       },
       {
         $set: {
           orderStatus: "cancelled",
           cancelledAt: new Date(),
-          cancelReason: "Auto cancelled due to payment timeout"
-        }
+          cancelReason: "Auto cancelled due to payment timeout",
+        },
       },
-      session ? { session } : {}
+      session ? { session } : {},
     );
 
     if (result.modifiedCount === 0) {
-      throw new Error(
-        ResponseMessages.ORDER_NOT_FOUND,
-      )
+      throw new Error(ResponseMessages.ORDER_NOT_FOUND);
     }
   }
 
@@ -162,13 +160,11 @@ export class OrderRepository implements IOrderRepository {
     const result = await OrderModel.updateOne(
       { _id: orderId, orderStatus: "created" },
       { $set: { orderStatus: "confirmed", confirmedAt: new Date() } },
-      session ? { session } : {}
+      session ? { session } : {},
     );
 
     if (result.modifiedCount === 0) {
-      throw new Error(
-        ResponseMessages.ORDER_NOT_FOUND,
-      )
+      throw new Error(ResponseMessages.ORDER_NOT_FOUND);
     }
   }
 
@@ -176,19 +172,26 @@ export class OrderRepository implements IOrderRepository {
   async cancelOrder(orderId: string, session?: ClientSession): Promise<void> {
     const result = await OrderModel.updateOne(
       { _id: orderId, orderStatus: { $nin: ["cancelled", "delivered"] } },
-      { $set: { orderStatus: "cancelled", cancelledAt: new Date(), cancelReason: "Payment failed" } },
-      session ? { session } : {}
+      {
+        $set: {
+          orderStatus: "cancelled",
+          cancelledAt: new Date(),
+          cancelReason: "Payment failed",
+        },
+      },
+      session ? { session } : {},
     );
 
     if (result.modifiedCount === 0) {
-      throw new Error(
-        ResponseMessages.ORDER_NOT_FOUND,
-      )
+      throw new Error(ResponseMessages.ORDER_NOT_FOUND);
     }
   }
 
   // get order summary
-  async getSummary(orderId: string, guestId: string): Promise<OrderSummaryView | null> {
+  async getSummary(
+    orderId: string,
+    guestId: string,
+  ): Promise<OrderSummaryView | null> {
     const document = await OrderModel.findOne({ _id: orderId, guestId }).lean();
     return OrderMapper.toSummaryView(document);
   }
@@ -196,7 +199,6 @@ export class OrderRepository implements IOrderRepository {
   async getAdminOrderList(allDoc: IGetAllDocDB): Promise<AdminOrderListItem[]> {
     const { query, page, limit, sort } = allDoc;
     const skip = (page - 1) * limit;
-
 
     const documents = await OrderModel.find(query)
       .sort(sort)
@@ -218,13 +220,11 @@ export class OrderRepository implements IOrderRepository {
     const result = await OrderModel.updateOne(
       { _id: orderId, orderStatus: "accepted" },
       { $set: { orderStatus: "dispatched", dispatchedAt: new Date() } },
-      session ? { session } : {}
+      session ? { session } : {},
     );
 
     if (result.modifiedCount === 0) {
-      throw new Error(
-        ResponseMessages.ORDER_NOT_FOUND,
-      )
+      throw new Error(ResponseMessages.ORDER_NOT_FOUND);
     }
   }
 
@@ -233,13 +233,11 @@ export class OrderRepository implements IOrderRepository {
     const result = await OrderModel.updateOne(
       { _id: orderId, orderStatus: "dispatched" },
       { $set: { orderStatus: "delivered", deliveredAt: new Date() } },
-      session ? { session } : {}
+      session ? { session } : {},
     );
 
     if (result.modifiedCount === 0) {
-      throw new Error(
-        ResponseMessages.ORDER_NOT_FOUND,
-      )
+      throw new Error(ResponseMessages.ORDER_NOT_FOUND);
     }
   }
 
@@ -248,25 +246,43 @@ export class OrderRepository implements IOrderRepository {
     const result = await OrderModel.updateOne(
       { _id: orderId, orderStatus: "confirmed" },
       { $set: { orderStatus: "accepted", acceptedAt: new Date() } },
-      session ? { session } : {}
+      session ? { session } : {},
     );
 
     if (result.modifiedCount === 0) {
-      throw new Error(
-        ResponseMessages.ORDER_NOT_FOUND,
-      )
+      throw new Error(ResponseMessages.ORDER_NOT_FOUND);
     }
   }
 
-  async getAdminOrderFullView(orderId: string): Promise<AdminOrderFullView | null> {
+  async getAdminOrderFullView(
+    orderId: string,
+  ): Promise<AdminOrderFullView | null> {
     const document = await OrderModel.findById(orderId).lean<IOrderLean>();
     if (!document) return null;
-    const payment = await PaymentModel.findOne({ orderId: document._id }).lean<IPaymentLean>();
+    const payment = await PaymentModel.findOne({
+      orderId: document._id,
+    }).lean<IPaymentLean>();
     return OrderMapper.toAdminOrderFullView(document, payment);
   }
 
   async getAdminSummery(orderId: string): Promise<OrderSummaryView | null> {
     const document = await OrderModel.findOne({ _id: orderId }).lean();
     return OrderMapper.toSummaryView(document);
+  }
+
+  async getOrdersForRevenue(
+    startDate: Date,
+    endDate: Date,
+  ): Promise<{ createdAt: Date; totalAmount: number }[]> {
+    const documents = await OrderModel.find({
+      createdAt: { $gte: startDate, $lte: endDate },
+      orderStatus: { $in: ["confirmed", "accepted", "dispatched"] },
+    },{ createdAt: 1, totalAmount: 1, _id: 0 })
+    .lean<{ createdAt: Date; totalAmount: number }[]>();
+
+    return documents.map((doc) => ({
+      createdAt: doc.createdAt!,
+      totalAmount: doc.totalAmount,
+    }));
   }
 }
