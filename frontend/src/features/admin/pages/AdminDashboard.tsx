@@ -2,7 +2,6 @@ import { useState } from "react";
 import AdminErrorState from "../../admin/components/AdminErrorState";
 import DashboardSkeleton from "../components/DashboardSkelton";
 import {
-  mockKpiCards,
   mockLowSellingProducts,
   mockMotivationSummary,
   mockOrderStatusDistribution,
@@ -17,6 +16,7 @@ import RevenueWidget from "../components/containers/RevenueWidget";
 import CategoryRankingWidget from "../components/containers/CategoryRankingWidget";
 import ProductRankingsWidget from "../components/containers/ProductRankingsWidget";
 import { useRevenueChart } from "../hooks/use.revenue.chart";
+import { useKpiCards } from "../hooks/use.kpi.cards";
 
 
 const AdminDashboardPage = () => {
@@ -26,11 +26,12 @@ const AdminDashboardPage = () => {
   const {data: revenueChartData, isLoading: revenueChartIsLoading, isError: revenueChartIsError} = useRevenueChart(chartRange);
   const revenueChart = revenueChartData?.data || null
 
+  // kpi cards
+  const {data: kpiCardsData, isLoading: dashboardKpisIsLoading, isError: dashboardKpisIsError} = useKpiCards();
+  const kpiCards = kpiCardsData?.data || null;
 
   const dashboardMotivationIsLoading = false;
   const dashboardMotivationIsError = false;
-  const dashboardKpisIsLoading = false;
-  const dashboardKpisIsError = false;
   const orderStatusIsLoading = false;
   const orderStatusIsError = false;
   const productsIsLoading = false;
@@ -61,7 +62,7 @@ const AdminDashboardPage = () => {
           <KpiWidget
             isLoading={dashboardKpisIsLoading}
             isError={dashboardKpisIsError}
-            data={mockKpiCards}
+            data={kpiCards}
           />
         </div>
 

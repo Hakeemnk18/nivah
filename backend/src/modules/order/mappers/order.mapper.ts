@@ -1,6 +1,16 @@
+import type {
+  TopAndLowSellingProductItem,
+  TopSellingCategoryItem,
+} from "../../analysis/types/analysis.type.js";
 import { Order } from "../entities/order.entity.js";
-import type { AdminOrderFullView, AdminOrderListItem, IOrderLean, IPaymentLean, OrderListView, OrderSummaryView } from "../types/order.type.js";
-
+import type {
+  AdminOrderFullView,
+  AdminOrderListItem,
+  IOrderLean,
+  IPaymentLean,
+  OrderListView,
+  OrderSummaryView,
+} from "../types/order.type.js";
 
 export class OrderMapper {
   /* ================= DOMAIN ================= */
@@ -11,8 +21,7 @@ export class OrderMapper {
     }
 
     const idString =
-      orderModelData._id?.toString() ||
-      orderModelData.id?.toString();
+      orderModelData._id?.toString() || orderModelData.id?.toString();
 
     if (!idString) {
       console.error("Order data missing ID:", orderModelData);
@@ -22,9 +31,7 @@ export class OrderMapper {
     return new Order({
       id: idString,
       orderNumber: orderModelData.orderNumber,
-      userId:
-        orderModelData.userId?.toString() ||
-        orderModelData.userId,
+      userId: orderModelData.userId?.toString() || orderModelData.userId,
       guestId: orderModelData.guestId,
       userSnapshot: {
         name: orderModelData.userSnapshot.name,
@@ -44,8 +51,7 @@ export class OrderMapper {
       items:
         orderModelData.items?.map((item: any) => ({
           id: item._id?.toString() || item.id?.toString(),
-          productId:
-            item.productId?.toString() || item.productId,
+          productId: item.productId?.toString() || item.productId,
           variantId: item.variantId?.toString() || item.variantId,
           size: item.size,
           name: item.name,
@@ -105,9 +111,7 @@ export class OrderMapper {
   static toSummaryView(orderModelData: any): OrderSummaryView | null {
     if (!orderModelData) return null;
 
-    const id =
-      orderModelData._id?.toString() ||
-      orderModelData.id?.toString();
+    const id = orderModelData._id?.toString() || orderModelData.id?.toString();
 
     if (!id) {
       console.error("Order data missing ID:", orderModelData);
@@ -143,16 +147,12 @@ export class OrderMapper {
     };
   }
 
-
-
   //   /* ================= ADMIN LIST VIEW ================= */
 
   static toAdminOrderListItem(orderModelData: any): AdminOrderListItem | null {
     if (!orderModelData) return null;
 
-    const id =
-      orderModelData._id?.toString() ||
-      orderModelData.id?.toString();
+    const id = orderModelData._id?.toString() || orderModelData.id?.toString();
 
     if (!id) {
       console.error("Order data missing ID:", orderModelData);
@@ -171,10 +171,53 @@ export class OrderMapper {
     };
   }
 
+  /* ================= ADMIN TOP SELLING PRODUCT ================= */
+
+  static toTopAndLowSellingProductItem(
+    data: any,
+  ): TopAndLowSellingProductItem | null {
+    if (!data) return null;
+
+    const productId = data.productId?.toString?.() || data._id?.toString?.();
+
+    if (!productId) {
+      console.error("Product ranking missing productId:", data);
+      return null;
+    }
+
+    return {
+      productId,
+      name: data.name ?? "Unknown Product",
+      totalQuantitySold: Number(data.totalQuantitySold ?? 0),
+      totalRevenue: Number(data.totalRevenue ?? 0),
+      iconUrl: data.iconUrl ?? "",
+    };
+  }
+
+  /* ================= ADMIN TOP SELLING CATEGORY ================= */
+  static toTopSellingCategoryItem(data: any): TopSellingCategoryItem | null {
+    if (!data) return null;
+
+    const categoryId = data.categoryId?.toString?.() || data._id?.toString?.();
+
+    if (!categoryId) {
+      console.error("Category ranking missing categoryId:", data);
+      return null;
+    }
+
+    return {
+      categoryId,
+      name: data.name ?? "Unknown Category",
+      totalQuantitySold: Number(data.totalQuantitySold ?? 0),
+      totalRevenue: Number(data.totalRevenue ?? 0),
+      iconUrl: data.iconUrl ?? "",
+    };
+  }
+
   /* ================= ADMIN DETAIL VIEW ================= */
   static toAdminOrderFullView(
     order: IOrderLean,
-    payment?: IPaymentLean | null
+    payment?: IPaymentLean | null,
   ): AdminOrderFullView {
     return {
       id: order._id.toString(),
