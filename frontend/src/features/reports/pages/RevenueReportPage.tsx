@@ -1,19 +1,17 @@
 // src/features/reports/pages/RevenueReportPage.tsx
 import { useState } from "react";
-import { Download, Calendar } from "lucide-react";
+import { Download } from "lucide-react";
 import AdminErrorState from "../../admin/components/AdminErrorState";
 import RevenueReportSkeleton from "../components/RevenueReportSkeleton";
 import RevenueSummaryCards from "../components/RevenueSummaryCards";
 import RevenueDataTable from "../components/RevenueDataTable";
-
-// Import your types and mock data here
 import type { RevenueFilterState } from "../types/reports.type";
-import { mockRevenueReportResponse } from "../types/reports.type";
 import ReportDateSelector from "../components/ReportDateSelector";
 import Pagination from "../../admin/components/table/Pagination";
 import { useRevenueReport } from "../hooks/use.revenue.report";
 
 const RevenueReportPage = () => {
+  console.log("revenue page mounted")
   const [currentPage, setCurrentPage] = useState(1);
 
 
@@ -25,8 +23,8 @@ const RevenueReportPage = () => {
   });
   const [customApplied, setCustomApplied] = useState(false);
   const enabled =
-  filter.option !== "custom" ||
-  (filter.option === "custom" && customApplied);
+    filter.option !== "custom" ||
+    (filter.option === "custom" && customApplied);
 
 
   // Data Fetching custom hook
@@ -42,11 +40,37 @@ const RevenueReportPage = () => {
 
   // Handlers
   const handleDownloadCSV = () => {
-    // We will implement CSV generation logic here later!
-    console.log("Downloading CSV for:", filter);
+    if (!reportData?.dailyData || reportData.dailyData.length === 0) {
+      console.warn("No data available to download.");
+      return;
+    }
+
+    const headers = ["Date", "Revenue", "Orders"];
+
+    // 1. Add "\uFEFF" (Byte Order Mark) to ensure Excel reads UTF-8 characters correctly
+    const csvRows = ["\uFEFF" + headers.join(",")];
+
+    for (const row of reportData.dailyData) {
+      // 2. Wrap all values in double quotes to prevent commas in data from breaking the columns
+      csvRows.push(`"${row.date}","${row.revenue}","${row.orders}"`);
+    }
+
+    const csvString = csvRows.join("\n");
+    const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    // Added a fallback just in case filter.option is undefined
+    link.setAttribute("download", `revenue_report_${filter?.option || 'export'}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
   };
 
- 
+
 
   // 3. Render logic
   let content;
@@ -95,10 +119,10 @@ const RevenueReportPage = () => {
             <button
               onClick={handleDownloadCSV}
               disabled={isLoading || isError}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium py-2.5 px-5 rounded-xl transition-colors shadow-md"
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium py-2.5 px-5 rounded-xl transition-colors shadow-md cursor-pointer"
             >
-              <Download className="w-4 h-4" />
-              <span className="sm:inline">Export PDF</span>
+              <Download className="w-4 h-4 " />
+              <span className="sm:inline">Export CSV</span>
             </button>
           </div>
         </div>
