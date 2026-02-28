@@ -6,6 +6,7 @@ import { registerCartDependencies } from "./cart.container.js";
 import { registerOrderDependencies } from "./order.container.js";
 import { registerPaymentDependencies } from "./payment.container.js";
 import { registerAnalysisDependencies } from "./analysis.container.js";
+import { registerReportDependencies } from "./report.container.js";
 
 registerCommonDependencies()
 registerUserDependencies();
@@ -15,6 +16,7 @@ registerCartDependencies()
 registerOrderDependencies()
 registerPaymentDependencies()
 registerAnalysisDependencies()
+registerReportDependencies()
 
 
 export { container } from "tsyringe";

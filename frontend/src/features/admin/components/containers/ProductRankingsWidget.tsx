@@ -7,8 +7,8 @@ import WidgetErrorFallback from "../WidgetErrorFallback";
 type Props = {
   isLoading: boolean;
   isError: boolean;
-  topProducts: TopAndLowSellingProductItem[] | null;
-  lowProducts: TopAndLowSellingProductItem[] | null;
+  topProducts: TopAndLowSellingProductItem[] | null | undefined;
+  lowProducts: TopAndLowSellingProductItem[] | null | undefined;
 };
 
 const ProductRankingsWidget = ({ isLoading, isError, topProducts, lowProducts }: Props) => {

@@ -23,6 +23,7 @@ const EditProductPage = lazy(() => import("../features/products/pages/EditProduc
 const OrderTable = lazy(() => import("../features/order/pages/AdminOrdersTable"))
 const AdminOrderDetailsPage = lazy(() => import("../features/order/pages/AdminOrderDetailsPage"))
 const AdminDashboard = lazy(() => import("../features/admin/pages/AdminDashboard"))
+const AdminRevenueReportPage = lazy(() => import("../features/reports/pages/RevenueReportPage"))
 
 /* ---------- fallback loader ---------- */
 const Loader = () => (
@@ -147,6 +148,14 @@ const adminRoutes = [
     element: (
       <Suspense fallback={<Loader />}>
         <AdminOrderDetailsPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "reports/revenue",
+    element: (
+      <Suspense fallback={<Loader />}>
+        <AdminRevenueReportPage />
       </Suspense>
     ),
   }

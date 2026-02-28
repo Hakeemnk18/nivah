@@ -1,10 +1,6 @@
 import { Router } from "express";
 import { container } from "../../../di/container.js";
-import express from "express";
-
 import { Authenticate } from "../../../infrastructure/middileware/auth.middleware.js";
-import type { AuthRequest } from "../../../infrastructure/middileware/auth.type.js";
-import { reteLimiter } from "../../../config/rate.limit.js";
 import { AnalysisController } from "../controller/analysis.controller.js";
 
 const router = Router();
@@ -37,6 +33,7 @@ router.get("/motivation", (req, res) =>
 );
 
 // get order status distribution
-router.get("/order-status", (req, res) => analysisController.getOrderStatusDistribution(req, res));
+router.get("/order-status", 
+    (req, res) => analysisController.getOrderStatusDistribution(req, res));
 
 export default router;

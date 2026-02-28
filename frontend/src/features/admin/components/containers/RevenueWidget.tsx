@@ -7,7 +7,7 @@ import WidgetErrorFallback from "../WidgetErrorFallback";
 type Props = {
   isLoading: boolean;
   isError: boolean;
-  data: RevenueChartData | null;
+  data: RevenueChartData | null | undefined;
   onRangeChange?: (range: RevenueRange) => void; 
 };
 

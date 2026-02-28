@@ -232,4 +232,7 @@ export const ResponseMessages = {
   ORDER_ALREADY_CONFIRMED: "Order is already confirmed",
   PAYMENT_ALREADY_CAPTURED: "Payment already captured",
 
+  /* ================= ANALYSIS / REPORTS ================= */
+  REVENUE_REPORT_FETCHED_SUCCESSFULLY: "Revenue report fetched successfully",
+
 }

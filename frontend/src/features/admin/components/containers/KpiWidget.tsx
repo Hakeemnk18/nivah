@@ -7,7 +7,7 @@ import WidgetErrorFallback from "../WidgetErrorFallback";
 type Props = {
   isLoading: boolean;
   isError: boolean;
-  data: DashboardKpiCardType[] | null;
+  data: DashboardKpiCardType[] | null | undefined;
 };
 
 const KpiWidget = ({ isLoading, isError, data }: Props) => {
