@@ -9,5 +9,7 @@ export const useRevenueChart = (range: RevenueRange) => {
         queryKey: ["revenue-chart", range],
         queryFn: () => getRevenueChartApi(range),
         enabled: !!range,
+        staleTime: 5 * 60 * 1000,
+        select: (data) => data?.data || null,
     });
 };

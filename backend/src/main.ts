@@ -10,6 +10,7 @@ import registerCartModule from "./modules/cart/cart.module.js";
 import registerOrderModule from "./modules/order/order.module.js";
 import { startCronJobs } from "./core/scheduler/cron.manager.js";
 import registerAnalysisModule from "./modules/analysis/analysis.module.js";
+import registerReportModule from "./modules/reports/report.module.js";
 
 
 const PORT = env.PORT
@@ -30,6 +31,7 @@ const startServer = async () => {
         registerCartModule(expressApp)
         registerOrderModule(expressApp)
         registerAnalysisModule(expressApp)
+        registerReportModule(expressApp)
 
 
 

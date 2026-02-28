@@ -141,7 +141,7 @@ export class GetKpiCardsUseCase implements IGetKpiCardsUseCase {
         formattedValue: pendingOrdersCount.toString(),
         action: {
           label: "Manage Orders",
-          href: "/admin/ordersManagement",
+          href: "/admin/orderManagement",
         },
       },
     ];

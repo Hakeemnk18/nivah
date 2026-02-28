@@ -7,7 +7,7 @@ import WidgetErrorFallback from "../WidgetErrorFallback";
 type Props = {
   isLoading: boolean;
   isError: boolean;
-  categories: TopSellingCategoryItem[] | null;
+  categories: TopSellingCategoryItem[] | null | undefined;
 };
 
 const CategoryRankingWidget = ({ isLoading, isError, categories }: Props) => {

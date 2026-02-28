@@ -32,7 +32,7 @@ const DashboardKpiCard = ({ data }: Props) => {
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl p-5 sm:p-6
+      className="relative overflow-hidden rounded-2xl p-5 sm:p-4
                  bg-gradient-to-br from-[#1f223f] to-[#2a2d55]
                  border border-white/10
                  shadow-md hover:shadow-xl
@@ -40,7 +40,7 @@ const DashboardKpiCard = ({ data }: Props) => {
                  flex flex-col justify-between"
     >
       <div className="flex justify-between items-start">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 ">
           <div
             className="w-10 h-10 sm:w-12 sm:h-12
                        rounded-full

@@ -7,7 +7,7 @@ import WidgetErrorFallback from "../WidgetErrorFallback";
 type Props = {
   isLoading: boolean;
   isError: boolean;
-  data: DashboardMotivationSummary | null;
+  data: DashboardMotivationSummary | null | undefined;
   // onRetry?: () => void; // Un-comment when you add React Query refetch
 };
 

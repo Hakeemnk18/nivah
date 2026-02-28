@@ -25,6 +25,7 @@ import type {
   TopAndLowSellingProductItem,
   TopSellingCategoryItem,
 } from "../../analysis/types/analysis.type.js";
+import type { GetRevenueReportPayload, RevenueReportSummary } from "../../reports/types/report.type.js";
 
 const { ObjectId } = Types;
 
@@ -557,5 +558,87 @@ export class OrderRepository implements IOrderRepository {
         },
       },
     ]);
+  }
+
+  async getRevenueReport(payload: GetRevenueReportPayload) : Promise<RevenueReportSummary> {
+    const { startDate, endDate, limit, page } = payload
+    // 1. Filter out cancelled orders and apply date ranges
+    const matchStage: any = {
+      orderStatus: { $ne: "cancelled" }, // Only count successful/pending orders
+    };
+
+    if (startDate || endDate) {
+      matchStage.createdAt = {};
+      if (startDate) matchStage.createdAt.$gte = startDate;
+      if (endDate) matchStage.createdAt.$lte = endDate;
+    }
+
+    // 2. The Aggregation Pipeline
+    const result = await OrderModel.aggregate([
+      { $match: matchStage },
+      {
+        $facet: {
+          // Facet A: Calculate the overall summary for the top cards
+          summary: [
+            {
+              $group: {
+                _id: null,
+                totalRevenue: { $sum: "$totalAmount" },
+                totalOrders: { $sum: 1 },
+              },
+            },
+          ],
+          // Facet B: Calculate the total number of unique days (for totalPages math)
+          totalDaysCount: [
+            {
+              $group: {
+                _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+              },
+            },
+            { $count: "count" },
+          ],
+          // Facet C: Calculate the daily revenue, sort it, and paginate it for the table
+          dailyData: [
+            {
+              $group: {
+                _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                revenue: { $sum: "$totalAmount" },
+                orders: { $sum: 1 },
+              },
+            },
+            { $sort: { _id: -1 } }, // Newest dates first
+            { $skip: (page - 1) * limit },
+            { $limit: limit },
+          ],
+        },
+      },
+    ]);
+
+    const facetData = result[0];
+
+    // Extract Summary (handle case where no orders exist)
+    const summaryData = facetData.summary[0] || { totalRevenue: 0, totalOrders: 0 };
+    const totalRevenue = summaryData.totalRevenue;
+    const totalOrders = summaryData.totalOrders;
+    const averageOrderValue = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
+
+    // Extract Pagination Data
+    const totalDays = facetData.totalDaysCount[0]?.count || 0;
+    const totalPages = Math.ceil(totalDays / limit);
+
+    // Format Daily Data array
+    const dailyData = facetData.dailyData.map((day: any) => ({
+      date: day._id,
+      revenue: day.revenue,
+      orders: day.orders,
+    }));
+
+    const revenueSummery: RevenueReportSummary = {
+      summary: { totalRevenue, totalOrders, averageOrderValue },
+      totalPages: totalPages === 0 ? 1 : totalPages,
+      dailyData
+    }
+
+    return revenueSummery
   }
 }

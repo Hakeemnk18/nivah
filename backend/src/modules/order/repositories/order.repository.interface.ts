@@ -1,5 +1,6 @@
 import type { IGetAllDocDB } from "../../../core/shared/interfaces/get.all.doc.interface.js";
 import type { TopAndLowSellingProductItem, TopSellingCategoryItem } from "../../analysis/types/analysis.type.js";
+import type { GetRevenueReportPayload, RevenueReportSummary } from "../../reports/types/report.type.js";
 import { Order } from "../entities/order.entity.js";
 import type {
   OrderSummaryView,
@@ -43,4 +44,5 @@ export interface IOrderRepository {
   getProductRankings(startDate: Date, endDate: Date, sortDirection: 1 | -1, limit: number): Promise<TopAndLowSellingProductItem[]>;
   getTopSellingCategories(startDate: Date, endDate: Date, limit: number): Promise<TopSellingCategoryItem[]>;
   getOrderStatusCounts(): Promise<{ _id: string; count: number }[]>;
+  getRevenueReport(payload: GetRevenueReportPayload) : Promise<RevenueReportSummary>
 }

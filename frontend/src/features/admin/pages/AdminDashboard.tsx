@@ -2,11 +2,9 @@ import { useState } from "react";
 import AdminErrorState from "../../admin/components/AdminErrorState";
 import DashboardSkeleton from "../components/DashboardSkelton";
 import {
-  mockLowSellingProducts,
   mockMotivationSummary,
   mockOrderStatusDistribution,
   mockTopSellingCategories,
-  mockTopSellingProducts,
   type RevenueRange,
 } from "../types/admin.type";
 import MotivationWidget from "../components/containers/MotivationWidget";
@@ -17,27 +15,29 @@ import CategoryRankingWidget from "../components/containers/CategoryRankingWidge
 import ProductRankingsWidget from "../components/containers/ProductRankingsWidget";
 import { useRevenueChart } from "../hooks/use.revenue.chart";
 import { useKpiCards } from "../hooks/use.kpi.cards";
+import { useProductsRanking } from "../hooks/use.products.ranking";
+import { useTopSellingCategories } from "../hooks/use.top.selling.categories";
+import { useMotivationSummary } from "../hooks/use.motivation.summery";
+import { useOrderStatusDistribution } from "../hooks/use.order.status.distribution";
 
 
 const AdminDashboardPage = () => {
 
   //revenue chart
   const [chartRange, setChartRange] = useState<RevenueRange>("Month");
-  const {data: revenueChartData, isLoading: revenueChartIsLoading, isError: revenueChartIsError} = useRevenueChart(chartRange);
-  const revenueChart = revenueChartData?.data || null
-
+  const {data: revenueChart, isLoading: revenueChartIsLoading, isError: revenueChartIsError} = useRevenueChart(chartRange);
   // kpi cards
-  const {data: kpiCardsData, isLoading: dashboardKpisIsLoading, isError: dashboardKpisIsError} = useKpiCards();
-  const kpiCards = kpiCardsData?.data || null;
+  const {data: kpiCards, isLoading: dashboardKpisIsLoading, isError: dashboardKpisIsError} = useKpiCards();
+  //products ranking
+  const {data: topProducts, isLoading: topProductsIsLoading, isError: topProductsIsError} = useProductsRanking()
+  //top selling categories
+  const {data: categories, isLoading: categoriesIsLoading, isError: categoriesIsError} = useTopSellingCategories()
+  //motivation summary
+  const {data: motivationSummary, isLoading: motivationSummaryIsLoading, isError: motivationSummaryIsError} = useMotivationSummary()
+  //order status distribution 
+  const {data: orderStatusDistribution, isLoading: orderStatusIsLoading, isError: orderStatusIsError} = useOrderStatusDistribution();
+  
 
-  const dashboardMotivationIsLoading = false;
-  const dashboardMotivationIsError = false;
-  const orderStatusIsLoading = false;
-  const orderStatusIsError = false;
-  const productsIsLoading = false;
-  const productsIsError = false;
-  const categoriesIsLoading = false;
-  const categoriesIsError = false;
   const [isLoading] = useState(false);
   const [isError] = useState(false);
 
@@ -53,9 +53,9 @@ const AdminDashboardPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
           <div className="lg:col-span-2">
             <MotivationWidget
-              isLoading={dashboardMotivationIsLoading}
-              isError={dashboardMotivationIsError}
-              data={mockMotivationSummary}
+              isLoading={motivationSummaryIsLoading}
+              isError={motivationSummaryIsError}
+              data={motivationSummary}
             />
           </div>
 
@@ -71,7 +71,7 @@ const AdminDashboardPage = () => {
             <OrderStatusWidget
               isLoading={orderStatusIsLoading}
               isError={orderStatusIsError}
-              data={mockOrderStatusDistribution}
+              data={orderStatusDistribution}
             />
           </div>
 
@@ -87,17 +87,17 @@ const AdminDashboardPage = () => {
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           <ProductRankingsWidget
-            isLoading={productsIsLoading}
-            isError={productsIsError}
-            topProducts={mockTopSellingProducts.products}
-            lowProducts={mockLowSellingProducts.products}
+            isLoading={topProductsIsLoading}
+            isError={topProductsIsError}
+            topProducts={topProducts?.topSelling?.products}
+            lowProducts={topProducts?.lowSelling?.products}
           />
           
           {/* Handles Categories (1 column) */}
           <CategoryRankingWidget
             isLoading={categoriesIsLoading}
             isError={categoriesIsError}
-            categories={mockTopSellingCategories.categories}
+            categories={categories?.categories}
           />
         </div>
       </>

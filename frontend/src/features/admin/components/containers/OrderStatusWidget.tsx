@@ -7,7 +7,7 @@ import WidgetErrorFallback from "../WidgetErrorFallback";
 type Props = {
   isLoading: boolean;
   isError: boolean;
-  data: OrderStatusDistribution | null;
+  data: OrderStatusDistribution | null | undefined;
 };
 
 const OrderStatusWidget = ({ isLoading, isError, data }: Props) => {
