@@ -1,4 +1,5 @@
 import type { IGetAllDocDB } from "../../../core/shared/interfaces/get.all.doc.interface.js";
+import type { TopAndLowSellingProductItem, TopSellingCategoryItem } from "../../analysis/types/analysis.type.js";
 import { Order } from "../entities/order.entity.js";
 import type {
   OrderSummaryView,
@@ -34,4 +35,12 @@ export interface IOrderRepository {
   getAdminOrderFullView(orderId: string): Promise<AdminOrderFullView | null>;
   getAdminSummery(orderId: string): Promise<OrderSummaryView | null>;
   getOrdersForRevenue(startDate: Date, endDate: Date): Promise<{ createdAt: Date; totalAmount: number }[]>;
+  getAggregateKpiStats(startDate: Date, endDate: Date): Promise<{ totalOrders: number, totalRevenue: number }>;
+  getDailyKpiStats(startDate: Date, endDate: Date): Promise<{ _id: string, orders: number, revenue: number }[]>;
+  getPendingOrdersCount(): Promise<number>;
+  getNewUsersCount(startDate: Date, endDate: Date): Promise<number>;
+  getDailyNewUsers(startDate: Date, endDate: Date): Promise<{ _id: string, count: number }[]>;
+  getProductRankings(startDate: Date, endDate: Date, sortDirection: 1 | -1, limit: number): Promise<TopAndLowSellingProductItem[]>;
+  getTopSellingCategories(startDate: Date, endDate: Date, limit: number): Promise<TopSellingCategoryItem[]>;
+  getOrderStatusCounts(): Promise<{ _id: string; count: number }[]>;
 }

@@ -328,3 +328,4 @@ export type RevenueChartData = {
 };
 
 export type RevenueChartResponse = ApiResponse<RevenueChartData>
+export type KpiCardsResponse = ApiResponse<DashboardKpiCardType[]>

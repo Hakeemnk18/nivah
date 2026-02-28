@@ -21,6 +21,10 @@ import type {
 import type { OrderStatus } from "../types/order.type.js";
 import type { ClientSession } from "mongoose";
 import { PaymentModel } from "../../payment/infrastructure/payment.schema.js";
+import type {
+  TopAndLowSellingProductItem,
+  TopSellingCategoryItem,
+} from "../../analysis/types/analysis.type.js";
 
 const { ObjectId } = Types;
 
@@ -274,15 +278,284 @@ export class OrderRepository implements IOrderRepository {
     startDate: Date,
     endDate: Date,
   ): Promise<{ createdAt: Date; totalAmount: number }[]> {
-    const documents = await OrderModel.find({
-      createdAt: { $gte: startDate, $lte: endDate },
-      orderStatus: { $in: ["confirmed", "accepted", "dispatched"] },
-    },{ createdAt: 1, totalAmount: 1, _id: 0 })
-    .lean<{ createdAt: Date; totalAmount: number }[]>();
+    const documents = await OrderModel.find(
+      {
+        createdAt: { $gte: startDate, $lte: endDate },
+        orderStatus: { $in: ["confirmed", "accepted", "dispatched"] },
+      },
+      { createdAt: 1, totalAmount: 1, _id: 0 },
+    ).lean<{ createdAt: Date; totalAmount: number }[]>();
 
     return documents.map((doc) => ({
       createdAt: doc.createdAt!,
       totalAmount: doc.totalAmount,
     }));
+  }
+
+  async getAggregateKpiStats(
+    startDate: Date,
+    endDate: Date,
+  ): Promise<{ totalOrders: number; totalRevenue: number }> {
+    const result = await OrderModel.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startDate, $lte: endDate },
+          orderStatus: { $in: ["confirmed", "accepted", "dispatched"] }, // Only valid orders
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalOrders: { $sum: 1 },
+          totalRevenue: { $sum: "$totalAmount" },
+        },
+      },
+    ]);
+    return result[0] || { totalOrders: 0, totalRevenue: 0 };
+  }
+
+  async getDailyKpiStats(
+    startDate: Date,
+    endDate: Date,
+  ): Promise<{ _id: string; orders: number; revenue: number }[]> {
+    return await OrderModel.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startDate, $lte: endDate },
+          orderStatus: { $in: ["confirmed", "accepted", "dispatched"] },
+        },
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+          orders: { $sum: 1 },
+          revenue: { $sum: "$totalAmount" },
+        },
+      },
+      { $sort: { _id: 1 } }, // Sort by date ascending
+    ]);
+  }
+
+  async getPendingOrdersCount(): Promise<number> {
+    return await OrderModel.countDocuments({ orderStatus: "created" });
+  }
+
+  async getNewUsersCount(startDate: Date, endDate: Date): Promise<number> {
+    const result = await OrderModel.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startDate, $lte: endDate },
+        },
+      },
+      {
+        $group: {
+          _id: "$guestId",
+        },
+      },
+      {
+        $count: "totalUniqueUsers",
+      },
+    ]);
+
+    return result[0]?.totalUniqueUsers || 0;
+  }
+
+  async getDailyNewUsers(
+    startDate: Date,
+    endDate: Date,
+  ): Promise<{ _id: string; count: number }[]> {
+    return await OrderModel.aggregate([
+      // 1️⃣ Create unified user key
+      {
+        $addFields: {
+          customerId: {
+            $ifNull: ["$userId", "$guestId"],
+          },
+        },
+      },
+
+      // 2️⃣ Find each user's FIRST order ever
+      {
+        $group: {
+          _id: "$customerId",
+          firstOrderDate: { $min: "$createdAt" },
+        },
+      },
+
+      // 3️⃣ Keep only users whose first order falls inside range
+      {
+        $match: {
+          firstOrderDate: { $gte: startDate, $lte: endDate },
+        },
+      },
+
+      // 4️⃣ Group by day
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$firstOrderDate",
+            },
+          },
+          count: { $sum: 1 },
+        },
+      },
+
+      { $sort: { _id: 1 } },
+    ]);
+  }
+
+  async getProductRankings(
+    startDate: Date,
+    endDate: Date,
+    sortDirection: 1 | -1,
+    limit: number,
+  ): Promise<TopAndLowSellingProductItem[]> {
+    const raw = await OrderModel.aggregate([
+      // 1. Match valid orders within the date range
+      {
+        $match: {
+          createdAt: { $gte: startDate, $lte: endDate },
+          orderStatus: {
+            $in: ["confirmed", "accepted", "dispatched", "delivered"],
+          },
+        },
+      },
+      // 2. Unwind the items array so we can group by individual products
+      { $unwind: "$items" },
+      // 3. Group by productId and sum up quantity and revenue
+      {
+        $group: {
+          _id: "$items.productId",
+          name: { $first: "$items.name" },
+          totalQuantitySold: { $sum: "$items.quantity" },
+          totalRevenue: {
+            $sum: { $multiply: ["$items.quantity", "$items.price"] },
+          },
+        },
+      },
+      // 4. Sort based on direction (1 for low-to-high, -1 for high-to-low)
+      { $sort: { totalQuantitySold: sortDirection } },
+      // 5. Limit to top 5 (or however many requested)
+      { $limit: limit },
+      // 6. Lookup the product to get the image
+      {
+        $lookup: {
+          from: "products", // Ensure this exactly matches your MongoDB collection name for products
+          localField: "_id",
+          foreignField: "_id",
+          as: "productDoc",
+        },
+      },
+      // 7. Flatten the product lookup array
+      { $unwind: { path: "$productDoc", preserveNullAndEmptyArrays: true } },
+      // 8. Format the final output to exactly match the type
+      {
+        $project: {
+          _id: 0,
+          productId: "$_id",
+          name: 1,
+          totalQuantitySold: 1,
+          totalRevenue: 1,
+          // Grab the first image from the product's images array
+          iconUrl: { $arrayElemAt: ["$productDoc.images.url", 0] },
+        },
+      },
+    ]);
+
+    return raw
+      .map((item) => OrderMapper.toTopAndLowSellingProductItem(item))
+      .filter((o): o is TopAndLowSellingProductItem => o !== null);
+  }
+
+  async getTopSellingCategories(
+    startDate: Date,
+    endDate: Date,
+    limit: number,
+  ): Promise<TopSellingCategoryItem[]> {
+    const raw = await OrderModel.aggregate([
+      // 1. Match valid orders from the last year
+      {
+        $match: {
+          createdAt: { $gte: startDate, $lte: endDate },
+          orderStatus: {
+            $in: ["confirmed", "accepted", "dispatched", "delivered"],
+          },
+        },
+      },
+      // 2. Break apart the order items
+      { $unwind: "$items" },
+      // 3. Group by Product first (Optimizes the lookup)
+      {
+        $group: {
+          _id: "$items.productId",
+          totalQuantitySold: { $sum: "$items.quantity" },
+          totalRevenue: {
+            $sum: { $multiply: ["$items.quantity", "$items.price"] },
+          },
+        },
+      },
+      // 4. Lookup the Product to get its sub-category and image
+      {
+        $lookup: {
+          from: "products", // Must match your MongoDB collection name exactly
+          localField: "_id",
+          foreignField: "_id",
+          as: "productDoc",
+        },
+      },
+      { $unwind: { path: "$productDoc", preserveNullAndEmptyArrays: false } },
+      // 5. Group by Category (Sub-Category from Product)
+      {
+        $group: {
+          _id: "$productDoc.category",
+          totalQuantitySold: { $sum: "$totalQuantitySold" },
+          totalRevenue: { $sum: "$totalRevenue" },
+          // Grab the first product's first image to represent this category
+          iconUrl: { $first: { $arrayElemAt: ["$productDoc.images.url", 0] } },
+        },
+      },
+      // 6. Sort by highest quantity sold
+      { $sort: { totalQuantitySold: -1 } },
+      // 7. Limit to top 5
+      { $limit: limit },
+      // 8. Lookup the Category to get its actual name
+      {
+        $lookup: {
+          from: "categories", // Must match your MongoDB collection name exactly
+          localField: "_id",
+          foreignField: "_id",
+          as: "categoryDoc",
+        },
+      },
+      { $unwind: { path: "$categoryDoc", preserveNullAndEmptyArrays: true } },
+      // 9. Format output to match TopSellingCategoryItem exactly
+      {
+        $project: {
+          _id: 0,
+          categoryId: "$_id",
+          name: { $ifNull: ["$categoryDoc.name", "Unknown Category"] },
+          totalQuantitySold: 1,
+          totalRevenue: 1,
+          iconUrl: 1,
+        },
+      },
+    ]);
+
+    return raw
+      .map((item) => OrderMapper.toTopSellingCategoryItem(item))
+      .filter((o): o is TopSellingCategoryItem => o !== null);
+  }
+
+  async getOrderStatusCounts(): Promise<{ _id: string; count: number }[]> {
+    return await OrderModel.aggregate([
+      {
+        $group: {
+          _id: "$orderStatus",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
   }
 }
