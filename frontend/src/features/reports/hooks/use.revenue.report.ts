@@ -44,8 +44,9 @@ export const useRevenueReport = (
   >({
     queryKey,
     queryFn,
-    enabled, 
+    enabled,
     placeholderData: keepPreviousData,
-    
+    refetchOnWindowFocus: false
+
   });
 };

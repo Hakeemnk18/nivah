@@ -62,7 +62,7 @@ const ReportDateSelector = ({ filter, setFilter, setEnabled }: Props) => {
 
     const start = new Date(filter.customStartDate);
     const end = new Date(filter.customEndDate);
-    
+
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
       setError("Invalid date format.");
       return;
@@ -113,10 +113,9 @@ const ReportDateSelector = ({ filter, setFilter, setEnabled }: Props) => {
                 key={opt.value}
                 onClick={() => handleOptionSelect(opt.value)}
                 className={`w-full text-left px-4 py-2.5 text-sm transition-colors
-                  ${
-                    filter.option === opt.value
-                      ? "bg-blue-500/10 text-blue-400 font-medium"
-                      : "text-gray-300 hover:bg-white/10"
+                  ${filter.option === opt.value
+                    ? "bg-blue-500/10 text-blue-400 font-medium"
+                    : "text-gray-300 hover:bg-white/10"
                   }`}
               >
                 {opt.label}
@@ -136,9 +135,9 @@ const ReportDateSelector = ({ filter, setFilter, setEnabled }: Props) => {
                 value={filter.customStartDate || ""}
                 onChange={(e) => {
                   setFilter({ ...filter, customStartDate: e.target.value });
-                  setError(""); // Clear error when user starts typing/selecting
+                  setError("");
+                  setEnabled(false);
                 }}
-                // 👇 Red border if there is an error
                 className={`bg-[#15172b] text-gray-300 text-sm rounded-xl px-3 py-2 h-[42px] focus:outline-none transition-colors [color-scheme:dark] border 
                 ${error && !filter.customStartDate ? "border-red-500 ring-1 ring-red-500/50" : "border-white/10 focus:border-blue-500"}`}
               />
@@ -148,9 +147,9 @@ const ReportDateSelector = ({ filter, setFilter, setEnabled }: Props) => {
                 value={filter.customEndDate || ""}
                 onChange={(e) => {
                   setFilter({ ...filter, customEndDate: e.target.value });
-                  setError(""); // Clear error
+                  setError("");
+                  setEnabled(false);
                 }}
-                // 👇 Red border if there is an error
                 className={`flex-1 min-w-[130px] bg-[#15172b] text-gray-300 text-sm rounded-xl px-3 py-2 h-[42px] focus:outline-none transition-colors [color-scheme:dark] border 
                 ${error && !filter.customEndDate ? "border-red-500 ring-1 ring-red-500/50" : "border-white/10 focus:border-blue-500"}`}
               />

@@ -9,19 +9,16 @@ import type { IReportController } from "./report.controller.interface.js";
 import { ResponseMessages } from "../../../core/constants/response.message.js";
 
 @injectable()
-export class ReportController implements IReportController{
+export class ReportController implements IReportController {
   constructor(
     @inject("IRevenueReportUseCase")
     private _reportUseCase: IRevenueReportUseCase
-) {}
+  ) { }
 
   async getRevenueReport(req: Request, res: Response): Promise<void> {
     try {
-      console.log("Received request for revenue report with query:", req.query);
       const parsedQuery = RevenueReportQuerySchema.parse(req.query);
-      console.log("Parsed query parameters:", parsedQuery);
       const reportData = await this._reportUseCase.execute(parsedQuery);
-      console.log(reportData.dailyData.length)
       res.status(HttpStatusCode.OK).json({
         success: true,
         message: ResponseMessages.REVENUE_REPORT_FETCHED_SUCCESSFULLY,
@@ -32,7 +29,7 @@ export class ReportController implements IReportController{
         totalPages: reportData.totalPages,
         currentPage: parsedQuery.page,
       });
-      
+
     } catch (error: any) {
       handleError(res, error)
     }

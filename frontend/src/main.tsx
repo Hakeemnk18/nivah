@@ -6,7 +6,13 @@ import allRoutes from './routes/Index.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { setQueryClient } from './shared/utils/logout.ts'
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false, // Prevents app-wide state loss on tab switch
+    },
+  },
+});
 
 const appRouter = createBrowserRouter(allRoutes)
 const root = createRoot(document.getElementById('root')!)

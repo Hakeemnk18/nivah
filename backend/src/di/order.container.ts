@@ -89,6 +89,7 @@ export const registerOrderDependencies = () => {
         useClass: CancelOrderUseCase,
     });
 
+
     container.register<IGetAdminFullViewUseCase>("IGetAdminFullViewUseCase", {
         useClass: GetAdminFullViewUseCase,
     });
@@ -97,6 +98,6 @@ export const registerOrderDependencies = () => {
         useClass: AdminDownloadInvoiceUseCase,
     });
 
-  
+
 
 };

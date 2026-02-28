@@ -27,17 +27,18 @@ export class AnalysisController implements IAnalysisController {
     private readonly _getProductRankingsUseCase: IGetProductRankingsUseCase,
 
     @inject("IGetCategoryRankingsUseCase")
-        private readonly _getCategoryRankingsUseCase: IGetCategoryRankingsUseCase,
-    
-        @inject("IGetMotivationUseCase")
-        private readonly _getMotivationUseCase: IGetMotivationUseCase,
+    private readonly _getCategoryRankingsUseCase: IGetCategoryRankingsUseCase,
 
-        @inject("IGetOrderStatusDistributionUseCase")
-        private readonly _getOrderStatusDistributionUseCase: IGetOrderStatusDistributionUseCase
-  ) {}
+    @inject("IGetMotivationUseCase")
+    private readonly _getMotivationUseCase: IGetMotivationUseCase,
+
+    @inject("IGetOrderStatusDistributionUseCase")
+    private readonly _getOrderStatusDistributionUseCase: IGetOrderStatusDistributionUseCase
+  ) { }
 
   async getRevenueChart(req: Request, res: Response): Promise<void> {
     try {
+
       const dto: GetRevenueQueryDto = GetRevenueQuerySchema.parse({
         range: req.query.range ?? "Month",
       });
@@ -71,61 +72,61 @@ export class AnalysisController implements IAnalysisController {
   }
 
   async getProductRankings(req: Request, res: Response): Promise<void> {
-        try {
-            const data = await this._getProductRankingsUseCase.execute();
+    try {
+      const data = await this._getProductRankingsUseCase.execute();
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: ResponseMessages.SUCCESS,
-                data: data, // Returns { topSelling, lowSelling }
-            });
-        } catch (error) {
-            handleError(res, error);
-            console.log("error in get product rankings controller ", error);
-        }
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data: data, // Returns { topSelling, lowSelling }
+      });
+    } catch (error) {
+      handleError(res, error);
+      console.log("error in get product rankings controller ", error);
     }
-    async getCategoryRankings(req: Request, res: Response): Promise<void> {
-        try {
-            const data = await this._getCategoryRankingsUseCase.execute();
+  }
+  async getCategoryRankings(req: Request, res: Response): Promise<void> {
+    try {
+      const data = await this._getCategoryRankingsUseCase.execute();
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: ResponseMessages.SUCCESS,
-                data: data,
-            });
-        } catch (error) {
-            handleError(res, error);
-            console.log("error in get category rankings controller ", error);
-        }
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data: data,
+      });
+    } catch (error) {
+      handleError(res, error);
+      console.log("error in get category rankings controller ", error);
     }
+  }
 
-    async getMotivationSummary(req: Request, res: Response): Promise<void> {
-        try {
-            const data = await this._getMotivationUseCase.execute();
+  async getMotivationSummary(req: Request, res: Response): Promise<void> {
+    try {
+      const data = await this._getMotivationUseCase.execute();
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: ResponseMessages.SUCCESS,
-                data: data,
-            });
-        } catch (error) {
-            handleError(res, error);
-            console.log("error in get motivation summary controller ", error);
-        }
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data: data,
+      });
+    } catch (error) {
+      handleError(res, error);
+      console.log("error in get motivation summary controller ", error);
     }
+  }
 
-    async getOrderStatusDistribution(req: Request, res: Response): Promise<void> {
-        try {
-            const data = await this._getOrderStatusDistributionUseCase.execute();
+  async getOrderStatusDistribution(req: Request, res: Response): Promise<void> {
+    try {
+      const data = await this._getOrderStatusDistributionUseCase.execute();
 
-            res.status(HttpStatusCode.OK).json({
-                success: true,
-                message: ResponseMessages.SUCCESS,
-                data: data,
-            });
-        } catch (error) {
-            handleError(res, error);
-            console.log("error in get order status distribution controller ", error);
-        }
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data: data,
+      });
+    } catch (error) {
+      handleError(res, error);
+      console.log("error in get order status distribution controller ", error);
     }
+  }
 }
