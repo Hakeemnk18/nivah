@@ -11,7 +11,9 @@ import registerOrderModule from "./modules/order/order.module.js";
 import { startCronJobs } from "./core/scheduler/cron.manager.js";
 import registerAnalysisModule from "./modules/analysis/analysis.module.js";
 import registerReportModule from "./modules/reports/report.module.js";
-
+import registerHeroModule from "./modules/hero/hero.module.js";
+import registerBannerModule from "./modules/banner/banner.module.js";
+import registerTestimonialModule from "./modules/testimonial/testimonial.module.js";
 
 const PORT = env.PORT
 
@@ -32,8 +34,9 @@ const startServer = async () => {
         registerOrderModule(expressApp)
         registerAnalysisModule(expressApp)
         registerReportModule(expressApp)
-
-
+        registerHeroModule(expressApp)
+        registerBannerModule(expressApp)
+        registerTestimonialModule(expressApp)
 
         expressApp.listen(PORT, () => {
             console.log(`🚀 Server running on port ${PORT}`);
