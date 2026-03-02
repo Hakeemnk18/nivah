@@ -49,7 +49,6 @@ export const getBannerByIdApi = async (
 
 // /* ---------- GET BANNER USER ---------- */
 export const getBannerUserApi = async (): Promise<GetBannerUserResponse> => {
-    console.log("getBannerUserApi");
     const response = await api.get<GetBannerUserResponse>(`/banners/list`);
     return response.data;
 };

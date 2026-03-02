@@ -49,7 +49,6 @@ export const getHeroByIdApi = async (
 
 // /* ---------- GET HERO USER ---------- */
 export const getHeroUserApi = async (): Promise<GetHeroUserResponse> => {
-    console.log("getHeroUserApi");
     const response = await api.get<GetHeroUserResponse>(`/heroes/list`);
     return response.data;
 };

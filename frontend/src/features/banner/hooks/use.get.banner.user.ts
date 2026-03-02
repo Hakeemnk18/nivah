@@ -4,7 +4,7 @@ import { getBannerUserApi } from "../api/banner.api";
 
 
 export const useGetAllUserBanner = () => {
-    console.log("useGetAllUserBanner");
+
     return useQuery({
         queryKey: ["user-banners"],
         queryFn: () => getBannerUserApi(),

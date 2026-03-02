@@ -125,7 +125,7 @@ export class TestimonialController implements ITestimonialController {
             res.status(HttpStatusCode.OK).json({
                 success: true,
                 message: ResponseMessages.SUCCESS,
-                data: data ? [data] : null,
+                data: data,
             });
         } catch (error) {
             console.log("Error in getTestimonialsForAdmin:", error);
