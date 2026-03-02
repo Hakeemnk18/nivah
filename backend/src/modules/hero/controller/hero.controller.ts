@@ -22,6 +22,7 @@ import {
 
 import { HeroMapper } from "../mappers/hero.mapper.js";
 import { ResponseMessages } from "../../../core/constants/response.message.js";
+import type { IGetHeroByIdUseCase } from "../use-cases/interfaces/get.hero.by.id.use-case.interface.js";
 
 @injectable()
 export class HeroController implements IHeroController {
@@ -42,7 +43,10 @@ export class HeroController implements IHeroController {
         private readonly _getHeroUserUseCase: IGetHeroUserUseCase,
 
         @inject("IGetHeroAdminUseCase")
-        private readonly _getHeroAdminUseCase: IGetHeroAdminUseCase
+        private readonly _getHeroAdminUseCase: IGetHeroAdminUseCase,
+
+        @inject("IGetHeroByIdUseCase")
+        private readonly _getHeroByIdUseCase: IGetHeroByIdUseCase
     ) { }
 
     async createHero(req: Request, res: Response): Promise<void> {
@@ -116,12 +120,11 @@ export class HeroController implements IHeroController {
 
     async getHeroForAdmin(req: Request, res: Response): Promise<void> {
         try {
-
             const data = await this._getHeroAdminUseCase.execute();
             res.status(HttpStatusCode.OK).json({
                 success: true,
                 message: ResponseMessages.HERO_FETCHED_SUCCESSFULLY,
-                data: data,
+                data: data ? [data] : null,
             });
         } catch (error) {
             console.log("Error in getHeroForAdmin:", error);
@@ -131,7 +134,7 @@ export class HeroController implements IHeroController {
 
     async getHeroForUser(req: Request, res: Response): Promise<void> {
         try {
-            console.log("getHeroForUser")
+            console.log("getHeroForUser");
             const data = await this._getHeroUserUseCase.execute();
             res.status(HttpStatusCode.OK).json({
                 success: true,
@@ -140,6 +143,24 @@ export class HeroController implements IHeroController {
             });
         } catch (error) {
             console.log("Error in getHeroForUser:", error);
+            handleError(res, error);
+        }
+    }
+
+    async getHeroById(req: Request, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+            validateObjectId(id);
+
+            const data = await this._getHeroByIdUseCase.execute(id!);
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: ResponseMessages.HERO_FETCHED_SUCCESSFULLY,
+                data: data,
+            });
+        } catch (error) {
+            console.log("Error in getHeroById:", error);
             handleError(res, error);
         }
     }

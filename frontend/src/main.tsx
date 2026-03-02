@@ -9,6 +9,7 @@ import { setQueryClient } from './shared/utils/logout.ts'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      retry: 1,
       refetchOnWindowFocus: false, // Prevents app-wide state loss on tab switch
     },
   },

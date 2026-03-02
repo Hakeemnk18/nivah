@@ -13,6 +13,8 @@ import type { IGetHeroAdminUseCase } from "../modules/hero/use-cases/interfaces/
 import { GetHeroAdminUseCase } from "../modules/hero/use-cases/get.hero.admin.use-case.js";
 import type { IHeroRepository } from "../modules/hero/repositories/hero.repository.interface.js";
 import { HeroRepository } from "../modules/hero/repositories/hero.repository.js";
+import type { IGetHeroByIdUseCase } from "../modules/hero/use-cases/interfaces/get.hero.by.id.use-case.interface.js";
+import { GetHeroByIdUseCase } from "../modules/hero/use-cases/get.hero.by.id.use-case.js";
 
 
 export const registerHeroDependencies = () => {
@@ -36,5 +38,9 @@ export const registerHeroDependencies = () => {
     });
     container.register<IGetHeroAdminUseCase>("IGetHeroAdminUseCase", {
         useClass: GetHeroAdminUseCase,
+    });
+
+    container.register<IGetHeroByIdUseCase>("IGetHeroByIdUseCase", {
+        useClass: GetHeroByIdUseCase,
     });
 }

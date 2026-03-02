@@ -24,6 +24,10 @@ const OrderTable = lazy(() => import("../features/order/pages/AdminOrdersTable")
 const AdminOrderDetailsPage = lazy(() => import("../features/order/pages/AdminOrderDetailsPage"))
 const AdminDashboard = lazy(() => import("../features/admin/pages/AdminDashboard"))
 const AdminRevenueReportPage = lazy(() => import("../features/reports/pages/RevenueReportPage"))
+const HeroTable = lazy(() => import("../features/hero/pages/HeroList"))
+const CreateHeroPage = lazy(() => import("../features/hero/pages/CreateHeroPage"))
+const EditHeroPage = lazy(() => import("../features/hero/pages/CreateHeroPage"))
+
 
 /* ---------- fallback loader ---------- */
 const Loader = () => (
@@ -47,8 +51,8 @@ const adminRoutes = [
     path: "dashboard",
     element: (
       <Suspense fallback={<Loader />}>
-          <AdminDashboard />
-        
+        <AdminDashboard />
+
       </Suspense>
     ),
   },
@@ -158,7 +162,41 @@ const adminRoutes = [
         <AdminRevenueReportPage />
       </Suspense>
     ),
-  }
+  },
+  {
+    path: "heroManagement",
+    element: (
+      <Suspense fallback={<Loader />}>
+
+        <HeroTable />
+
+
+
+      </Suspense>
+    ),
+  },
+  {
+    path: "createHero",
+    element: (
+      <Suspense fallback={<Loader />}>
+
+        <CreateHeroPage />
+
+
+      </Suspense>
+    ),
+  },
+  {
+    path: "editHero",
+    element: (
+      <Suspense fallback={<Loader />}>
+
+        <CreateHeroPage />
+
+
+      </Suspense>
+    ),
+  },
 ];
 
 export default adminRoutes;

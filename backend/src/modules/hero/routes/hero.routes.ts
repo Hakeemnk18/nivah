@@ -18,6 +18,18 @@ router.get(
     // authorizeRoles("admin"),
     (req, res) => heroController.getHeroForAdmin(req, res),
 );
+/* ---------- USER: GET HERO BANNER ---------- */
+router.get(
+    "/list",
+    (req, res) => heroController.getHeroForUser(req, res),
+);
+/* ---------- ADMIN: GET HERO BANNER BY ID ---------- */
+router.get(
+    "/:id",
+    // authenticate.verifyToken,
+    // authorizeRoles("admin"),
+    (req, res) => heroController.getHeroById(req, res),
+);
 
 /* ---------- ADMIN: CREATE HERO BANNER ---------- */
 router.post(
@@ -51,10 +63,6 @@ router.patch(
     (req, res) => heroController.unblockHero(req, res),
 );
 
-/* ---------- USER: GET HERO BANNER ---------- */
-router.get(
-    "/list",
-    (req, res) => heroController.getHeroForUser(req, res),
-);
+
 
 export default router;
