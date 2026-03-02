@@ -7,4 +7,5 @@ export interface IHeroController {
     unblockHero(req: Request, res: Response): Promise<void>;
     getHeroForAdmin(req: Request, res: Response): Promise<void>;
     getHeroForUser(req: Request, res: Response): Promise<void>;
+    getHeroById(req: Request, res: Response): Promise<void>;
 }

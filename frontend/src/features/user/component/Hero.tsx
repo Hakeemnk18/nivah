@@ -1,11 +1,32 @@
 import { motion } from "framer-motion";
+import { useGetAllUserHero } from "../../hero/hooks/use.get.hero.user";
+import type { UserHeroView } from "../../hero/types/hero.type";
+import { useNavigate } from "react-router-dom";
+
+const mockHero: UserHeroView = {
+  id: "1",
+  title: "Timeless Elegance in Every Ornament",
+  subtitle: "Crafted to shine for every moment.",
+  image: {
+    url: "/images/hero-ring.png",
+  },
+};
 
 export default function Hero() {
+  const { data: heroData } = useGetAllUserHero();
+  console.log("heroData", heroData);
+  const hero = heroData || mockHero;
+  console.log("hero", hero);
+  const navigate = useNavigate();
+
+  const words = hero.title.split(" ");
+  const highlight = words.slice(0, 2).join(" ");
+  const rest = words.slice(2).join(" ");
   return (
-     <section className="relative w-full h-[60vh] md:h-[85vh] overflow-hidden">
-        
+    <section className="relative w-full h-[60vh] md:h-[85vh] overflow-hidden">
+
       <img
-        src="/images/hero-ring.png"
+        src={hero.image.url}
         alt="Elegant gold ring"
         className="absolute inset-0 w-full h-full object-cover"
       />
@@ -21,16 +42,17 @@ export default function Hero() {
         >
           <h1 className="text-4xl md:text-5xl font-serif leading-tight text-white">
             <span className="gold-shimmer">
-              Timeless Elegance
+              {highlight}
             </span>{" "}
-            in <br /> Every Ornament
+            {rest}
           </h1>
 
           <p className="mt-4 text-sm md:text-base text-[#9ca3af]">
-            Crafted to shine for every moment.
+            {hero.subtitle}
           </p>
 
           <motion.button
+            onClick={() => navigate("/products")}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="mt-6 inline-block border border-[var(--accent)] px-6 py-2 text-sm tracking-wide text-white hover:bg-[var(--accent)] hover:text-black transition"
