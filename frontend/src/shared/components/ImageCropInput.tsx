@@ -8,11 +8,12 @@ type Props = {
     max: number;
     aspect: number;
     value: ImageItem[];
+    title: string;
     onChange: (images: ImageItem[]) => void;
     error?: string;
 };
 
-const ImageCropInput = ({ max, aspect, onChange, error, value }: Props) => {
+const ImageCropInput = ({ max, aspect, onChange, error, value, title }: Props) => {
     const [images, setImages] = useState<ImageItem[]>(value);
     useEffect(() => {
         setImages(value);
@@ -84,7 +85,7 @@ const ImageCropInput = ({ max, aspect, onChange, error, value }: Props) => {
 
     return (
         <div>
-            <p className="mb-2">Product Images</p>
+            <p className="mb-2">{title}</p>
 
             {/* Preview Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">

@@ -134,7 +134,7 @@ export class HeroController implements IHeroController {
 
     async getHeroForUser(req: Request, res: Response): Promise<void> {
         try {
-            console.log("getHeroForUser");
+
             const data = await this._getHeroUserUseCase.execute();
             res.status(HttpStatusCode.OK).json({
                 success: true,

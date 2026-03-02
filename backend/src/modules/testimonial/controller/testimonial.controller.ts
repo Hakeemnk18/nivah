@@ -22,6 +22,7 @@ import {
 } from "../dtos/testimonial.dto.js";
 
 import { TestimonialMapper } from "../mappers/testimonial.mapper.js";
+import type { IGetTestimonialByIdUseCase } from "../use-cases/interfaces/get.testimonial.by.id.use-case.interface.js";
 
 @injectable()
 export class TestimonialController implements ITestimonialController {
@@ -42,7 +43,10 @@ export class TestimonialController implements ITestimonialController {
         private readonly _getTestimonialsForUserUseCase: IGetTestimonialsForUserUseCase,
 
         @inject("IGetTestimonialsForAdminUseCase")
-        private readonly _getTestimonialsForAdminUseCase: IGetTestimonialsForAdminUseCase
+        private readonly _getTestimonialsForAdminUseCase: IGetTestimonialsForAdminUseCase,
+
+        @inject("IGetTestimonialByIdUseCase")
+        private readonly _getTestimonialByIdUseCase: IGetTestimonialByIdUseCase,
     ) { }
 
     async createTestimonial(req: Request, res: Response): Promise<void> {
@@ -121,7 +125,7 @@ export class TestimonialController implements ITestimonialController {
             res.status(HttpStatusCode.OK).json({
                 success: true,
                 message: ResponseMessages.SUCCESS,
-                data,
+                data: data ? [data] : null,
             });
         } catch (error) {
             console.log("Error in getTestimonialsForAdmin:", error);
@@ -140,6 +144,24 @@ export class TestimonialController implements ITestimonialController {
             });
         } catch (error) {
             console.log("Error in getTestimonialsForUser:", error);
+            handleError(res, error);
+        }
+    }
+
+    async getTestimonialById(req: Request, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+            validateObjectId(id);
+
+            const data = await this._getTestimonialByIdUseCase.execute(id!);
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: ResponseMessages.SUCCESS,
+                data: data,
+            });
+        } catch (error) {
+            console.log("Error in getTestimonialById:", error);
             handleError(res, error);
         }
     }

@@ -22,6 +22,7 @@ import {
 } from "../dtos/banner.dto.js";
 
 import { BannerMapper } from "../mappers/banner.mapper.js";
+import type { IGetBannerByIdUseCase } from "../use-cases/interfaces/get.banner.by.id.use-case.interface.js";
 
 @injectable()
 export class BannerController implements IBannerController {
@@ -42,7 +43,10 @@ export class BannerController implements IBannerController {
         private readonly _getBannerUserUseCase: IGetBannerUserUseCase,
 
         @inject("IGetBannerAdminUseCase")
-        private readonly _getBannerAdminUseCase: IGetBannerAdminUseCase
+        private readonly _getBannerAdminUseCase: IGetBannerAdminUseCase,
+
+        @inject("IGetBannerByIdUseCase")
+        private readonly _getBannerByIdUseCase: IGetBannerByIdUseCase,
     ) { }
 
     async createBanner(req: Request, res: Response): Promise<void> {
@@ -121,7 +125,7 @@ export class BannerController implements IBannerController {
             res.status(HttpStatusCode.OK).json({
                 success: true,
                 message: ResponseMessages.SUCCESS,
-                data: data,
+                data: data ? [data] : null,
             });
         } catch (error) {
             console.log("Error in getBannerForAdmin:", error);
@@ -140,6 +144,24 @@ export class BannerController implements IBannerController {
             });
         } catch (error) {
             console.log("Error in getBannerForUser:", error);
+            handleError(res, error);
+        }
+    }
+
+    async getBannerById(req: Request, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+            validateObjectId(id);
+
+            const data = await this._getBannerByIdUseCase.execute(id!);
+
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: ResponseMessages.SUCCESS,
+                data: data,
+            });
+        } catch (error) {
+            console.log("Error in getBannerById:", error);
             handleError(res, error);
         }
     }

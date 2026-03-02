@@ -13,6 +13,8 @@ import type { IGetTestimonialsForUserUseCase } from "../modules/testimonial/use-
 import { GetTestimonialsForUserUseCase } from "../modules/testimonial/use-cases/get.testimonials.for.user.use-case.js";
 import type { IGetTestimonialsForAdminUseCase } from "../modules/testimonial/use-cases/interfaces/get.testimonials.for.admin.use-case.interface.js";
 import { GetTestimonialsForAdminUseCase } from "../modules/testimonial/use-cases/get.testimonials.for.admin.use-case.js";
+import type { IGetTestimonialByIdUseCase } from "../modules/testimonial/use-cases/interfaces/get.testimonial.by.id.use-case.interface.js";
+import { GetTestimonialByIdUseCase } from "../modules/testimonial/use-cases/get.testimonial.by.id.use-case.js";
 
 
 export const registerTestimonialDependencies = () => {
@@ -36,5 +38,9 @@ export const registerTestimonialDependencies = () => {
     });
     container.register<IGetTestimonialsForAdminUseCase>("IGetTestimonialsForAdminUseCase", {
         useClass: GetTestimonialsForAdminUseCase,
+    });
+
+    container.register<IGetTestimonialByIdUseCase>("IGetTestimonialByIdUseCase", {
+        useClass: GetTestimonialByIdUseCase,
     });
 }
