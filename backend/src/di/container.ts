@@ -7,6 +7,9 @@ import { registerOrderDependencies } from "./order.container.js";
 import { registerPaymentDependencies } from "./payment.container.js";
 import { registerAnalysisDependencies } from "./analysis.container.js";
 import { registerReportDependencies } from "./report.container.js";
+import { registerHeroDependencies } from "./hero.container.js";
+import { registerBannerDependencies } from "./banner.container.js";
+import { registerTestimonialDependencies } from "./testimonial.container.js";
 
 registerCommonDependencies()
 registerUserDependencies();
@@ -17,6 +20,9 @@ registerOrderDependencies()
 registerPaymentDependencies()
 registerAnalysisDependencies()
 registerReportDependencies()
+registerHeroDependencies()
+registerBannerDependencies()
+registerTestimonialDependencies()
 
 
 export { container } from "tsyringe";
