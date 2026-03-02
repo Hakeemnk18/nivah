@@ -28,6 +28,8 @@ const HeroTable = lazy(() => import("../features/hero/pages/HeroList"))
 const CreateHeroPage = lazy(() => import("../features/hero/pages/CreateHeroPage"))
 const BannerTable = lazy(() => import("../features/banner/pages/BannerList"))
 const CreateBannerPage = lazy(() => import("../features/banner/pages/CreateBannerPage"))
+const TestimonialTable = lazy(() => import("../features/testimonial/pages/TestimonialList"))
+const CreateTestimonialPage = lazy(() => import("../features/testimonial/pages/CreateTestimonialPage"))
 
 
 
@@ -228,6 +230,40 @@ const adminRoutes = [
       <Suspense fallback={<Loader />}>
 
         <CreateBannerPage />
+
+
+      </Suspense>
+    ),
+  },
+  {
+    path: "testimonialManagement",
+    element: (
+      <Suspense fallback={<Loader />}>
+
+        <TestimonialTable />
+
+
+
+      </Suspense>
+    ),
+  },
+  {
+    path: "createTestimonial",
+    element: (
+      <Suspense fallback={<Loader />}>
+
+        <CreateTestimonialPage />
+
+
+      </Suspense>
+    ),
+  },
+  {
+    path: "editTestimonial",
+    element: (
+      <Suspense fallback={<Loader />}>
+
+        <CreateTestimonialPage />
 
 
       </Suspense>

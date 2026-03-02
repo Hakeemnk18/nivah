@@ -4,7 +4,6 @@ import { getHeroUserApi } from "../api/hero.api";
 
 
 export const useGetAllUserHero = () => {
-    console.log("useGetAllUserHero");
     return useQuery({
         queryKey: ["user-heroes"],
         queryFn: () => getHeroUserApi(),
