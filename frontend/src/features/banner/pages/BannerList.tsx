@@ -1,47 +1,45 @@
-import { useState } from "react";
 import { FaEdit, FaTrash, FaUnlock } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-
+import { useNavigate } from "react-router-dom"
 import AddButton from "../../admin/components/table/AddButton";
 import AdminBreadcrumb from "../../admin/components/AdminBreadCrumb";
 import AdminTableFullSkeleton from "../../admin/components/AdminTableSkeleton";
 import AdminErrorState from "../../admin/components/AdminErrorState";
-import { useGetAllAdminHero } from "../hooks/use.get.admin.hero";
-import { useBlockHero } from "../hooks/use.block.hero";
-import { useUnblockHero } from "../hooks/use.unblock.banner";
+import { useGetAllAdminBanner } from "../hooks/use.get.admin.banner";
+import { useBlockBanner } from "../hooks/use.block.banner";
+import { useUnblockBanner } from "../hooks/use.unblock.banner";
+import type { BannerView } from "../types/banner.type";
 
-const HeroTable = () => {
+const BannerTable = () => {
     const navigate = useNavigate();
-    const { data: heroesList, isLoading, isError } = useGetAllAdminHero();
-    const { mutateAsync: blockHero } = useBlockHero();
-    const { mutateAsync: unblockHero } = useUnblockHero();
-    const heroes = heroesList?.data || [];
+    const { data: bannersList, isLoading, isError } = useGetAllAdminBanner();
+    const { mutateAsync: blockBanner } = useBlockBanner();
+    const { mutateAsync: unblockBanner } = useUnblockBanner();
+    const banners: BannerView[] = bannersList?.data || [];
 
     const crumbs = [{ label: "Hero Banner" }];
 
     /* ---------- handlers ---------- */
     const handleEdit = (id: string) => {
-        navigate(`/admin/editHero?heroId=${id}`);
+        navigate(`/admin/editBanner?bannerId=${id}`);
     };
 
     const handleBlock = async (id: string) => {
-        await blockHero(id);
+        await blockBanner(id);
 
     };
 
     const handleUnblock = async (id: string) => {
-        await unblockHero(id);
+        await unblockBanner(id);
     };
 
     const handleAdd = () => {
-        navigate("/admin/createHero");
+        navigate("/admin/createBanner");
     };
 
     let content;
 
     if (isLoading) {
-        content = <AdminTableFullSkeleton title="Hero Banner" />;
+        content = <AdminTableFullSkeleton title="Banner" />;
     } else if (isError) {
         content = <AdminErrorState />;
     } else {
@@ -49,12 +47,12 @@ const HeroTable = () => {
             <>
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
-                    <h2 className="text-xl font-semibold">Hero Banner</h2>
+                    <h2 className="text-xl font-semibold">Banner</h2>
 
                     <div className="flex flex-wrap gap-3 items-center">
                         {/* Only show Add button if there are no hero banners */}
-                        {heroes.length === 0 && (
-                            <AddButton label="Add Hero" onClick={handleAdd} />
+                        {banners.length === 0 && (
+                            <AddButton label="Add Banner" onClick={handleAdd} />
                         )}
                     </div>
                 </div>
@@ -67,12 +65,6 @@ const HeroTable = () => {
                                 {/* Image */}
                                 <th className="py-3 w-[100px] sm:w-[120px]">Image</th>
 
-                                {/* Title */}
-                                <th className="w-[180px] sm:w-[220px]">Title</th>
-
-                                {/* Subtitle */}
-                                <th className="min-w-[200px]">Subtitle</th>
-
                                 {/* Status */}
                                 <th className="w-[90px] sm:w-[110px]">Status</th>
 
@@ -84,14 +76,14 @@ const HeroTable = () => {
                         </thead>
 
                         <tbody>
-                            {heroes.length === 0 ? (
+                            {banners.length === 0 ? (
                                 <tr>
                                     <td colSpan={5} className="py-10 text-center text-gray-300">
-                                        No hero banner found. Add one to display it on the homepage.
+                                        No banner found. Add one to display it on the homepage.
                                     </td>
                                 </tr>
                             ) : (
-                                heroes.map((item) => (
+                                banners.map((item) => (
                                     <tr
                                         key={item.id}
                                         className="border-t border-[#2c2e4a] hover:bg-[#232447]"
@@ -102,7 +94,7 @@ const HeroTable = () => {
                                                 <div className="w-20 h-12 rounded overflow-hidden bg-[#2c2e4a]">
                                                     <img
                                                         src={item.image.url}
-                                                        alt={"Hero"}
+                                                        alt={"Banner"}
                                                         className="w-full h-full object-cover"
                                                     />
                                                 </div>
@@ -112,17 +104,6 @@ const HeroTable = () => {
                                                 </div>
                                             )}
                                         </td>
-
-                                        {/* Title Column */}
-                                        <td className="py-3 font-medium text-white truncate max-w-[200px]">
-                                            {item.title || "-"}
-                                        </td>
-
-                                        {/* Subtitle Column */}
-                                        <td className="text-gray-300 truncate max-w-[200px]">
-                                            {item.subtitle || "-"}
-                                        </td>
-
                                         {/* Status Column */}
                                         <td>
                                             <span
@@ -186,4 +167,4 @@ const HeroTable = () => {
     );
 };
 
-export default HeroTable;
+export default BannerTable;

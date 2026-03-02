@@ -59,4 +59,12 @@ router.get(
     (req, res) => bannerController.getBannerForUser(req, res),
 );
 
+/* ---------- ADMIN: GET BANNER BY ID ---------- */
+router.get(
+    "/:id",
+    // authenticate.verifyToken,
+    // authorizeRoles("admin"),
+    (req, res) => bannerController.getBannerById(req, res),
+);
+
 export default router;

@@ -7,4 +7,5 @@ export interface ITestimonialController {
     unblockTestimonial(req: Request, res: Response): Promise<void>;
     getTestimonialsForAdmin(req: Request, res: Response): Promise<void>;
     getTestimonialsForUser(req: Request, res: Response): Promise<void>;
+    getTestimonialById(req: Request, res: Response): Promise<void>;
 }

@@ -204,6 +204,7 @@ const CreateProductForm = () => {
                         {errors.categoryId && <p className="text-red-400 text-sm">{errors.categoryId}</p>}
                         {/* images */}
                         <ImageCropInput
+                            title="Product Images"
                             max={3}
                             aspect={4 / 5}
                             value={formData.images}

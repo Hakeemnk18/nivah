@@ -7,4 +7,5 @@ export interface IBannerController {
     unblockBanner(req: Request, res: Response): Promise<void>;
     getBannerForAdmin(req: Request, res: Response): Promise<void>;
     getBannerForUser(req: Request, res: Response): Promise<void>;
+    getBannerById(req: Request, res: Response): Promise<void>;
 }

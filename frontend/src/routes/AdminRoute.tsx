@@ -26,7 +26,9 @@ const AdminDashboard = lazy(() => import("../features/admin/pages/AdminDashboard
 const AdminRevenueReportPage = lazy(() => import("../features/reports/pages/RevenueReportPage"))
 const HeroTable = lazy(() => import("../features/hero/pages/HeroList"))
 const CreateHeroPage = lazy(() => import("../features/hero/pages/CreateHeroPage"))
-const EditHeroPage = lazy(() => import("../features/hero/pages/CreateHeroPage"))
+const BannerTable = lazy(() => import("../features/banner/pages/BannerList"))
+const CreateBannerPage = lazy(() => import("../features/banner/pages/CreateBannerPage"))
+
 
 
 /* ---------- fallback loader ---------- */
@@ -192,6 +194,40 @@ const adminRoutes = [
       <Suspense fallback={<Loader />}>
 
         <CreateHeroPage />
+
+
+      </Suspense>
+    ),
+  },
+  {
+    path: "bannerManagement",
+    element: (
+      <Suspense fallback={<Loader />}>
+
+        <BannerTable />
+
+
+
+      </Suspense>
+    ),
+  },
+  {
+    path: "createBanner",
+    element: (
+      <Suspense fallback={<Loader />}>
+
+        <CreateBannerPage />
+
+
+      </Suspense>
+    ),
+  },
+  {
+    path: "editBanner",
+    element: (
+      <Suspense fallback={<Loader />}>
+
+        <CreateBannerPage />
 
 
       </Suspense>

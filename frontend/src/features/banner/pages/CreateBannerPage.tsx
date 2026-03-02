@@ -1,59 +1,50 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
-
 import ImageCropInput from "../../../shared/components/ImageCropInput";
 import AdminLoader from "../../admin/components/AdminLoader";
 import type { ImageItem } from "../../../shared/types/image.type";
-import { useCreateHero } from "../hooks/use.create.hero";
 import { uploadToCloudinary } from "../../../shared/utils/cloudinary";
-import type { CreateHeroPayload } from "../types/hero.type";
 import { handleApiError } from "../../../shared/utils/handle.api.error";
-import { useGetAdminHeroById } from "../hooks/use.get.hero.by.id";
-import { useEditHero } from "../hooks/use.edit.hero";
+import { useCreateBanner } from "../hooks/use.create.banner";
+import { useEditBanner } from "../hooks/use.edit.banner";
+import { useGetAdminBannerById } from "../hooks/use.get.banner.by.id";
+import type { CreateBannerPayload } from "../types/banner.type";
 
 type FormState = {
-    title: string;
-    subtitle: string;
     images: ImageItem[];
 };
 
 type FormErrors = {
-    title?: string;
-    subtitle?: string;
     images?: string;
 };
 
-const CreateHeroForm = () => {
+const CreateBannerForm = () => {
     const [searchParams] = useSearchParams();
-    const heroId = searchParams.get("heroId");
-    const { data: hero } = useGetAdminHeroById(heroId);
+    const bannerId = searchParams.get("bannerId");
+    const { data: banner } = useGetAdminBannerById(bannerId);
     const navigate = useNavigate();
     const [submitting, setSubmitting] = useState(false);
-    const { mutateAsync: createHero } = useCreateHero();
-    const { mutateAsync: updateHero } = useEditHero();
+    const { mutateAsync: createBanner } = useCreateBanner();
+    const { mutateAsync: updateBanner } = useEditBanner();
 
     const [formData, setFormData] = useState<FormState>({
-        title: "",
-        subtitle: "",
         images: [],
     });
 
     const [errors, setErrors] = useState<FormErrors>({});
 
     useEffect(() => {
-        if (hero?.data) {
+        if (banner?.data) {
             setFormData({
-                title: hero.data.title,
-                subtitle: hero.data.subtitle,
                 images: [{
-                    url: hero.data.image.url,
-                    publicId: hero.data.image.publicId,
+                    url: banner.data.image.url,
+                    publicId: banner.data.image.publicId,
                     type: "existing",
                 }],
             });
         }
-    }, [hero]);
+    }, [banner]);
 
     /* ---------- handlers ---------- */
 
@@ -70,12 +61,6 @@ const CreateHeroForm = () => {
         let uploadedImages: { url: string; publicId: string }[] = [];
 
         // Validation
-        if (!formData.title.trim() || formData.title.length < 2)
-            newErrors.title = "Minimum 2 characters";
-
-        if (!formData.subtitle.trim() || formData.subtitle.length < 5)
-            newErrors.subtitle = "Minimum 5 characters";
-
         if (formData.images.length === 0)
             newErrors.images = "A hero image is required";
 
@@ -103,22 +88,20 @@ const CreateHeroForm = () => {
                 console.log("Cloudinary error response:", err?.response?.data);
                 return;
             }
-            const payload: CreateHeroPayload = {
-                title: formData.title,
-                subtitle: formData.subtitle,
+            const payload: CreateBannerPayload = {
                 image: {
                     url: uploadedImages[0].url,
                     publicId: uploadedImages[0].publicId,
                 },
             };
-            if (heroId) {
-                await updateHero({ id: heroId, data: payload });
+            if (bannerId) {
+                await updateBanner({ id: bannerId, data: payload });
             } else {
-                await createHero(payload);
+                await createBanner(payload);
             }
             setSubmitting(false);
-            toast.success("Hero banner created successfully");
-            navigate("/admin/heroManagement");
+            toast.success("Banner created successfully");
+            navigate("/admin/bannerManagement");
         } catch (err) {
             const fieldErrors = handleApiError(err);
             if (fieldErrors) setErrors(fieldErrors);
@@ -128,51 +111,20 @@ const CreateHeroForm = () => {
 
     return (
         <>
-            {submitting && <AdminLoader fullScreen label={heroId ? "Editing banner..." : "Creating banner..."} />}
+            {submitting && <AdminLoader fullScreen label={bannerId ? "Editing banner..." : "Creating banner..."} />}
             <div className="pb-20">
                 <div className="max-w-3xl mx-auto bg-[#1d1e33] p-6 rounded-xl text-white mt-4">
-                    <h2 className="text-xl font-semibold mb-6">{heroId ? "Edit Hero Banner" : "Create Hero Banner"}</h2>
+                    <h2 className="text-xl font-semibold mb-6">{bannerId ? "Edit Banner" : "Create Banner"}</h2>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Title */}
-                        <div>
-                            <input
-                                name="title"
-                                value={formData.title}
-                                onChange={handleChange}
-                                placeholder="Banner Title eg: Timeless Elegance in Every Ornament"
-                                className="w-full px-4 py-2 rounded-lg bg-[#232447] focus:outline-none focus:ring-1 focus:ring-blue-500"
-                            />
-                            {errors.title && (
-                                <p className="text-red-400 text-sm mt-1">{errors.title}</p>
-                            )}
-                        </div>
-
-                        {/* Subtitle */}
-                        <div>
-                            <textarea
-                                name="subtitle"
-                                value={formData.subtitle}
-                                onChange={handleChange}
-                                rows={3}
-                                placeholder="Banner Subtitle"
-                                className="w-full px-4 py-2 rounded-lg bg-[#232447] focus:outline-none focus:ring-1 focus:ring-blue-500"
-                            />
-                            {errors.subtitle && (
-                                <p className="text-red-400 text-sm mt-1">{errors.subtitle}</p>
-                            )}
-                        </div>
-
-
-
 
                         {/* Image Upload */}
                         <div>
                             <h3 className="text-sm text-gray-300 mb-2">Banner Image</h3>
                             <ImageCropInput
-                                title="Hero Banner Image"
+                                title="Banner Image"
                                 max={1}
-                                aspect={16 / 9}
+                                aspect={5 / 2}
                                 value={formData.images}
                                 onChange={(files) =>
                                     setFormData({ ...formData, images: files })
@@ -195,7 +147,7 @@ const CreateHeroForm = () => {
                                 disabled={submitting}
                                 className="px-5 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition"
                             >
-                                {(heroId) ? "Editing" : "Creating"}
+                                {(bannerId) ? "Editing" : "Creating"}
                             </button>
                         </div>
                     </form>
@@ -205,4 +157,4 @@ const CreateHeroForm = () => {
     );
 };
 
-export default CreateHeroForm;
+export default CreateBannerForm;

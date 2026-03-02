@@ -13,6 +13,8 @@ import type { IGetBannerUserUseCase } from "../modules/banner/use-cases/interfac
 import { GetBannerUserUseCase } from "../modules/banner/use-cases/get.banner.user.use-case.js";
 import type { IGetBannerAdminUseCase } from "../modules/banner/use-cases/interfaces/get.banner.admin.use-case.interface.js";
 import { GetBannerAdminUseCase } from "../modules/banner/use-cases/get.banner.admin.use-case.js";
+import type { IGetBannerByIdUseCase } from "../modules/banner/use-cases/interfaces/get.banner.by.id.use-case.interface.js";
+import { GetBannerByIdUseCase } from "../modules/banner/use-cases/get.banner.by.id.use-case.js";
 
 
 export const registerBannerDependencies = () => {
@@ -36,5 +38,8 @@ export const registerBannerDependencies = () => {
     });
     container.register<IGetBannerAdminUseCase>("IGetBannerAdminUseCase", {
         useClass: GetBannerAdminUseCase,
+    });
+    container.register<IGetBannerByIdUseCase>("IGetBannerByIdUseCase", {
+        useClass: GetBannerByIdUseCase,
     });
 }

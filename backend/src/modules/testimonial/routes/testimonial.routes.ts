@@ -55,4 +55,12 @@ router.get(
     (req, res) => testimonialController.getTestimonialsForUser(req, res),
 );
 
+/* ---------- ADMIN: GET TESTIMONIAL BY ID ---------- */
+router.get(
+    "/:id",
+    // authenticate.verifyToken,
+    // authorizeRoles("admin"),
+    (req, res) => testimonialController.getTestimonialById(req, res),
+);
+
 export default router;
