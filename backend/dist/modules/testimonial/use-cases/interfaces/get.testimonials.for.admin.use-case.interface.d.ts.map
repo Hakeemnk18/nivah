@@ -1,0 +1,1 @@
+{"version":3,"file":"get.testimonials.for.admin.use-case.interface.d.ts","sourceRoot":"","sources":["../../../../../src/modules/testimonial/use-cases/interfaces/get.testimonials.for.admin.use-case.interface.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,eAAe,EAAE,MAAM,iCAAiC,CAAC;AAEvE,MAAM,WAAW,+BAA+B;IAC5C,OAAO,IAAI,OAAO,CAAC,eAAe,EAAE,CAAC,CAAC;CACzC"}

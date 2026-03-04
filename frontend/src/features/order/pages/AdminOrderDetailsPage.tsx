@@ -1,9 +1,8 @@
-import React from "react";
 import AdminErrorState from "../../admin/components/AdminErrorState";
 import AdminOrderDetailsSkeleton from "../components/AdminOrderDetailsSkelton";
 import type { OrderStatus } from "../types/order.type";
 import { useAdminOrderDetails } from "../hooks/use.get.admin.order.details";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAdminDownloadInvoice } from "../hooks/use.admin.download.invoice";
 import toast from "react-hot-toast";
 
@@ -71,7 +70,7 @@ const AdminOrderDetailsPage = () => {
   const handleDownloadInvoice = async () => {
     if (!order) return;
     try {
-      const blob = await downloadInvoiceMutate({ orderId: order.id});
+      const blob = await downloadInvoiceMutate({ orderId: order.id });
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");

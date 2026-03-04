@@ -47,7 +47,7 @@ const CheckoutPage = () => {
     const handlePaymentCancel = async (orderId: string, response: any) => {
         try {
 
-            const res = await api.post<ApiResponse>("/orders/payment-failure", {
+            await api.post<ApiResponse>("/orders/payment-failure", {
                 razorpay_order_id: response.error.metadata.order_id,
                 razorpay_payment_id: response.error.metadata.payment_id,
                 failure_reason: response.error.reason,
@@ -63,7 +63,7 @@ const CheckoutPage = () => {
     const handlePaymentSuccess = async (orderId: string, response: any) => {
         try {
 
-            const res = await api.post<ApiResponse>("/orders/verify-payment", {
+            await api.post<ApiResponse>("/orders/verify-payment", {
                 ...response,
             });
             navigate(`/order-status/${orderId}`)

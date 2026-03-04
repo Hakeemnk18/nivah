@@ -1,6 +1,5 @@
-import type { ApiResponse } from "../../../shared/types/api.types";
 
-export type ReportDateRangeOption = 
+export type ReportDateRangeOption =
   | "daily"        // Today/Daily
   | "this_week"    // This Week
   | "this_month"   // This Month
@@ -12,7 +11,7 @@ export type ReportDateRangeOption =
 // 2. The state object you will use in your React component
 export type RevenueFilterState = {
   option: ReportDateRangeOption;
-  customStartDate?: string | null; 
+  customStartDate?: string | null;
   customEndDate?: string | null;
 };
 
@@ -25,15 +24,15 @@ export type RevenueSummary = {
 
 
 export type DailyRevenueData = {
-  date: string;     
-  revenue: number;  
-  orders: number;   
+  date: string;
+  revenue: number;
+  orders: number;
 };
 
 
 export type RevenueReportResponseData = {
-    summary: RevenueSummary;
-    dailyData: DailyRevenueData[];
+  summary: RevenueSummary;
+  dailyData: DailyRevenueData[];
 };
 
 
@@ -41,7 +40,7 @@ export type RevenueReportResponseData = {
 export const mockRevenueSummary: RevenueSummary = {
   totalRevenue: 1540000,
   totalOrders: 31,
-  averageOrderValue: 49677, 
+  averageOrderValue: 49677,
 };
 
 // 2. Mock data for the Data Table / Chart

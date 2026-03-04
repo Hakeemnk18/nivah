@@ -10,7 +10,7 @@ import { HttpStatusCode } from "../../../core/constants/http.status.codes.js";
 export class GetCurrentUserUseCase implements IGetCurrentUserUseCase {
   constructor(
     @inject("IUserRepository") private readonly _userRepository: IUserRepository
-  ) {}
+  ) { }
   async execute(id: string): Promise<LoginResponseDto> {
     const user = await this._userRepository.findById(id);
 

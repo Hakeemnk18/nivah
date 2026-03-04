@@ -3,7 +3,8 @@ import { container } from "../../di/container.js";
 import { AutoCancelOrderUseCase } from "../../modules/order/use-cases/auto-cancel-order.use-case.js";
 
 export function startCronJobs() {
-    cron.schedule("0 * * * *", async () => {
+    cron.schedule("* * * * *", async () => {
+
         const useCase = container.resolve(AutoCancelOrderUseCase);
         await useCase.execute();
     });

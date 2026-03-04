@@ -14,8 +14,8 @@ const heroController = container.resolve(HeroController);
 /* ---------- ADMIN: GET HERO BANNER ---------- */
 router.get(
     "/",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => heroController.getHeroForAdmin(req, res),
 );
 /* ---------- USER: GET HERO BANNER ---------- */
@@ -26,40 +26,40 @@ router.get(
 /* ---------- ADMIN: GET HERO BANNER BY ID ---------- */
 router.get(
     "/:id",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => heroController.getHeroById(req, res),
 );
 
 /* ---------- ADMIN: CREATE HERO BANNER ---------- */
 router.post(
     "/",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => heroController.createHero(req, res),
 );
 
 /* ---------- ADMIN: EDIT HERO BANNER ---------- */
 router.put(
     "/:id",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => heroController.editHero(req, res),
 );
 
 /* ---------- ADMIN: BLOCK HERO BANNER ---------- */
 router.patch(
     "/:id/block",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => heroController.blockHero(req, res),
 );
 
 /* ---------- ADMIN: UNBLOCK HERO BANNER ---------- */
 router.patch(
     "/:id/unblock",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => heroController.unblockHero(req, res),
 );
 

@@ -1,0 +1,1 @@
+{"version":3,"file":"get.order.status.use-case.interface.d.ts","sourceRoot":"","sources":["../../../../../src/modules/analysis/use-cases/interfaces/get.order.status.use-case.interface.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,uBAAuB,EAAE,MAAM,8BAA8B,CAAC;AAE5E,MAAM,WAAW,kCAAkC;IAC/C,OAAO,IAAI,OAAO,CAAC,uBAAuB,CAAC,CAAC;CAC/C"}

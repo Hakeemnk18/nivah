@@ -33,19 +33,24 @@ const CreateTestimonialPage = lazy(() => import("../features/testimonial/pages/C
 
 
 
-/* ---------- fallback loader ---------- */
-const Loader = () => (
-  <div className="flex flex-col items-center justify-center h-screen bg-[#181a2a] gap-3">
-    <div className="w-7 h-7 border-2 border-gray-600 border-t-blue-400 rounded-full animate-spin" />
-    <p className="text-sm text-gray-400">Loading admin data…</p>
-  </div>
-);
+
 
 const adminRoutes = [
   {
+    index: true,
+    element: (
+      <Suspense >
+        <AdminBootstrap>
+          <AdminDashboard />
+        </AdminBootstrap>
+
+      </Suspense>
+    )
+  },
+  {
     path: "login",
     element: (
-      <Suspense fallback={<Loader />}>
+      <Suspense >
         <LoginPage role="admin" />
       </Suspense>
     ),
@@ -54,8 +59,10 @@ const adminRoutes = [
   {
     path: "dashboard",
     element: (
-      <Suspense fallback={<Loader />}>
-        <AdminDashboard />
+      <Suspense >
+        <AdminBootstrap>
+          <AdminDashboard />
+        </AdminBootstrap>
 
       </Suspense>
     ),
@@ -64,7 +71,7 @@ const adminRoutes = [
   {
     path: "categoryManagement",
     element: (
-      <Suspense fallback={<Loader />}>
+      <Suspense >
         <AdminBootstrap>
           <CategoryTable />
         </AdminBootstrap>
@@ -76,7 +83,7 @@ const adminRoutes = [
   {
     path: "subCategoryManagement",
     element: (
-      <Suspense fallback={<Loader />}>
+      <Suspense >
         <AdminBootstrap>
           <CategoryTable />
         </AdminBootstrap>
@@ -89,7 +96,7 @@ const adminRoutes = [
   {
     path: "createCategory",
     element: (
-      <Suspense fallback={<Loader />}>
+      <Suspense >
         <AdminBootstrap>
           <CreateCategoryPage />
         </AdminBootstrap>
@@ -100,7 +107,7 @@ const adminRoutes = [
   {
     path: "editCategory",
     element: (
-      <Suspense fallback={<Loader />}>
+      <Suspense >
         <AdminBootstrap>
           <CreateCategoryPage />
         </AdminBootstrap>
@@ -112,9 +119,10 @@ const adminRoutes = [
   {
     path: "productManagement",
     element: (
-      <Suspense fallback={<Loader />}>
-
-        <ProductTable />
+      <Suspense >
+        <AdminBootstrap>
+          <ProductTable />
+        </AdminBootstrap>
 
 
 
@@ -124,9 +132,10 @@ const adminRoutes = [
   {
     path: "createProduct",
     element: (
-      <Suspense fallback={<Loader />}>
-
-        <CreateProductPage />
+      <Suspense >
+        <AdminBootstrap>
+          <CreateProductPage />
+        </AdminBootstrap>
 
 
       </Suspense>
@@ -135,9 +144,10 @@ const adminRoutes = [
   {
     path: "editProduct",
     element: (
-      <Suspense fallback={<Loader />}>
-
-        <EditProductPage />
+      <Suspense >
+        <AdminBootstrap>
+          <EditProductPage />
+        </AdminBootstrap>
 
 
       </Suspense>
@@ -146,33 +156,40 @@ const adminRoutes = [
   {
     path: "orderManagement",
     element: (
-      <Suspense fallback={<Loader />}>
-        <OrderTable />
+      <Suspense >
+        <AdminBootstrap>
+          <OrderTable />
+        </AdminBootstrap>
       </Suspense>
     ),
   },
   {
     path: "orderDetails/:orderId",
     element: (
-      <Suspense fallback={<Loader />}>
-        <AdminOrderDetailsPage />
+      <Suspense >
+        <AdminBootstrap>
+          <AdminOrderDetailsPage />
+        </AdminBootstrap>
       </Suspense>
     ),
   },
   {
     path: "reports/revenue",
     element: (
-      <Suspense fallback={<Loader />}>
-        <AdminRevenueReportPage />
+      <Suspense >
+        <AdminBootstrap>
+          <AdminRevenueReportPage />
+        </AdminBootstrap>
       </Suspense>
     ),
   },
   {
     path: "heroManagement",
     element: (
-      <Suspense fallback={<Loader />}>
-
-        <HeroTable />
+      <Suspense >
+        <AdminBootstrap>
+          <HeroTable />
+        </AdminBootstrap>
 
 
 
@@ -182,9 +199,10 @@ const adminRoutes = [
   {
     path: "createHero",
     element: (
-      <Suspense fallback={<Loader />}>
-
-        <CreateHeroPage />
+      <Suspense >
+        <AdminBootstrap>
+          <CreateHeroPage />
+        </AdminBootstrap>
 
 
       </Suspense>
@@ -193,9 +211,10 @@ const adminRoutes = [
   {
     path: "editHero",
     element: (
-      <Suspense fallback={<Loader />}>
-
-        <CreateHeroPage />
+      <Suspense >
+        <AdminBootstrap>
+          <CreateHeroPage />
+        </AdminBootstrap>
 
 
       </Suspense>
@@ -204,9 +223,10 @@ const adminRoutes = [
   {
     path: "bannerManagement",
     element: (
-      <Suspense fallback={<Loader />}>
-
-        <BannerTable />
+      <Suspense >
+        <AdminBootstrap>
+          <BannerTable />
+        </AdminBootstrap>
 
 
 
@@ -216,9 +236,10 @@ const adminRoutes = [
   {
     path: "createBanner",
     element: (
-      <Suspense fallback={<Loader />}>
-
-        <CreateBannerPage />
+      <Suspense >
+        <AdminBootstrap>
+          <CreateBannerPage />
+        </AdminBootstrap>
 
 
       </Suspense>
@@ -227,20 +248,20 @@ const adminRoutes = [
   {
     path: "editBanner",
     element: (
-      <Suspense fallback={<Loader />}>
-
-        <CreateBannerPage />
-
-
+      <Suspense >
+        <AdminBootstrap>
+          <CreateBannerPage />
+        </AdminBootstrap>
       </Suspense>
     ),
   },
   {
     path: "testimonialManagement",
     element: (
-      <Suspense fallback={<Loader />}>
-
-        <TestimonialTable />
+      <Suspense >
+        <AdminBootstrap>
+          <TestimonialTable />
+        </AdminBootstrap>
 
 
 
@@ -250,9 +271,10 @@ const adminRoutes = [
   {
     path: "createTestimonial",
     element: (
-      <Suspense fallback={<Loader />}>
-
-        <CreateTestimonialPage />
+      <Suspense >
+        <AdminBootstrap>
+          <CreateTestimonialPage />
+        </AdminBootstrap>
 
 
       </Suspense>
@@ -261,9 +283,10 @@ const adminRoutes = [
   {
     path: "editTestimonial",
     element: (
-      <Suspense fallback={<Loader />}>
-
-        <CreateTestimonialPage />
+      <Suspense >
+        <AdminBootstrap>
+          <CreateTestimonialPage />
+        </AdminBootstrap>
 
 
       </Suspense>

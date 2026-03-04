@@ -17,17 +17,17 @@ export const useAdminCategories = (
   const queryFn = () =>
     getAllCategoriesForAdminApi(
       {
-      page: currentPage,
-      search,
-      sort,
-      ...filters
-    }, parentId);
+        page: currentPage,
+        search,
+        sort,
+        ...filters
+      }, parentId);
 
   return useQuery<
-    GetCategoryListResponse, 
-    Error,                   
-    GetCategoryListResponse, 
-    AdminCategoryQueryKey    
+    GetCategoryListResponse,
+    Error,
+    GetCategoryListResponse,
+    AdminCategoryQueryKey
   >({
     queryKey,
     queryFn,

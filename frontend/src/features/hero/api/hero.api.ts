@@ -1,5 +1,5 @@
 import api from "../../../api/axios.instance";
-import type { ApiResponse, GetIdNameResponse, } from "../../../shared/types/api.types";
+import type { ApiResponse } from "../../../shared/types/api.types";
 import type { AdminGetAllHeroResponse, CreateHeroPayload, GetHeroDetailsResponse, GetHeroUserResponse } from "../types/hero.type";
 
 

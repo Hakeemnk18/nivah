@@ -26,7 +26,6 @@ export class PaymentMapper {
 
             providerOrderId: paymentModelData.providerOrderId,
             providerPaymentId: paymentModelData.providerPaymentId,
-            providerSignature: paymentModelData.providerSignature,
 
             amount: paymentModelData.amount,
             currency: paymentModelData.currency,
@@ -48,7 +47,6 @@ export class PaymentMapper {
 
             providerOrderId: paymentEntity.providerOrderId,
             providerPaymentId: paymentEntity.providerPaymentId,
-            providerSignature: paymentEntity.providerSignature,
 
             amount: paymentEntity.amount,
             currency: paymentEntity.currency,

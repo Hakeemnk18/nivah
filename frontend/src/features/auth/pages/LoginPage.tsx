@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useLocation, } from "react-router-dom";
 import { useLogin } from "../hooks/useLogin";
-import { useForgotPassword } from "../hooks/useForgotPassword";
 import { handleApiError } from "../../../shared/utils/handle.api.error";
 import GoogleLogin from "../components/GoogleLogin";
 //import ForgotPasswordModal from "../components/EmailModal";
@@ -11,7 +10,7 @@ interface LoginPageProps {
 }
 
 const LoginPage = ({ role }: LoginPageProps) => {
-  const navigate = useNavigate();
+
   const location = useLocation();
   const from = location.state?.from || "/";
 
@@ -19,7 +18,7 @@ const LoginPage = ({ role }: LoginPageProps) => {
   const { mutateAsync: loginMutate, isPending } = useLogin();
   //   const { mutateAsync: forgotPasswordMutate } = useForgotPassword();
 
-  const [isForgotPsd, setIsForgotPsd] = useState(false);
+
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
@@ -58,10 +57,7 @@ const LoginPage = ({ role }: LoginPageProps) => {
     }
   };
 
-  const handleForgotPassword = async (email: string) => {
-    //await forgotPasswordMutate({ email });
-    setIsForgotPsd(false);
-  };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center  px-4">
@@ -117,7 +113,6 @@ const LoginPage = ({ role }: LoginPageProps) => {
             <div className="text-right">
               <button
                 type="button"
-                onClick={() => setIsForgotPsd(true)}
                 className="text-sm text-blue-600 hover:underline"
               >
                 Forgot password?
@@ -155,14 +150,6 @@ const LoginPage = ({ role }: LoginPageProps) => {
           </>
         )}
 
-        {/* Forgot password modal */}
-        {/* {isForgotPsd && (
-          <ForgotPasswordModal
-            open={isForgotPsd}
-            onClose={() => setIsForgotPsd(false)}
-            onSubmit={handleForgotPassword}
-          />
-        )} */}
       </div>
     </div>
   );

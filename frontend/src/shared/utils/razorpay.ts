@@ -1,9 +1,6 @@
 
 import toast from "react-hot-toast";
 import type { IRazorpayOrder, IRazorpayOptions } from "../../features/order/types/order.type";
-import type { ApiResponse } from "../types/api.types";
-import { handleApiError } from "./handle.api.error";
-import api from "../../api/axios.instance"
 const keyId = import.meta.env.VITE_RAZORPAY_KEY_ID;
 
 
@@ -49,8 +46,8 @@ export const openRazorpayCheckoutFunction = (
                 onCancel(order.notes.appOrderId, { reason: "dismissed" });
             }
         },
-        onPaymentFailed: (response: any) => {
-            onCancel(order.notes.appOrderId, response);
+        onPaymentFailed: () => {
+            toast.error("Payment failed");
         }
     });
 }

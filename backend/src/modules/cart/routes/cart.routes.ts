@@ -1,13 +1,9 @@
 import { Router } from "express";
 import { container } from "tsyringe";
-
-import { Authenticate } from "../../../infrastructure/middileware/auth.middleware.js";
-import { authorizeRoles } from "../../../infrastructure/middileware/role.middleware.js";
 import { CartController } from "../controller/cart.controller.js";
 
 const router = Router();
 
-const authenticate = container.resolve(Authenticate);
 const cartController = container.resolve(CartController);
 
 /* ---------- CREATE ---------- */

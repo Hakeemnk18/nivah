@@ -65,6 +65,7 @@ export class AutoCancelOrderUseCase implements IAutoCancelOrderUseCase {
       }
       await this._paymentRepository.autoCancelPayment(orderIds, session);
       await this._orderRepository.autoCancelOlderThan(orderIds, session);
+      console.log("auto cancel completed")
 
       await session.commitTransaction();
     } catch (error) {

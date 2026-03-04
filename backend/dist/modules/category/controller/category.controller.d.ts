@@ -1,0 +1,40 @@
+import type { Request, Response } from "express";
+import type { ICategoryController } from "./category.controller.interface.js";
+import type { ICreateCategoryUseCase } from "../use-cases/interfaces/create.category.use-case.interface.js";
+import type { IEditCategoryUseCase } from "../use-cases/interfaces/edit.category.use-case.interface.js";
+import type { IBlockCategoryUseCase } from "../use-cases/interfaces/block.category.use-case.interface.js";
+import type { IUnblockCategoryUseCase } from "../use-cases/interfaces/unblock.category.use-case.interface.js";
+import type { IGetAllCategoryUseCase } from "../use-cases/interfaces/get.all.category.use-case.interface.js";
+import type { IGetParentCategoryUseCase } from "../use-cases/interfaces/get.parent.category.use-case.interface.js";
+import type { IGetSubCategoryUseCase } from "../use-cases/interfaces/get.sub.category.use-case.interface.js";
+import type { IGetCategoryByIdUseCase } from "../use-cases/interfaces/get.category.by-id.use-case.interface.js";
+import type { IGetAllSubCategoriesForAdminUseCase } from "../use-cases/interfaces/get.all.sub.categories.for.admin.use-case.interface.js";
+import type { IGetAllSubCategoryForUserUseCase } from "../use-cases/interfaces/get.all.sub.category.for.user.use-case.interface.js";
+import type { IGetSignatureCategoryUseCase } from "../use-cases/interfaces/get.signature.category.use-case.interface.js";
+export declare class CategoryController implements ICategoryController {
+    private readonly _createCategoryUseCase;
+    private readonly _editCategoryUseCase;
+    private readonly _blockCategoryUseCase;
+    private readonly _unblockCategoryUseCase;
+    private readonly _getAllCategoryUseCase;
+    private readonly _getParentCategoryUseCase;
+    private readonly _getSubCategoryUseCase;
+    private readonly _getCategoryByIdUseCase;
+    private readonly _getAllSubCategoriesForAdminUseCase;
+    private readonly _getAllSubCategoryForUserUseCase;
+    private readonly _getSignatureCategoryUseCase;
+    constructor(_createCategoryUseCase: ICreateCategoryUseCase, _editCategoryUseCase: IEditCategoryUseCase, _blockCategoryUseCase: IBlockCategoryUseCase, _unblockCategoryUseCase: IUnblockCategoryUseCase, _getAllCategoryUseCase: IGetAllCategoryUseCase, _getParentCategoryUseCase: IGetParentCategoryUseCase, _getSubCategoryUseCase: IGetSubCategoryUseCase, _getCategoryByIdUseCase: IGetCategoryByIdUseCase, _getAllSubCategoriesForAdminUseCase: IGetAllSubCategoriesForAdminUseCase, _getAllSubCategoryForUserUseCase: IGetAllSubCategoryForUserUseCase, _getSignatureCategoryUseCase: IGetSignatureCategoryUseCase);
+    createCategory(req: Request, res: Response): Promise<void>;
+    editCategory(req: Request, res: Response): Promise<void>;
+    getCategoryById(req: Request, res: Response): Promise<void>;
+    blockCategory(req: Request, res: Response): Promise<void>;
+    unblockCategory(req: Request, res: Response): Promise<void>;
+    getAllParentCategoryForAdmin(req: Request, res: Response): Promise<void>;
+    getAllSubCategoryForAdminById(req: Request, res: Response): Promise<void>;
+    getParentCategories(req: Request, res: Response): Promise<void>;
+    getSubCategories(req: Request, res: Response): Promise<void>;
+    getAllSubCategoryForAdmin(req: Request, res: Response): Promise<void>;
+    getAllSubCategoryForUser(req: Request, res: Response): Promise<void>;
+    getSignatureCategories(req: Request, res: Response): Promise<void>;
+}
+//# sourceMappingURL=category.controller.d.ts.map

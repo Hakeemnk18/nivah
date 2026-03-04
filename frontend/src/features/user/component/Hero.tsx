@@ -14,9 +14,7 @@ const mockHero: UserHeroView = {
 
 export default function Hero() {
   const { data: heroData } = useGetAllUserHero();
-  console.log("heroData", heroData);
   const hero = heroData || mockHero;
-  console.log("hero", hero);
   const navigate = useNavigate();
 
   const words = hero.title.split(" ");

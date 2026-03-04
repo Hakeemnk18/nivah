@@ -13,30 +13,40 @@ const productController = container.resolve(ProductController);
 /* ---------- CREATE PRODUCT ---------- */
 router.post(
   "/",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => productController.createProduct(req, res),
 );
 
 /* ---------- EDIT PRODUCT ---------- */
 router.put(
   "/:id",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => productController.editProduct(req, res),
 );
 
 /* ---------- BLOCK PRODUCT ---------- */
 router.patch(
   "/:id/block",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => productController.blockProduct(req, res),
 );
 
 /* ---------- UNBLOCK PRODUCT ---------- */
 router.patch(
   "/:id/unblock",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => productController.unblockProduct(req, res),
 );
 
 /* ---------- ADMIN: GET ALL PRODUCTS ---------- */
 router.get(
   "/",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => productController.getAllProductForAdmin(req, res),
 );
 
@@ -54,24 +64,32 @@ router.get(
 
 /* ---------- GET PRODUCT DETAILS FOR ADMIN ---------- */
 router.get("/:id",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => productController.getProductDetailsForAdmin(req, res)
 )
 
 /* ---------- ADD VARIANT ---------- */
 router.post(
   "/:productId/variants",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => productController.addVariant(req, res),
 );
 
 /* ---------- EDIT VARIANT ---------- */
 router.put(
   "/:productId/variants/:variantId",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => productController.editVariant(req, res),
 );
 
 /* ---------- GET VARIANT DETAILS FOR ADMIN ---------- */
 router.get(
   "/:productId/variants/:variantId",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => productController.getAdminProductVariant(req, res)
 )
 

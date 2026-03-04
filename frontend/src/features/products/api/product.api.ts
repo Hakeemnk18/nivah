@@ -1,5 +1,4 @@
 import api from "../../../api/axios.instance";
-import { sampleProducts } from "../../../shared/data/sample.products";
 import type {
   ApiResponse,
 } from "../../../shared/types/api.types";

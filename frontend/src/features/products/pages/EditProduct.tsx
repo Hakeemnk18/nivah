@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { data, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAllSubCategoriesForUser } from "../../category/hooks/use.sub.categories";
 import ImageCropInput from "../../../shared/components/ImageCropInput";

@@ -7,7 +7,6 @@ export interface UserProps {
   password?: string | null;
   googleId?: string | null;
   isBlocked?: boolean;
-  isGuest: boolean;
   isVerified?: boolean;
   tokenVersion: number;
 }
@@ -18,7 +17,6 @@ export class User {
   public readonly email: string;
   public readonly phone: string | null;
   public readonly role: "admin" | "user";
-  public readonly isGuest: boolean;
   public readonly password: string | null;
   public readonly googleId: string | null;
   public readonly isVerified: boolean;
@@ -32,7 +30,6 @@ export class User {
     this.phone = props.phone ?? null;
     this.role = props.role;
     this.password = props.password ?? null;
-    this.isGuest = props.isGuest;
     this.googleId = props.googleId ?? null;
     this.isVerified = props.isVerified ?? false;
     this.isBlocked = props.isBlocked ?? false;

@@ -48,12 +48,6 @@ const CreateBannerForm = () => {
 
     /* ---------- handlers ---------- */
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-        setErrors({ ...errors, [e.target.name]: "" });
-    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -85,7 +79,6 @@ const CreateBannerForm = () => {
             } catch (err: any) {
 
                 setErrors({ images: "Image upload failed. Please try again." });
-                console.log("Cloudinary error response:", err?.response?.data);
                 return;
             }
             const payload: CreateBannerPayload = {

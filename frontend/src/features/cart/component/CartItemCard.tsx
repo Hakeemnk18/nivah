@@ -39,7 +39,8 @@ const CartItemCard = ({ item, handleUpdateCartItem, handleRemoveCartItem }: Cart
                         <div className="flex items-center border border-[var(--bg-secondary)] rounded-xl overflow-hidden">
                             <button
                                 onClick={() => handleUpdateCartItem("decrement", item.itemId)}
-                                className="px-3 py-1.5 hover:bg-[var(--bg-secondary)] transition cursor-pointer">
+                                disabled={item.quantity <= 1}
+                                className="px-3 py-1.5 hover:bg-[var(--bg-secondary)] transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                                 <Minus size={14} />
                             </button>
 
@@ -49,7 +50,8 @@ const CartItemCard = ({ item, handleUpdateCartItem, handleRemoveCartItem }: Cart
 
                             <button
                                 onClick={() => handleUpdateCartItem("increment", item.itemId)}
-                                className="px-3 py-1.5 hover:bg-[var(--bg-secondary)] transition cursor-pointer">
+                                disabled={item.quantity >= 20}
+                                className="px-3 py-1.5 hover:bg-[var(--bg-secondary)] transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                                 <Plus size={14} />
                             </button>
                         </div>
