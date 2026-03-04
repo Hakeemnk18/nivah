@@ -22,7 +22,7 @@ export default function ProductListing() {
   const navigate = useNavigate();
 
   /* ---------- Fetch Parent Categories ---------- */
-  const { data: parentData, isLoading: parentLoading } = useParentCategories();
+  const { data: parentData } = useParentCategories();
 
   const parentCategories = parentData?.data || [];
 
@@ -34,7 +34,7 @@ export default function ProductListing() {
   }, [parentCategories]);
 
   /* ---------- Fetch Sub Categories Based on Parent ---------- */
-  const { data: childData, isLoading: childLoading } =
+  const { data: childData } =
     useSubCategoriesByIdForUser(parentId || firstParentId);
 
   const childCategories = childData?.data || [];

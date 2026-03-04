@@ -56,7 +56,7 @@ const OrderSummaryCard = ({ order, onDownloadInvoice, isDownloading }: OrderSumm
                 <button
                     onClick={onDownloadInvoice}
                     disabled={isDownloading}
-                    className="w-full mt-6 bg-[var(--accent)] text-black font-semibold rounded-xl py-3 hover:opacity-90 transition"
+                    className="w-full mt-6 bg-[var(--accent)] text-black font-semibold rounded-xl py-3 hover:opacity-90 transition cursor-pointer"
                 >
                     {isDownloading ? "Downloading..." : "Download Invoice"}
                 </button>

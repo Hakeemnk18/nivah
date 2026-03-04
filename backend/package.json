@@ -26,13 +26,15 @@
     "@types/mongoose": "^5.11.96",
     "@types/node": "^25.0.3",
     "@types/pdfkit": "^0.17.5",
+    "copyfiles": "^2.4.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
   "scripts": {
     "dev": "tsx watch src/main.ts",
-    "build": "tsc",
+    "build": "tsc && npm run copy-assets",
+    "copy-assets": "copyfiles -u 1 src/assets/**/* dist",
     "start": "node dist/main.js"
   },
   "type": "module"

@@ -18,7 +18,7 @@ const OrderItemsCard = ({ items }: OrderItemsCardProps) => {
 
                 {items.map((item) => (
                     <div
-                        key={item.variantId}
+                        key={item.itemId}
                         className="flex justify-between items-start border-b border-[var(--bg-secondary)] pb-4"
                     >
 

@@ -1,0 +1,1 @@
+{"version":3,"file":"get.admin.full.view.use-case.interface.d.ts","sourceRoot":"","sources":["../../../../../src/modules/order/use-cases/interfaces/get.admin.full.view.use-case.interface.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,kBAAkB,EAAE,MAAM,2BAA2B,CAAC;AAEpE,MAAM,WAAW,wBAAwB;IACrC,OAAO,CAAC,OAAO,EAAE,MAAM,GAAG,OAAO,CAAC,kBAAkB,CAAC,CAAC;CACzD"}

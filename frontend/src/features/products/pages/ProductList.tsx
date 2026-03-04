@@ -115,6 +115,11 @@ const ProductTable = () => {
     setShowSort(false);
   }, [filters, sort, currentPage]);
 
+  /*set current page to 1 when filters or sort changes*/
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters, sort, search]);
+
   const handleReset = () => {
     setSearch("");
     setSort("");

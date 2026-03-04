@@ -183,13 +183,14 @@ export default function ProductDetailsPage() {
                 </p>
 
                 <QuantitySelector
-                  maxQuantity={selectedVariant?.stock!}
+                  maxQuantity={selectedVariant?.stock! < 20 ? selectedVariant?.stock! : 20}
                   value={quantity} onChange={setQuantity} />
 
                 <button
                   onClick={handleAddToCart}
+                  disabled={isAddingItemToCart}
                   className="w-full py-4 rounded-2xl bg-[var(--accent)] text-black font-semibold text-sm tracking-wide hover:opacity-90 transition shadow-lg cursor-pointer">
-                  Add to Cart
+                  {isAddingItemToCart ? "Adding..." : "Add to Cart"}
                 </button>
               </div>
             </div>

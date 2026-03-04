@@ -1,0 +1,45 @@
+import type { Request, Response } from "express";
+import type { IOrderController } from "./order.controller.interface.js";
+import type { ICreateOrderUseCase } from "../use-cases/interfaces/create.order.use-case.interface.js";
+import type { IVerifyPaymentUseCase } from "../use-cases/interfaces/verify.payment.use-case.interface.js";
+import type { IGetOrderStatusUseCase } from "../use-cases/interfaces/get.order.status.use-case.interface.js";
+import type { IHandlePaymentFailureUseCase } from "../use-cases/interfaces/failure.payment.use-case.interface.js";
+import type { IGetOrderSummaryUseCase } from "../use-cases/interfaces/get.order.summery.use-case.interface.js";
+import type { IDownloadInvoiceUseCase } from "../use-cases/interfaces/download.invoice.use-case.interface.js";
+import type { IGetAdminOrdersUseCase } from "../use-cases/interfaces/get.admin.orders.use-case.interface.js";
+import type { IDispatchOrderUseCase } from "../use-cases/interfaces/dispatch.order.use-case.interface.js";
+import type { IDeliverOrderUseCase } from "../use-cases/interfaces/deliver.order.use-case.interface.js";
+import type { IAcceptOrderUseCase } from "../use-cases/interfaces/accept.order.use-case.interface.js";
+import type { ICancelOrderUseCase } from "../use-cases/interfaces/cancel.order.use-case.interface.js";
+import type { IGetAdminFullViewUseCase } from "../use-cases/interfaces/get.admin.full.view.use-case.interface.js";
+import type { IAdminDownloadInvoiceUseCase } from "../use-cases/interfaces/admin.dowload.invoice.use-case.interface.js";
+export declare class OrderController implements IOrderController {
+    private readonly _createOrderUseCase;
+    private readonly _verifyPaymentUseCase;
+    private readonly _getOrderStatusUseCase;
+    private readonly _handlePaymentFailureUseCase;
+    private readonly _getOrderSummaryUseCase;
+    private readonly _downloadInvoiceUseCase;
+    private readonly _getAdminOrdersUseCase;
+    private readonly _dispatchOrderUseCase;
+    private readonly _deliverOrderUseCase;
+    private readonly _acceptOrderUseCase;
+    private readonly _cancelOrderUseCase;
+    private readonly _getAdminFullViewUseCase;
+    private readonly _adminDownloadInvoiceUseCase;
+    constructor(_createOrderUseCase: ICreateOrderUseCase, _verifyPaymentUseCase: IVerifyPaymentUseCase, _getOrderStatusUseCase: IGetOrderStatusUseCase, _handlePaymentFailureUseCase: IHandlePaymentFailureUseCase, _getOrderSummaryUseCase: IGetOrderSummaryUseCase, _downloadInvoiceUseCase: IDownloadInvoiceUseCase, _getAdminOrdersUseCase: IGetAdminOrdersUseCase, _dispatchOrderUseCase: IDispatchOrderUseCase, _deliverOrderUseCase: IDeliverOrderUseCase, _acceptOrderUseCase: IAcceptOrderUseCase, _cancelOrderUseCase: ICancelOrderUseCase, _getAdminFullViewUseCase: IGetAdminFullViewUseCase, _adminDownloadInvoiceUseCase: IAdminDownloadInvoiceUseCase);
+    createOrder(req: Request, res: Response): Promise<void>;
+    verifyPayment(req: Request, res: Response): Promise<void>;
+    getOrderStatus(req: Request, res: Response): Promise<void>;
+    handlePaymentFailure(req: Request, res: Response): Promise<void>;
+    getOrderSummary(req: Request, res: Response): Promise<void>;
+    downloadInvoice(req: Request, res: Response): Promise<void>;
+    getAdminOrders(req: Request, res: Response): Promise<void>;
+    dispatchOrder(req: Request, res: Response): Promise<void>;
+    deliverOrder(req: Request, res: Response): Promise<void>;
+    acceptOrder(req: Request, res: Response): Promise<void>;
+    cancelOrder(req: Request, res: Response): Promise<void>;
+    getAdminFullView(req: Request, res: Response): Promise<void>;
+    adminDownloadInvoice(req: Request, res: Response): Promise<void>;
+}
+//# sourceMappingURL=order.controller.d.ts.map

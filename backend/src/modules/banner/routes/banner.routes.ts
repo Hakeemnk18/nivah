@@ -16,40 +16,40 @@ const bannerController = container.resolve(BannerController);
 /* ---------- ADMIN: GET BANNER ---------- */
 router.get(
     "/",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => bannerController.getBannerForAdmin(req, res),
 );
 
 /* ---------- ADMIN: CREATE BANNER ---------- */
 router.post(
     "/",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => bannerController.createBanner(req, res),
 );
 
 /* ---------- ADMIN: EDIT BANNER ---------- */
 router.put(
     "/:id",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => bannerController.editBanner(req, res),
 );
 
 /* ---------- ADMIN: BLOCK BANNER ---------- */
 router.patch(
     "/:id/block",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => bannerController.blockBanner(req, res),
 );
 
 /* ---------- ADMIN: UNBLOCK BANNER ---------- */
 router.patch(
     "/:id/unblock",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => bannerController.unblockBanner(req, res),
 );
 
@@ -62,8 +62,8 @@ router.get(
 /* ---------- ADMIN: GET BANNER BY ID ---------- */
 router.get(
     "/:id",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => bannerController.getBannerById(req, res),
 );
 

@@ -12,40 +12,40 @@ const testimonialController = container.resolve(TestimonialController);
 /* ---------- ADMIN: GET TESTIMONIALS ---------- */
 router.get(
     "/",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => testimonialController.getTestimonialsForAdmin(req, res),
 );
 
 /* ---------- ADMIN: CREATE TESTIMONIAL ---------- */
 router.post(
     "/",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => testimonialController.createTestimonial(req, res),
 );
 
 /* ---------- ADMIN: EDIT TESTIMONIAL ---------- */
 router.put(
     "/:id",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => testimonialController.editTestimonial(req, res),
 );
 
 /* ---------- ADMIN: BLOCK TESTIMONIAL ---------- */
 router.patch(
     "/:id/block",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => testimonialController.blockTestimonial(req, res),
 );
 
 /* ---------- ADMIN: UNBLOCK TESTIMONIAL ---------- */
 router.patch(
     "/:id/unblock",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => testimonialController.unblockTestimonial(req, res),
 );
 
@@ -58,8 +58,8 @@ router.get(
 /* ---------- ADMIN: GET TESTIMONIAL BY ID ---------- */
 router.get(
     "/:id",
-    // authenticate.verifyToken,
-    // authorizeRoles("admin"),
+    authenticate.authenticate,
+    authorizeRoles("admin"),
     (req, res) => testimonialController.getTestimonialById(req, res),
 );
 

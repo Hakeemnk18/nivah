@@ -13,28 +13,32 @@ const categoryController = container.resolve(CategoryController);
 /* ---------- CREATE ---------- */
 router.post(
   "/",
-
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => categoryController.createCategory(req, res),
 );
 
 /* ---------- EDIT ---------- */
 router.put(
   "/:id",
-
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => categoryController.editCategory(req, res),
 );
 
 /* ---------- BLOCK ---------- */
 router.patch(
   "/:id/block",
-
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => categoryController.blockCategory(req, res),
 );
 
 /* ---------- UNBLOCK ---------- */
 router.patch(
   "/:id/unblock",
-
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => categoryController.unblockCategory(req, res),
 );
 
@@ -48,6 +52,8 @@ router.get(
 /* ---------- ADMIN: get all sub categories ---------- */
 router.get(
   "/sub-categories",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => categoryController.getAllSubCategoryForAdmin(req, res),
 );
 
@@ -59,13 +65,16 @@ router.get(
 /* ---------- ADMIN: get all categories ---------- */
 router.get(
   "/",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => categoryController.getAllParentCategoryForAdmin(req, res),
 );
 
 /* ---------- ADMIN: get all sub-categories of parent ---------- */
 router.get(
   "/:parentId/sub-categories",
-
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => categoryController.getAllSubCategoryForAdminById(req, res),
 );
 
@@ -79,14 +88,14 @@ router.get(
 /* ---------- GET CATEGORY BY ID ---------- */
 router.get(
   "/:id",
-
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => categoryController.getCategoryById(req, res),
 );
 
 /* ---------- USER: get all sub-categories ---------- */
 router.get(
   "/sub-categories/list",
-
   (req, res) => categoryController.getAllSubCategoryForUser(req, res),
 );
 

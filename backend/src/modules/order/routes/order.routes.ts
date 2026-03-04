@@ -7,6 +7,7 @@ import type { AuthRequest } from "../../../infrastructure/middileware/auth.type.
 import { reteLimiter } from "../../../config/rate.limit.js";
 import { OrderController } from "../controller/order.controller.js";
 import { RazorpayWebhookController } from "../controller/webhook.controller.js";
+import { authorizeRoles } from "../../../infrastructure/middileware/role.middleware.js";
 
 const router = Router()
 
@@ -31,11 +32,6 @@ router.post('/',
 router.get('/',
   (req, res) => orderController.getAdminOrders(req, res))
 
-//get revenue chart
-// router.get('/revenue-chart', 
-//     (req, res) => orderController.getRevenueChart(req, res)
-// );
-
 //verify payment
 router.post('/verify-payment',
   (req, res) => orderController.verifyPayment(req, res))
@@ -47,9 +43,11 @@ router.post('/payment-failure',
 
 //get admin full view
 router.get('/:orderId',
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => orderController.getAdminFullView(req, res))
 
-//get order status
+//user get order status
 router.get('/:orderId/order-status',
   (req, res) => orderController.getOrderStatus(req, res))
 
@@ -61,9 +59,11 @@ router.get('/:orderId/order-summary',
 
 //admin download invoice
 router.get("/:orderId/invoice/download",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => orderController.adminDownloadInvoice(req, res));
 
-//download invoice
+//user download invoice
 router.get("/:orderId/invoice",
   (req, res) => orderController.downloadInvoice(req, res));
 
@@ -71,18 +71,26 @@ router.get("/:orderId/invoice",
 
 //dispatch order
 router.patch("/:orderId/dispatch",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => orderController.dispatchOrder(req, res));
 
 //deliver order
 router.patch("/:orderId/deliver",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => orderController.deliverOrder(req, res));
 
 //accept order
 router.patch("/:orderId/accept",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => orderController.acceptOrder(req, res));
 
 //cancel order
 router.patch("/:orderId/cancel",
+  authenticate.authenticate,
+  authorizeRoles("admin"),
   (req, res) => orderController.cancelOrder(req, res));
 
 export default router

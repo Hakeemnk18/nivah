@@ -1,0 +1,1 @@
+{"version":3,"file":"handle.webhook.use-case.interface.d.ts","sourceRoot":"","sources":["../../../../../src/modules/order/use-cases/interfaces/handle.webhook.use-case.interface.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,oBAAoB,EAAE,MAAM,2BAA2B,CAAC;AAEtE,MAAM,WAAW,6BAA6B;IAC1C,OAAO,CAAC,KAAK,EAAE,oBAAoB,GAAG,OAAO,CAAC,IAAI,CAAC,CAAC;CACvD"}

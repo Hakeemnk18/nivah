@@ -1,4 +1,4 @@
-import type { ApiResponse, IdName } from "../../../shared/types/api.types";
+import type { ApiResponse } from "../../../shared/types/api.types";
 
 export type AddCartItemPayload = {
     guestId: string;

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useGetAllUserBanner } from "../../banner/hooks/use.get.banner.user";
 import type { UserBannerView } from "../../banner/types/banner.type";
 
@@ -11,21 +12,23 @@ export default function SignatureOfferBanner() {
   const { data: bannerData } = useGetAllUserBanner();
   const banner = bannerData || mockBanner;
 
-
   return (
     <section className="relative w-full overflow-hidden bg-black">
-      <div className="relative w-full aspect-[5/2]">
-        {/* Background image */}
-        <img
-          src={banner.image.url}
-          alt="Promotional offer banner"
-          className="absolute inset-0 h-full w-full object-cover"
-          loading="lazy"
-        />
+      <Link to={"/products"}>
 
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/40" />
-      </div>
+        <div className="relative w-full aspect-[5/2]">
+          {/* Background image */}
+          <img
+            src={banner.image.url}
+            alt="Promotional offer banner"
+            className="absolute inset-0 h-full w-full object-cover"
+            loading="lazy"
+          />
+
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+      </Link>
     </section>
   );
 }

@@ -1,0 +1,48 @@
+import type { Request, Response } from "express";
+import type { IProductController } from "./product.controller.interface.js";
+import type { ICreateProductUseCase } from "../use-cases/interfaces/create.product.use-case.interface.js";
+import type { IBlockProductUseCase } from "../use-cases/interfaces/block.product.use-case.interface.js";
+import type { IUnblockProductUseCase } from "../use-cases/interfaces/unblock.product.use-case.interface.js";
+import type { IEditProductUseCase } from "../use-cases/interfaces/edit.product.use-case.interface.js";
+import type { IGetAllProductForAdminUseCase } from "../use-cases/interfaces/get.all.product.admin.use-case.interface.js";
+import type { IAddProductVariantUseCase } from "../use-cases/interfaces/add.product.variant.use-case.interface.js";
+import type { IEditProductVariantUseCase } from "../use-cases/interfaces/edit.product.variant.use-case.interface.js";
+import type { IGetProductDetailsForAdminUseCase } from "../use-cases/interfaces/get.product.admin.use-case.interface.js";
+import type { IGetProductVariantForAdmin } from "../use-cases/interfaces/get.product.variant.for.admin.interface.js";
+import type { IGetFeaturedProductUseCase } from "../use-cases/interfaces/get.fetured.product.use-case.interface.js";
+import type { IGetAllProductForUserUseCase } from "../use-cases/interfaces/get.all.product.user.use-case.interface.js";
+import type { IGetProductForUserUseCase } from "../use-cases/interfaces/get.product.user.use-case.interface.js";
+import type { IGetRelatedProductUseCase } from "../use-cases/interfaces/get.related.product.use-case.interface.js";
+import type { IGetProductVariantForUserUseCase } from "../use-cases/interfaces/get.product.variant.for.user.use-case.interface.js";
+export declare class ProductController implements IProductController {
+    private readonly _createProductUseCase;
+    private readonly _editProductUseCase;
+    private readonly _blockProductUseCase;
+    private readonly _unblockProductUseCase;
+    private readonly _getAllProductForAdminUseCase;
+    private readonly _addProductVariantUseCase;
+    private readonly _editProductVariantUseCase;
+    private readonly _getProductDetailsForAdminUseCase;
+    private readonly _getProductVariantForAdminUseCase;
+    private readonly _getFeaturedProductUseCase;
+    private readonly _getAllProductForUserUseCase;
+    private readonly _getProductForUserUseCase;
+    private readonly _getRelatedProductUseCase;
+    private readonly _getProductVariantForUserUseCase;
+    constructor(_createProductUseCase: ICreateProductUseCase, _editProductUseCase: IEditProductUseCase, _blockProductUseCase: IBlockProductUseCase, _unblockProductUseCase: IUnblockProductUseCase, _getAllProductForAdminUseCase: IGetAllProductForAdminUseCase, _addProductVariantUseCase: IAddProductVariantUseCase, _editProductVariantUseCase: IEditProductVariantUseCase, _getProductDetailsForAdminUseCase: IGetProductDetailsForAdminUseCase, _getProductVariantForAdminUseCase: IGetProductVariantForAdmin, _getFeaturedProductUseCase: IGetFeaturedProductUseCase, _getAllProductForUserUseCase: IGetAllProductForUserUseCase, _getProductForUserUseCase: IGetProductForUserUseCase, _getRelatedProductUseCase: IGetRelatedProductUseCase, _getProductVariantForUserUseCase: IGetProductVariantForUserUseCase);
+    createProduct(req: Request, res: Response): Promise<void>;
+    editProduct(req: Request, res: Response): Promise<void>;
+    blockProduct(req: Request, res: Response): Promise<void>;
+    unblockProduct(req: Request, res: Response): Promise<void>;
+    getAllProductForAdmin(req: Request, res: Response): Promise<void>;
+    addVariant(req: Request, res: Response): Promise<void>;
+    editVariant(req: Request, res: Response): Promise<void>;
+    getProductDetailsForAdmin(req: Request, res: Response): Promise<void>;
+    getAdminProductVariant(req: Request, res: Response): Promise<void>;
+    getFeaturedProducts(req: Request, res: Response): Promise<void>;
+    getAllProductForUser(req: Request, res: Response): Promise<void>;
+    getProductDetailsForUser(req: Request, res: Response): Promise<void>;
+    getRelatedProducts(req: Request, res: Response): Promise<void>;
+    getProductVariantForUser(req: Request, res: Response): Promise<void>;
+}
+//# sourceMappingURL=product.controller.d.ts.map

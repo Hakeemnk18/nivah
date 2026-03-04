@@ -62,7 +62,7 @@ const CategoryTable = () => {
     },
   ];
 
-  const { data, isLoading, isFetching, isError, refetch } = useAdminCategories(
+  const { data, isLoading, isFetching, isError } = useAdminCategories(
     parentId,
     currentPage,
     search,

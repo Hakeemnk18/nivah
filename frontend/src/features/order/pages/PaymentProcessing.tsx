@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from '../../../api/axios.instance'
 import SectionTitle from "../../../shared/components/SectionTitle";
-import type { ApiResponse } from "../../../shared/types/api.types";
 
 type OrderStatus = "created" | "confirmed" | "cancelled";
 

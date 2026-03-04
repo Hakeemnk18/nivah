@@ -1,8 +1,5 @@
-import { useState } from "react";
 import { FaEdit, FaTrash, FaUnlock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-
 import AddButton from "../../admin/components/table/AddButton";
 import AdminBreadcrumb from "../../admin/components/AdminBreadCrumb";
 import AdminTableFullSkeleton from "../../admin/components/AdminTableSkeleton";

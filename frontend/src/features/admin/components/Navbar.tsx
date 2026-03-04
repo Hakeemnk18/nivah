@@ -21,7 +21,10 @@ const navItems = [
   { label: "Categories", path: "/admin/categoryManagement", icon: FaList },
   { label: "Products", path: "/admin/productManagement", icon: FaBox },
   { label: "Orders", path: "/admin/orderManagement", icon: FaShoppingCart },
-  { label: "Users", path: "/admin/users", icon: FaUsers },
+  { label: "Reports", path: "/admin/reports/revenue", icon: FaUsers },
+  { label: "Testimonials", path: "/admin/testimonialManagement", icon: FaUsers },
+  { label: "Heroes", path: "/admin/heroManagement", icon: FaUsers },
+  { label: "Banners", path: "/admin/bannerManagement", icon: FaUsers },
 ];
 
 const AdminNavbar = () => {

@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction} from "express";
+import type { Request, Response, NextFunction } from "express";
 
 
 import { injectable, inject } from "tsyringe";
@@ -13,49 +13,49 @@ import { ResponseMessages } from "../../core/constants/response.message.js";
 
 
 @injectable()
-export class Authenticate implements IAuthenticate{
+export class Authenticate implements IAuthenticate {
   constructor(
     @inject("ITokenService") private readonly tokenService: ITokenService,
     @inject("IUserRepository") private readonly userRepo: IUserRepository
-  ) {}
+  ) { }
 
   authenticate = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     const accessToken = req.cookies.access_token;
 
-    
+
     if (!accessToken) {
-      //console.log("no access token")
-       res
+
+      res
         .status(HttpStatusCode.UNAUTHORIZED)
         .json({ message: ResponseMessages.UNAUTHORIZED });
-        return
+      return
     }
-    //console.log("valid access token")
+
 
     try {
-      
+
       const decoded = (await this.tokenService.verifyAccessToken(
         accessToken
       )) as {
         id: string;
         role: string;
       };
-      
+
       const user = await this.userRepo.findById(decoded.id);
 
       if (!user) {
-         res
+        res
           .status(HttpStatusCode.FORBIDDEN)
           .json({ message: ResponseMessages.UNAUTHORIZED });
-          return
+        return
       }
 
-      
+
       if (user.isBlocked) {
-         res
-          .status(HttpStatusCode.FORBIDDEN) 
+        res
+          .status(HttpStatusCode.FORBIDDEN)
           .json({ message: ResponseMessages.ACCESS_DENIED });
-          return
+        return
       }
 
       req.user = decoded;
@@ -63,12 +63,12 @@ export class Authenticate implements IAuthenticate{
 
     } catch (error) {
       console.log("inside catch ", error)
-       res
+      res
         .status(HttpStatusCode.UNAUTHORIZED)
         .json({ message: ResponseMessages.UNAUTHORIZED });
-        return
+      return
     }
   }
 
-  
+
 }
