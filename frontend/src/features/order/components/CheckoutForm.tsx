@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { STATE_OPTIONS, type OrderFormData, type OrderFormErrors } from "../types/order.type";
 import Input from "./Checkout.input";
 import Select from "./CheckoutSelect";
@@ -5,7 +6,7 @@ import Select from "./CheckoutSelect";
 interface CheckoutFormProps {
     formData: OrderFormData;
     errors: OrderFormErrors;
-    onChange: (field: keyof OrderFormData, value: string) => void;
+    onChange: (field: keyof OrderFormData, value: string | boolean) => void;
 
 }
 
@@ -84,6 +85,28 @@ const CheckoutForm = ({
                             onChange={(v) => onChange("pincode", v)}
                             error={errors.pincode}
                         />
+                    </div>
+
+                    {/* Terms & Conditions */}
+                    <div className="flex items-start gap-3">
+                        <input
+                            type="checkbox"
+                            checked={formData.acceptedTerms}
+                            onChange={(e) => onChange("acceptedTerms", e.target.checked)}
+                            className="mt-1 h-4 w-4 accent-[var(--accent)] cursor-pointer"
+                        />
+                        {errors.acceptedTerms && <p className="text-xs text-red-400 mt-1">{errors.acceptedTerms}</p>}
+                        <p className="text-xs sm:text-sm text-[var(--muted)] leading-relaxed">
+                            I agree to the{" "}
+                            <Link
+                                to="/terms-and-conditions"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[var(--accent)] underline hover:opacity-80"
+                            >
+                                Terms & Conditions
+                            </Link>
+                        </p>
                     </div>
                 </div>
             </div>

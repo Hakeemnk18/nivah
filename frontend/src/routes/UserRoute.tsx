@@ -10,6 +10,10 @@ const CartPage = lazy(() => import("../features/cart/pages/CartPage"));
 const CheckoutPage = lazy(() => import("../features/order/pages/CeckoutPage"));
 const OrderStatusPage = lazy(() => import("../features/order/pages/PaymentProcessing"));
 const OrderSuccessPage = lazy(() => import("../features/order/pages/OrderSuccessPage"));
+const PrivacyPolicy = lazy(() => import("../features/user/component/PrivacyAndPolicy"));
+const About = lazy(() => import("../features/user/component/About"));
+const TermsAndConditions = lazy(() => import("../features/user/component/T&C"));
+const OrderCancelledPage = lazy(() => import("../features/order/pages/OrderCancelPage"));
 const userRoutes = [
     {
         element: <LandingLayout />,
@@ -47,6 +51,22 @@ const userRoutes = [
                 path: "order-success",
                 element: <OrderSuccessPage />,
             },
+            {
+                path: "privacy-policy",
+                element: <PrivacyPolicy />,
+            },
+            {
+                path: "about",
+                element: <About />,
+            },
+            {
+                path: "terms-and-conditions",
+                element: <TermsAndConditions />,
+            },
+            {
+                path: "order-cancelled",
+                element: <OrderCancelledPage />,
+            }
         ],
     },
 ];

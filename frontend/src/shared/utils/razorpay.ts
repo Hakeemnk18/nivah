@@ -11,16 +11,17 @@ export const openRazorpayCheckout = (options: IRazorpayOptions) => {
     const rzp = new (window as any).Razorpay(options);
 
     rzp.on("payment.failed", (response: any) => {
-        console.error("Payment failed:", response);
-
-        toast.error(response?.error?.description || "Payment failed");
+        if (options.onPaymentFailed) {
+            options.onPaymentFailed(response);
+        }
     });
     rzp.open();
 };
 
 export const openRazorpayCheckoutFunction = (
     order: IRazorpayOrder,
-    onHandle: (orderId: string, response: any) => {}
+    onHandle: (orderId: string, response: any) => {},
+    onCancel: (orderId: string, response: any) => {}
 ) => {
     if (!keyId) {
         toast.error("Payment configuration error");
@@ -44,8 +45,12 @@ export const openRazorpayCheckoutFunction = (
 
         modal: {
             ondismiss: () => {
-                toast("Payment popup closed");
+                console.log("User closed payment popup");
+                onCancel(order.notes.appOrderId, { reason: "dismissed" });
             }
         },
+        onPaymentFailed: (response: any) => {
+            onCancel(order.notes.appOrderId, response);
+        }
     });
 }

@@ -11,7 +11,6 @@ const POLL_INTERVAL = 2000;
 
 export default function PaymentProcessing() {
     const { orderId } = useParams();
-    console.log("order id  ", orderId)
     const navigate = useNavigate();
 
     const [status, setStatus] = useState<OrderStatus>("created");
@@ -41,7 +40,7 @@ export default function PaymentProcessing() {
                     if (currentStatus === "cancelled") {
                         clearInterval(interval);
                         clearTimeout(timer);
-                        navigate(`/order-failed/${orderId}`);
+                        navigate(`/order-cancelled?orderId=${orderId}`);
                     }
 
                 } catch (error) {

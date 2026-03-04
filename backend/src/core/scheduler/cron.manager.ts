@@ -4,8 +4,6 @@ import { AutoCancelOrderUseCase } from "../../modules/order/use-cases/auto-cance
 
 export function startCronJobs() {
     cron.schedule("0 * * * *", async () => {
-        console.log("Running auto cancel job...");
-
         const useCase = container.resolve(AutoCancelOrderUseCase);
         await useCase.execute();
     });

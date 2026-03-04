@@ -40,7 +40,7 @@ const CheckoutSummary = ({ checkout, onPlaceOrder }: CheckoutSummaryProps) => {
 
                     <button
                         onClick={onPlaceOrder}
-                        className="w-full mt-3 bg-[var(--accent)] text-black font-semibold rounded-xl py-3 hover:opacity-90 transition">
+                        className="w-full mt-3 bg-[var(--accent)] text-black font-semibold rounded-xl py-3 hover:opacity-90 transition cursor-pointer">
                         Place Order
                     </button>
 

@@ -188,7 +188,7 @@ export default function ProductDetailsPage() {
 
                 <button
                   onClick={handleAddToCart}
-                  className="w-full py-4 rounded-2xl bg-[var(--accent)] text-black font-semibold text-sm tracking-wide hover:opacity-90 transition shadow-lg">
+                  className="w-full py-4 rounded-2xl bg-[var(--accent)] text-black font-semibold text-sm tracking-wide hover:opacity-90 transition shadow-lg cursor-pointer">
                   Add to Cart
                 </button>
               </div>
@@ -219,17 +219,18 @@ export default function ProductDetailsPage() {
         <section className="mt-20">
           <div
 
-            className="max-w-7xl mx-auto px-4">
+            className="max-w-7xl mx-auto px-2 sm:px-4">
             {/* Section Title */}
             <div className="text-center mb-12">
               <SectionTitle label="You May Also Like" />
             </div>
 
             {/* Product Grid */}
+
             <div
               className="
           grid
-          gap-8
+          gap-6
           grid-cols-2
           sm:grid-cols-2
           md:grid-cols-3

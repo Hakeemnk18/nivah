@@ -32,20 +32,35 @@ const CheckoutPage = () => {
         city: "kannur",
         state: "kerala",
         pincode: "670641",
+        acceptedTerms: false,
     });
     const [errors, setErrors] = useState<OrderFormErrors>({});
 
     const handleChange = (
         field: keyof OrderFormData,
-        value: string
+        value: string | boolean
     ) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
-
-        // clear field error while typing
         setErrors((prev) => ({ ...prev, [field]: undefined }));
     };
 
-    const handlePaymentProcessing = async (orderId: string, response: any) => {
+    const handlePaymentCancel = async (orderId: string, response: any) => {
+        try {
+
+            const res = await api.post<ApiResponse>("/orders/payment-failure", {
+                razorpay_order_id: response.error.metadata.order_id,
+                razorpay_payment_id: response.error.metadata.payment_id,
+                failure_reason: response.error.reason,
+            });
+            navigate(`/order-status/${orderId}`)
+        } catch (error) {
+            handleApiError(error)
+            console.log("error inside verify subscription payment ", error)
+        }
+
+    }
+
+    const handlePaymentSuccess = async (orderId: string, response: any) => {
         try {
 
             const res = await api.post<ApiResponse>("/orders/verify-payment", {
@@ -79,9 +94,10 @@ const CheckoutPage = () => {
                 pincode: formData.pincode,
                 cartId: checkoutSummary?.cartId!,
                 guestId: guestId,
+                acceptedTerms: formData.acceptedTerms,
             });
 
-            openRazorpayCheckoutFunction(res?.data!, handlePaymentProcessing)
+            openRazorpayCheckoutFunction(res?.data!, handlePaymentSuccess, handlePaymentCancel)
 
         } catch (error) {
             const validateError = handleApiError(error);

@@ -4,6 +4,7 @@ import { ObjectIdSchema } from "../../../core/utils/object.id.validation.js";
 
 /* ---------- ALLOWED STATES ---------- */
 
+
 export const STATE_OPTIONS = [
     "Kerala",
     "Tamil Nadu",
@@ -12,6 +13,9 @@ export const STATE_OPTIONS = [
     "Telangana",
     "Delhi",
     "Uttar Pradesh",
+    "Maharashtra",
+    "Gujarat",
+    "Goa",
 ] as const;
 
 /* ---------- COMMON VALIDATORS ---------- */
@@ -72,6 +76,9 @@ export const CreateOrderSchema = z
             .string()
             .trim()
             .regex(pincodeRegex, "Invalid pincode"),
+        acceptedTerms: z.boolean().refine((value) => value, {
+            message: "You must accept the terms and conditions",
+        }),
     })
     .strict();
 

@@ -37,6 +37,7 @@ export type OrderPlacementPayload = {
     city: string;
     state: string;
     pincode: string;
+    acceptedTerms: boolean;
 }
 
 export type OrderFormData = {
@@ -48,6 +49,7 @@ export type OrderFormData = {
     city: string;
     state: string;
     pincode: string;
+    acceptedTerms: boolean;
 };
 
 export type OrderFormErrors = {
@@ -58,6 +60,7 @@ export type OrderFormErrors = {
     city?: string;
     state?: string;
     pincode?: string;
+    acceptedTerms?: string;
 };
 
 export const STATE_OPTIONS = [
@@ -68,6 +71,9 @@ export const STATE_OPTIONS = [
     { value: "Telangana", label: "Telangana" },
     { value: "Delhi", label: "Delhi" },
     { value: "Uttar Pradesh", label: "Uttar Pradesh" },
+    { value: "Maharashtra", label: "Maharashtra" },
+    { value: "Gujarat", label: "Gujarat" },
+    { value: "Goa", label: "Goa" },
 ];
 
 
@@ -104,6 +110,7 @@ export interface IRazorpayOptions {
     modal?: {
         ondismiss?: () => void;
     };
+    onPaymentFailed?: (response: any) => void;
     handler: (response: {
         razorpay_payment_id: string;
         razorpay_order_id: string;

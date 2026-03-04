@@ -14,6 +14,7 @@ import { mapPaymentMode } from "../../../core/utils/get.payment.method.js";
 import mongoose from "mongoose";
 import type { VerifyPaymentRequestDto } from "../dtos/verify.payment.dto.js";
 import type { IVerifyPaymentUseCase } from "./interfaces/verify.payment.use-case.interface.js";
+import type { INotificationService } from "../../../core/ports/notification.service.interface.js";
 
 @injectable()
 export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
@@ -32,6 +33,9 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
 
         @inject("IProductRepository")
         private readonly _productRepository: IProductRepository,
+
+        @inject("INotificationService")
+        private readonly _notificationService: INotificationService
     ) { }
 
     async execute(dto: VerifyPaymentRequestDto): Promise<void> {
@@ -142,6 +146,11 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
             await this._cartRepository.emptyCart(payment.guestId!, session)
 
             await session.commitTransaction();
+            await this._notificationService.sendBookingConfirmation(
+                order.userSnapshot.phone,
+                `✅ Your order has been successfully placed.\nRupees of ${order.totalAmount}\nOrder ID: ${order.id}\nWe will notify you about further updates soon.\nThank you for choosing Nivah!`
+            );
+
         } catch (error) {
             await session.abortTransaction();
             throw error;

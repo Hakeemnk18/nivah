@@ -36,7 +36,7 @@ const CheckoutSummary = ({
 
                 <button
                     onClick={onCheckout}
-                    className="mt-6 w-full py-3.5 rounded-xl bg-[var(--accent)] text-black font-semibold hover:opacity-90 transition shadow">
+                    className="mt-6 w-full py-3.5 rounded-xl bg-[var(--accent)] text-black font-semibold hover:opacity-90 transition shadow cursor-pointer">
                     Checkout
                 </button>
             </div>
