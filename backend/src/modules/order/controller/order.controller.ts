@@ -68,7 +68,7 @@ export class OrderController implements IOrderController {
     @inject("IAdminDownloadInvoiceUseCase")
     private readonly _adminDownloadInvoiceUseCase: IAdminDownloadInvoiceUseCase,
 
-  ) {}
+  ) { }
 
   async createOrder(req: Request, res: Response): Promise<void> {
     try {
@@ -88,6 +88,7 @@ export class OrderController implements IOrderController {
 
   async verifyPayment(req: Request, res: Response): Promise<void> {
     try {
+      console.log("called verify payment controller")
       const validationResult = VerifyPaymentSchema.parse(req.body);
 
       const order = await this._verifyPaymentUseCase.execute(validationResult);
@@ -122,6 +123,7 @@ export class OrderController implements IOrderController {
 
   async handlePaymentFailure(req: Request, res: Response): Promise<void> {
     try {
+
       const validationResult = HandlePaymentFailureSchema.parse(req.body);
 
       const order =
@@ -301,5 +303,5 @@ export class OrderController implements IOrderController {
     }
   }
 
-  
+
 }

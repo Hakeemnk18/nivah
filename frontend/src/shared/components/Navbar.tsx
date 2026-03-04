@@ -3,7 +3,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import Logo from "./Logo";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type NavbarProps = {
   mode?: "landing" | "default";
@@ -69,9 +69,9 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
                 : "text-[var(--text)]"
               }`}
           >
-            <li onClick={() => navigate('/')} className="cursor-pointer">Home</li>
-            <li onClick={() => navigate("/products")} className="cursor-pointer">Shop</li>
-            <li onClick={() => navigate('/about')} className="cursor-pointer">About</li>
+            <Link to="/" className="cursor-pointer">Home</Link>
+            <Link to="/products" className="cursor-pointer">Shop</Link>
+            <Link to="/about" className="cursor-pointer">About</Link>
           </ul>
 
           <div
@@ -113,13 +113,14 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
             </div>
             <ul className="flex flex-col gap-6 px-6 py-8 text-sm text-white">
               {["Home", "Shop", "About"].map((item) => (
-                <li
+                <Link
+                  to={item === "Home" ? "/" : item === "Shop" ? "/products" : "/about"}
                   key={item}
                   className="tracking-wide hover:text-[var(--accent)] transition"
                   onClick={() => setIsOpen(false)}
                 >
                   {item}
-                </li>
+                </Link>
               ))}
             </ul>
           </motion.div>

@@ -1,4 +1,4 @@
-import type { OrderFormData, OrderFormErrors } from "../types/order.type";
+import { STATE_OPTIONS, type OrderFormData, type OrderFormErrors } from "../types/order.type";
 
 export const validateCheckoutForm = (
     data: OrderFormData
@@ -24,12 +24,16 @@ export const validateCheckoutForm = (
 
     if (!data.city.trim()) errors.city = "City is required";
 
-    if (!data.state.trim()) errors.state = "State is required";
+    if (!data.state.trim() || !STATE_OPTIONS.find((state) => state.value === data.state)) errors.state = "State is required";
 
     if (!data.pincode.trim()) {
         errors.pincode = "Pincode is required";
     } else if (!/^\d{5,6}$/.test(data.pincode)) {
         errors.pincode = "Invalid pincode";
+    }
+
+    if (!data.acceptedTerms) {
+        errors.acceptedTerms = "You must accept the terms and conditions";
     }
 
     return errors;

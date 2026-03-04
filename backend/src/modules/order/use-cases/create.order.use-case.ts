@@ -36,6 +36,16 @@ export class CreateOrderUseCase implements ICreateOrderUseCase {
     ) { }
     async execute(data: CreateOrderRequestDto): Promise<IRazorpayOrder> {
         /* =========================================================
+       VALIDATE ACCEPTED TERMS
+   ========================================================= */
+
+        if (!data.acceptedTerms) {
+            throw new CustomError(
+                ResponseMessages.ACCEPTED_TERMS_REQUIRED,
+                HttpStatusCode.BAD_REQUEST,
+            );
+        }
+        /* =========================================================
        LOAD USER CART
    ========================================================= */
 

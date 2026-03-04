@@ -173,6 +173,7 @@ export const ResponseMessages = {
   ORDER_CANNOT_CANCEL_DISPATCHED: "Dispatched order cannot be cancelled",
 
   ORDER_STATUS_TRANSITION_INVALID: "Invalid order status transition",
+  ACCEPTED_TERMS_REQUIRED: "Accepted terms is required",
 
   /* ================= ORDER STATUS SUCCESS ================= */
 
