@@ -6,7 +6,7 @@ const app = express();
 
 app.use(cookieParser())
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:4173"],
+  origin: ["http://localhost:5173", "http://localhost:4173", "https://nivah-rho.vercel.app"],
   credentials: true,
 }));
 app.use(express.json());
