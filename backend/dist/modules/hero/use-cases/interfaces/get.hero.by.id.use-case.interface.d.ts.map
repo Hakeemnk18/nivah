@@ -1,1 +1,0 @@
-{"version":3,"file":"get.hero.by.id.use-case.interface.d.ts","sourceRoot":"","sources":["../../../../../src/modules/hero/use-cases/interfaces/get.hero.by.id.use-case.interface.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,QAAQ,EAAE,MAAM,0BAA0B,CAAC;AAEzD,MAAM,WAAW,mBAAmB;IAChC,OAAO,CAAC,EAAE,EAAE,MAAM,GAAG,OAAO,CAAC,QAAQ,CAAC,CAAC;CAC1C"}

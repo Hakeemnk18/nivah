@@ -1,1 +1,0 @@
-{"version":3,"file":"edit.product.use-case.interface.d.ts","sourceRoot":"","sources":["../../../../../src/modules/product/use-cases/interfaces/edit.product.use-case.interface.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,qBAAqB,EAAE,MAAM,gCAAgC,CAAC;AAE5E,MAAM,WAAW,mBAAmB;IAClC,OAAO,CACL,SAAS,EAAE,MAAM,EACjB,GAAG,EAAE,qBAAqB,GACzB,OAAO,CAAC,IAAI,CAAC,CAAC;CAClB"}

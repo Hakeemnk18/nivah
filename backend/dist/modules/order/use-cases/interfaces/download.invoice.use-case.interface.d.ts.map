@@ -1,1 +1,0 @@
-{"version":3,"file":"download.invoice.use-case.interface.d.ts","sourceRoot":"","sources":["../../../../../src/modules/order/use-cases/interfaces/download.invoice.use-case.interface.ts"],"names":[],"mappings":"AACA,MAAM,WAAW,uBAAuB;IACpC,OAAO,CAAC,OAAO,EAAE,MAAM,EAAE,OAAO,EAAE,MAAM,GAAG,OAAO,CAAC,MAAM,CAAC,CAAC;CAC9D"}

@@ -1,1 +1,0 @@
-{"version":3,"file":"create.hero.use-case.interface.d.ts","sourceRoot":"","sources":["../../../../../src/modules/hero/use-cases/interfaces/create.hero.use-case.interface.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,oBAAoB,EAAE,MAAM,wBAAwB,CAAC;AAEnE,MAAM,WAAW,kBAAkB;IAC/B,OAAO,CAAC,GAAG,EAAE,oBAAoB,GAAG,OAAO,CAAC,IAAI,CAAC,CAAC;CACrD"}

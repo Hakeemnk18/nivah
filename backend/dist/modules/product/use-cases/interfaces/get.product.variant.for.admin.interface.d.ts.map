@@ -1,1 +1,0 @@
-{"version":3,"file":"get.product.variant.for.admin.interface.d.ts","sourceRoot":"","sources":["../../../../../src/modules/product/use-cases/interfaces/get.product.variant.for.admin.interface.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,gBAAgB,EAAE,MAAM,6BAA6B,CAAC;AAEpE,MAAM,WAAW,0BAA0B;IACvC,OAAO,CAAC,SAAS,EAAE,MAAM,EAAE,SAAS,EAAE,MAAM,GAAG,OAAO,CAAC,gBAAgB,CAAC,CAAC;CAE5E"}
