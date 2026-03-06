@@ -1,7 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import type { Request, Response } from "express";
 import crypto from "crypto";
-import type { HandleRazorpayWebhookUseCase } from "../use-cases/handle.webhook.usecase.js";
 import type { IHandleRazorpayWebhookUseCase } from "../use-cases/interfaces/handle.webhook.use-case.interface.js";
 
 
@@ -32,7 +31,7 @@ export class RazorpayWebhookController implements IHandleRazorpayWebHookControll
         }
 
         const event = JSON.parse(req.body.toString());
-
+        console.log("event", event)
         try {
             await this._handleRazorpayWebhookUseCase.execute(event);
             res.status(200).json({ received: true });

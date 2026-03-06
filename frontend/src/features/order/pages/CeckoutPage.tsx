@@ -13,8 +13,6 @@ import { useCreateOrder } from "../hooks/use.create.order";
 import { handleApiError } from "../../../shared/utils/handle.api.error";
 import { openRazorpayCheckoutFunction } from "../../../shared/utils/razorpay";
 import { useNavigate } from "react-router-dom";
-import type { ApiResponse } from "../../../shared/types/api.types";
-import api from '../../../api/axios.instance'
 
 const CheckoutPage = () => {
     const guestId = getGuestId()
@@ -44,34 +42,10 @@ const CheckoutPage = () => {
         setErrors((prev) => ({ ...prev, [field]: undefined }));
     };
 
-    const handlePaymentCancel = async (orderId: string, response: any) => {
-        try {
 
-            await api.post<ApiResponse>("/orders/payment-failure", {
-                razorpay_order_id: response.error.metadata.order_id,
-                razorpay_payment_id: response.error.metadata.payment_id,
-                failure_reason: response.error.reason,
-            });
-            navigate(`/order-status/${orderId}`)
-        } catch (error) {
-            handleApiError(error)
-            console.log("error inside verify subscription payment ", error)
-        }
-
-    }
-
-    const handlePaymentSuccess = async (orderId: string, response: any) => {
-        try {
-
-            await api.post<ApiResponse>("/orders/verify-payment", {
-                ...response,
-            });
-            navigate(`/order-status/${orderId}`)
-        } catch (error) {
-            handleApiError(error)
-            console.log("error inside verify subscription payment ", error)
-        }
-
+    const handlePaymentSuccess = async (orderId: string) => {
+        console.log("handled payment called")
+        navigate(`/order-status/${orderId}`)
     }
 
     const handleSubmit = async () => {
@@ -97,7 +71,7 @@ const CheckoutPage = () => {
                 acceptedTerms: formData.acceptedTerms,
             });
 
-            openRazorpayCheckoutFunction(res?.data!, handlePaymentSuccess, handlePaymentCancel)
+            openRazorpayCheckoutFunction(res?.data!, handlePaymentSuccess)
 
         } catch (error) {
             const validateError = handleApiError(error);

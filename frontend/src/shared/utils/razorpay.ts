@@ -17,8 +17,7 @@ export const openRazorpayCheckout = (options: IRazorpayOptions) => {
 
 export const openRazorpayCheckoutFunction = (
     order: IRazorpayOrder,
-    onHandle: (orderId: string, response: any) => {},
-    onCancel: (orderId: string, response: any) => {}
+    onHandle: (orderId: string) => {},
 ) => {
     if (!keyId) {
         toast.error("Payment configuration error");
@@ -32,8 +31,8 @@ export const openRazorpayCheckoutFunction = (
         description: "Payment for order",
         order_id: order.id,
         notes: order.notes,
-        handler: async (response: any) => {
-            onHandle(order.notes.appOrderId, response)
+        handler: async () => {
+            onHandle(order.notes.appOrderId)
         },
         prefill: {
             email: "user@example.com",
@@ -43,7 +42,7 @@ export const openRazorpayCheckoutFunction = (
         modal: {
             ondismiss: () => {
                 console.log("User closed payment popup");
-                onCancel(order.notes.appOrderId, { reason: "dismissed" });
+
             }
         },
         onPaymentFailed: () => {

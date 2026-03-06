@@ -5,7 +5,7 @@ import SectionTitle from "../../../shared/components/SectionTitle";
 
 type OrderStatus = "created" | "confirmed" | "cancelled";
 
-const MAX_WAIT_TIME = 30000; // 30 seconds
+const MAX_WAIT_TIME = 90000;
 const POLL_INTERVAL = 2000;
 
 export default function PaymentProcessing() {
