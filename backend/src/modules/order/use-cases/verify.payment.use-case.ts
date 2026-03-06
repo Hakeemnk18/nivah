@@ -148,7 +148,7 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
             await session.commitTransaction();
             await this._notificationService.sendBookingConfirmation(
                 order.userSnapshot.phone,
-                `✅ Your order has been successfully placed.\nRupees of ${order.totalAmount}\nOrder ID: ${order.id}\nWe will notify you about further updates soon.\nThank you for choosing Nivah!`
+                `✅ Your order has been successfully placed.\nRupees of ${order.totalAmount}\nOrder Number: ${order.orderNumber}\nWe will notify you about further updates soon.\nThank you for choosing Nivah!`
             );
 
         } catch (error) {

@@ -24,6 +24,7 @@ import type { IAcceptOrderUseCase } from "../use-cases/interfaces/accept.order.u
 import type { ICancelOrderUseCase } from "../use-cases/interfaces/cancel.order.use-case.interface.js";
 import type { IGetAdminFullViewUseCase } from "../use-cases/interfaces/get.admin.full.view.use-case.interface.js";
 import type { IAdminDownloadInvoiceUseCase } from "../use-cases/interfaces/admin.dowload.invoice.use-case.interface.js";
+import type { ISyncPaymentUseCase } from "../use-cases/interfaces/sync.payment.usecase.interface.js";
 
 
 @injectable()
@@ -67,6 +68,9 @@ export class OrderController implements IOrderController {
 
     @inject("IAdminDownloadInvoiceUseCase")
     private readonly _adminDownloadInvoiceUseCase: IAdminDownloadInvoiceUseCase,
+
+    @inject("ISyncPaymentUseCase")
+    private readonly _syncPaymentUseCase: ISyncPaymentUseCase,
 
   ) { }
 
@@ -300,6 +304,24 @@ export class OrderController implements IOrderController {
     } catch (error) {
       handleError(res, error);
       console.log("error in download invoice controller ", error);
+    }
+  }
+
+  async syncPayment(req: Request, res: Response): Promise<void> {
+    try {
+      console.log("sync payment controller called");
+      const orderId = req.params.orderId;
+      validateObjectId(orderId);
+      const orderStatus = await this._syncPaymentUseCase.execute(orderId!);
+
+      res.status(HttpStatusCode.OK).json({
+        success: true,
+        message: ResponseMessages.SUCCESS,
+        data: orderStatus,
+      });
+    } catch (error) {
+      handleError(res, error);
+      console.log("error in sync payment controller ", error);
     }
   }
 

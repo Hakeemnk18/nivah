@@ -146,4 +146,9 @@ export class PaymentRepository implements IPaymentRepository {
             throw new Error("Payment not found");
         }
     }
+
+    async findByOrderId(orderId: string): Promise<Payment | null> {
+        const foundDocument = await PaymentModel.findOne({ orderId }).lean();
+        return PaymentMapper.toDomain(foundDocument);
+    }
 }

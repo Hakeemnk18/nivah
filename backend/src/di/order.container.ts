@@ -31,6 +31,8 @@ import type { IGetAdminFullViewUseCase } from "../modules/order/use-cases/interf
 import { GetAdminFullViewUseCase } from "../modules/order/use-cases/get.admin.full.view.use-case.js";
 import type { IAdminDownloadInvoiceUseCase } from "../modules/order/use-cases/interfaces/admin.dowload.invoice.use-case.interface.js";
 import { AdminDownloadInvoiceUseCase } from "../modules/order/use-cases/admin.dowload.invoice.use-case.js";
+import type { ISyncPaymentUseCase } from "../modules/order/use-cases/interfaces/sync.payment.usecase.interface.js";
+import { SyncPaymentUseCase } from "../modules/order/use-cases/sync.payment.use-case.js";
 
 export const registerOrderDependencies = () => {
     container.register<IOrderRepository>("IOrderRepository", {
@@ -98,6 +100,8 @@ export const registerOrderDependencies = () => {
         useClass: AdminDownloadInvoiceUseCase,
     });
 
-
+    container.register<ISyncPaymentUseCase>("ISyncPaymentUseCase", {
+        useClass: SyncPaymentUseCase,
+    });
 
 };

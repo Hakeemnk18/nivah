@@ -264,6 +264,9 @@ export type AdminOrderQueryKey = [
     }
 ];
 
+export type SyncPaymentResponse = ApiResponse<{ status: string }>
+
+
 
 
 

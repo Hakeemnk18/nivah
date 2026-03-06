@@ -67,7 +67,8 @@ router.get("/:orderId/invoice/download",
 router.get("/:orderId/invoice",
   (req, res) => orderController.downloadInvoice(req, res));
 
-
+router.post("/:orderId/sync-payment",
+  (req, res) => orderController.syncPayment(req, res));
 
 //dispatch order
 router.patch("/:orderId/dispatch",
