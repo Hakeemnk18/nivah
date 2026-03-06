@@ -20,7 +20,12 @@ export class RazorpayWebhookController implements IHandleRazorpayWebHookControll
         console.log("webhook controller called new", req.body)
         const signature = req.headers["x-razorpay-signature"] as string;
         const requestWithRawBody = req as Request & { rawBody: Buffer };
-        console.log(requestWithRawBody.rawBody)
+        if (!requestWithRawBody.rawBody) {
+            console.error("Raw body is missing from the request.");
+            res.status(400).send("Webhook error: Raw body missing");
+            return;
+        }
+        console.log("raw body ", requestWithRawBody.rawBody)
         const expected = crypto
             .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET!)
             .update(requestWithRawBody.rawBody)
@@ -31,7 +36,8 @@ export class RazorpayWebhookController implements IHandleRazorpayWebHookControll
             return;
         }
 
-        const event = JSON.parse(req.body.toString());
+        const event = req.body;
+        console.log("Verified event:", event);
         console.log("event", event)
         try {
             await this._handleRazorpayWebhookUseCase.execute(event);

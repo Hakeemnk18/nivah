@@ -20,7 +20,6 @@ const webhookController = container.resolve(RazorpayWebhookController);
 //create order by webhook
 router.post(
   "/webhook/razorpay",
-  express.raw({ type: "application/json" }),
   (req, res) => webhookController.handle(req, res)
 );
 
