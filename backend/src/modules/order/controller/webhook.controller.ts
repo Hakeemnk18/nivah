@@ -17,7 +17,7 @@ export class RazorpayWebhookController implements IHandleRazorpayWebHookControll
     ) { }
 
     async handle(req: Request, res: Response): Promise<void> {
-        console.log("webhook controller called ", req.body)
+        console.log("webhook controller called new", req.body)
         const signature = req.headers["x-razorpay-signature"] as string;
         const requestWithRawBody = req as Request & { rawBody: Buffer };
         console.log(requestWithRawBody.rawBody)
