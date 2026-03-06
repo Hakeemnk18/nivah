@@ -67,14 +67,6 @@ export class HandleRazorpayWebhookUseCase
                         session
                     );
                     break;
-
-                case "payment.failed":
-                    await this.handleFailed(
-                        payment,
-                        session
-                    );
-                    break;
-
                 default:
                     break;
             }
@@ -93,7 +85,7 @@ export class HandleRazorpayWebhookUseCase
         entity: RazorpayWebhookEvent["payload"]["payment"]["entity"],
         session: mongoose.ClientSession
     ): Promise<void> {
-
+        console.log("handle captured called")
         const order = await this._orderRepository
             .findById(payment.orderId, session);
 
@@ -135,42 +127,5 @@ export class HandleRazorpayWebhookUseCase
                 session
             );
         }
-    }
-
-    private async handleFailed(
-        payment: Payment,
-        session: mongoose.ClientSession
-    ): Promise<void> {
-
-        // if (payment.status === "failed") return;
-
-        // const order = await this._orderRepository
-        //     .findById(payment.orderId, session);
-
-        // if (!order) return;
-
-        // if (order.orderStatus === "cancelled") return;
-
-        // for (const item of order.items) {
-
-        //     await this._productRepository.incrementStock({
-        //         productId: item.productId,
-        //         variantId: item.variantId,
-        //         quantity: item.quantity,
-        //         session,
-        //     });
-        // }
-
-        // await this._orderRepository.changeStatus(
-        //     payment.orderId,
-        //     "cancelled",
-        //     session
-        // );
-
-        // await this._paymentRepository.updateStatus(
-        //     payment.id,
-        //     "failed",
-        //     session
-        // );
     }
 }
