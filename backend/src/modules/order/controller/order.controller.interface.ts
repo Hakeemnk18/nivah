@@ -14,8 +14,5 @@ export interface IOrderController {
     cancelOrder(req: Request, res: Response): Promise<void>;
     getAdminFullView(req: Request, res: Response): Promise<void>;
     adminDownloadInvoice(req: Request, res: Response): Promise<void>;
-
-
-    // getOrderById(req: Request, res: Response): Promise<void>;    
-    // getOrdersByGuestId(req: Request, res: Response): Promise<void>;
+    syncPayment(req: Request, res: Response): Promise<void>;
 }

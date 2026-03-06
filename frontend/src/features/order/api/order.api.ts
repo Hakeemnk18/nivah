@@ -1,11 +1,12 @@
 import api from "../../../api/axios.instance";
 import type { ApiResponse } from "../../../shared/types/api.types";
-import type { 
-    AdminOrderFullResponse, 
-    AdminOrderListResponse, 
-    CreateOrderResponse, 
-    OrderPlacementPayload, 
-    OrderSummaryResponse
+import type {
+    AdminOrderFullResponse,
+    AdminOrderListResponse,
+    CreateOrderResponse,
+    OrderPlacementPayload,
+    OrderSummaryResponse,
+    SyncPaymentResponse
 } from "../types/order.type";
 
 
@@ -93,11 +94,18 @@ export const getAdminOrderDetailsApi = async (
 export const adminDownloadInvoiceApi = async (
     orderId: string,
 ): Promise<Blob> => {
-    
+
     const response = await api.get<Blob>
         (`/orders/${orderId}/invoice/download`, {
             responseType: "blob",
         });
+    return response.data;
+};
+
+export const syncPaymentApi = async (
+    orderId: string
+): Promise<SyncPaymentResponse> => {
+    const response = await api.post<SyncPaymentResponse>(`/orders/${orderId}/sync-payment`);
     return response.data;
 };
 

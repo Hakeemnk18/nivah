@@ -98,6 +98,12 @@ export interface IRazorpayPayment {
   created_at: number;
 }
 
+export interface IRazorpayPaymentCollection {
+  entity: string;
+  count: number;
+  items: IRazorpayPayment[];
+}
+
 
 
 export type AutoCancelPayload = {

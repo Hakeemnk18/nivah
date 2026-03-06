@@ -12,4 +12,5 @@ export interface IPaymentRepository {
     autoCancelPayment(orderIds: string[], session?: ClientSession): Promise<void>;
     failPayment(payload: FailPaymentPayload): Promise<void>;
     confirmPayment(payload: ConfirmPaymentPayload): Promise<void>;
+    findByOrderId(orderId: string): Promise<Payment | null>;
 }

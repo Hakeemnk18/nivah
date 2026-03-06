@@ -1,5 +1,5 @@
 import { injectable } from "tsyringe";
-import type { IRazorpayOrder, IRazorpayOrderOptions, IRazorpayPayment } from "../../modules/order/types/order.type.js";
+import type { IRazorpayOrder, IRazorpayOrderOptions, IRazorpayPayment, IRazorpayPaymentCollection } from "../../modules/order/types/order.type.js";
 import type { IPaymentGateway } from "../../core/ports/payment.service.interface.js";
 import { razorpay } from "../../config/razorpay.js";
 
@@ -54,5 +54,12 @@ export class RazorpayService implements IPaymentGateway {
             error_description: payment.error_description ?? undefined,
             created_at: payment.created_at,
         };
+    }
+
+    async fetchPaymentsByOrderId(orderId: string): Promise<IRazorpayPaymentCollection> {
+
+        const payments = await razorpay.orders.fetchPayments(orderId) as IRazorpayPaymentCollection;
+
+        return payments;
     }
 }

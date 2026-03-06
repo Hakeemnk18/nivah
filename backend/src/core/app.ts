@@ -9,7 +9,13 @@ app.use(cors({
   origin: ["http://localhost:5173", "https://nivah-rho.vercel.app"],
   credentials: true,
 }));
-app.use(express.json());
+app.use(
+  express.json({
+    verify: (req: any, res, buf) => {
+      req.rawBody = buf;
+    },
+  })
+);
 app.use(express.urlencoded({ extended: true }));
 
 export default app;

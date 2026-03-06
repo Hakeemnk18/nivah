@@ -19,10 +19,11 @@ export class RazorpayWebhookController implements IHandleRazorpayWebHookControll
     async handle(req: Request, res: Response): Promise<void> {
         console.log("webhook controller called")
         const signature = req.headers["x-razorpay-signature"] as string;
-
+        const requestWithRawBody = req as Request & { rawBody: Buffer };
+        console.log(requestWithRawBody.rawBody)
         const expected = crypto
             .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET!)
-            .update(req.body)
+            .update(requestWithRawBody.rawBody)
             .digest("hex");
 
         if (signature !== expected) {
