@@ -12,7 +12,7 @@ app.use(cors({
 app.use(
   express.json({
     verify: (req: any, res, buf) => {
-      if (req.originalUrl === "/webhook/razorpay") {
+      if (req.originalUrl.includes("/webhook/razorpay")) {
         req.rawBody = buf;
       }
     },
