@@ -49,7 +49,7 @@ export class SyncPaymentUseCase implements ISyncPaymentUseCase {
             razorpayOrderId
         );
 
-        console.log("rzorpay payments ", razorpayPayment)
+
         const capturedPayment = razorpayPayment.items.find(
             (payment: any) => payment.status === "captured"
         );
