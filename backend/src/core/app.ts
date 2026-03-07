@@ -6,7 +6,12 @@ const app = express();
 
 app.use(cookieParser())
 app.use(cors({
-  origin: ["http://localhost:5173", "https://nivah-rho.vercel.app"],
+  origin: [
+    "http://localhost:5173",
+    "https://nivah-rho.vercel.app",
+    "https://nivahfashionshub.com",
+    "https://www.nivahfashionshub.com"
+  ],
   credentials: true,
 }));
 app.use(

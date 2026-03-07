@@ -51,6 +51,7 @@ export default function ProductListing() {
     isFetchingNextPage,
     isLoading,
     isError,
+    refetch
   } = useUserProducts(search, sort, {
     parentCategoryId: parentId,
     childCategoryId: childId,
@@ -78,6 +79,13 @@ export default function ProductListing() {
 
   const products =
     data?.pages.flatMap((page) => page.data) || [];
+
+  const handleResetFilters = () => {
+    setParentId(undefined);
+    setChildId(undefined);
+    setSearch("");
+    setSort("newest");
+  }
 
   //const products = sampleProducts;
 
@@ -138,11 +146,12 @@ export default function ProductListing() {
           <EmptyState
             title="Something went wrong"
             description="We couldn’t load products right now."
+            onRetry={() => refetch()}
           />
         )}
 
         {!isLoading && !isError && products.length === 0 && (
-          <ProductEmptyState />
+          <ProductEmptyState onReset={handleResetFilters} />
         )}
 
         {/* Product Grid */}

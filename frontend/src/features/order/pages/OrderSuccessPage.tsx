@@ -58,7 +58,10 @@ const OrderSuccessPage = () => {
                 )}
 
                 {!orderLoading && !orderError && !order && (
-                    <EmptyState />
+                    <EmptyState
+                        title="Order Not Found"
+                        description="We couldn’t find any order matching your current details"
+                    />
                 )}
 
                 {!orderLoading && !orderError && order && (
