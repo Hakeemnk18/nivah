@@ -4,6 +4,8 @@ import Logo from "./Logo";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
+import { getGuestId } from "../utils/guest";
+import { useGetCartItemsCount } from "../../features/cart/hooks/use.get.cart.items.count";
 
 type NavbarProps = {
   mode?: "landing" | "default";
@@ -12,6 +14,9 @@ type NavbarProps = {
 export default function Navbar({ mode = "default" }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const guestId = getGuestId();
+  const { data: cartItemsCount } = useGetCartItemsCount(guestId);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,16 +28,14 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-
-
   return (
     <>
       <nav
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${mode === "landing"
-          ? scrolled
-            ? "backdrop-blur bg-black/30"
-            : "bg-transparent"
-          : "bg-[var(--card)]"
+            ? scrolled
+              ? "backdrop-blur bg-black/30"
+              : "bg-transparent"
+            : "bg-[var(--card)]"
           }`}
         style={{
           borderColor: scrolled ? "var(--card)" : "transparent",
@@ -76,16 +79,27 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
 
           <div
             className={`flex items-center gap-4 md:flex-1 md:justify-end ${mode === "landing"
-              ? scrolled
-                ? "text-[var(--text)]"
-                : "text-white"
-              : "text-[var(--text)]"
+                ? scrolled
+                  ? "text-[var(--text)]"
+                  : "text-white"
+                : "text-[var(--text)]"
               }`}
           >
-            <ShoppingCart
-              className="cursor-pointer"
+            {/* Cart Icon with Badge */}
+            <div
+              className="relative cursor-pointer flex items-center justify-center"
               onClick={() => navigate("/cart")}
-              size={20} />
+            >
+              <ShoppingCart size={20} />
+
+              {/* Conditional rendering for count > 0 */}
+              {(cartItemsCount ?? 0) > 0 && (
+                <span className="absolute -top-2 -right-2.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--text)] text-[var(--card)] text-[10px] font-bold shadow-sm">
+                  {cartItemsCount}
+                </span>
+              )}
+            </div>
+
             <ThemeToggle />
           </div>
         </div>

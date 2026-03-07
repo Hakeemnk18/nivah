@@ -37,4 +37,10 @@ router.get(
   (req, res) => cartController.getCheckoutItem(req, res),
 );
 
+/* ---------- GET CART ITEMS COUNT ---------- */
+router.get(
+  "/cart-items-count/:guestId",
+  (req, res) => cartController.getCartItemsCount(req, res),
+);
+
 export default router;

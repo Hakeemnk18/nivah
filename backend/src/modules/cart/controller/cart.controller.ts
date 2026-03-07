@@ -13,6 +13,7 @@ import type { IUpdateCartCountUseCase } from "../use-cases/interfaces/update.car
 import { RemoveCartItemSchema } from "../dtos/remove.cart.dto.js";
 import { UpdateCartItemQuantitySchema } from "../dtos/update.cart.dto.js";
 import type { IGetCheckoutItemUseCase } from "../use-cases/interfaces/get.checkout.item.use-case.interface.js";
+import type { IGetCartItemsCountUseCase } from "../use-cases/interfaces/get.cart.items.count.use-case.interface.js";
 
 @injectable()
 export class CartController implements ICartController {
@@ -23,6 +24,7 @@ export class CartController implements ICartController {
         @inject("IRemoveCartItemUseCase") private _removeCartItemUseCase: IRemoveCartItemUseCase,
         @inject("IUpdateCartCountUseCase") private _updateCartCountUseCase: IUpdateCartCountUseCase,
         @inject("IGetCheckoutItemUseCase") private _getCheckoutItemUseCase: IGetCheckoutItemUseCase,
+        @inject("IGetCartItemsCountUseCase") private _getCartItemsCountUseCase: IGetCartItemsCountUseCase,
     ) { }
 
     async addToCart(req: Request, res: Response): Promise<void> {
@@ -96,6 +98,22 @@ export class CartController implements ICartController {
         } catch (error) {
             handleError(res, error)
             console.log("error in get checkout item controller", error)
+        }
+    }
+
+    async getCartItemsCount(req: Request, res: Response): Promise<void> {
+        try {
+            const guestId = req.params.guestId;
+            const dto = GuestIdSchema.parse(guestId);
+            const cartItemsCount = await this._getCartItemsCountUseCase.execute(dto);
+            res.status(HttpStatusCode.OK).json({
+                success: true,
+                message: ResponseMessages.SUCCESS,
+                data: cartItemsCount,
+            });
+        } catch (error) {
+            handleError(res, error)
+            console.log("error in get cart items count controller", error)
         }
     }
 

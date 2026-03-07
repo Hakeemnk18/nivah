@@ -8,6 +8,7 @@ export const useAddItemToCart = () => {
         mutationFn: addItemToCartApi,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["cart"] });
+            queryClient.invalidateQueries({ queryKey: ["cart-items-count"] })
         },
     });
 };

@@ -67,5 +67,6 @@ export type CheckoutView = {
 }
 
 export type CheckoutResponse = ApiResponse<CheckoutView>
+export type GetCartItemsCountResponse = ApiResponse<number>
 
 
