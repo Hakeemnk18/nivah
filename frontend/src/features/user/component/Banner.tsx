@@ -13,7 +13,7 @@ export default function SignatureOfferBanner() {
   const banner = bannerData || mockBanner;
 
   return (
-    <section className="relative w-full overflow-hidden bg-black">
+    <section className="relative w-full overflow-hidden ">
       <Link to={"/products"}>
 
         <div className="relative w-full aspect-[5/2]">
@@ -25,8 +25,6 @@ export default function SignatureOfferBanner() {
             loading="lazy"
           />
 
-          {/* Dark overlay */}
-          <div className="absolute inset-0 bg-black/40" />
         </div>
       </Link>
     </section>

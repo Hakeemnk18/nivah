@@ -1,13 +1,15 @@
 import { PackageSearch } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
-export default function ProductEmptyState() {
-  const navigate = useNavigate();
+interface EmptyProductPros {
+  onReset: () => void
+}
+export default function ProductEmptyState({ onReset }: EmptyProductPros) {
+
 
   return (
     <div className="flex min-h-[60vh] items-center justify-center px-4">
       <div className="w-full max-w-xl text-center">
-        
+
         {/* Icon Container */}
         <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#1a1a1a] to-[#111] shadow-lg border border-[#2a2a2a]">
           <PackageSearch className="h-10 w-10 text-[#d4af37]" />
@@ -27,14 +29,14 @@ export default function ProductEmptyState() {
         {/* Actions */}
         <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
           <button
-            onClick={() => navigate("/products")}
+            onClick={onReset}
             className="px-6 py-2 rounded-md bg-[#d4af37] text-black font-medium hover:opacity-90 transition"
           >
             View All Products
           </button>
 
           <button
-            onClick={() => window.location.reload()}
+            onClick={onReset}
             className="px-6 py-2 rounded-md border border-gray-600 text-gray-300 hover:bg-gray-800 transition"
           >
             Reset Filters
