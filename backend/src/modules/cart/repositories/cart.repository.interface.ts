@@ -30,4 +30,5 @@ export interface ICartRepository {
   getCheckoutViewByGuestId(guestId: string): Promise<CheckoutView | null>;
 
   emptyCart(guestId: string, session?: ClientSession): Promise<void>;
+  getCartItemsCount(guestId: string): Promise<number>;
 }

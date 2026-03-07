@@ -443,4 +443,15 @@ export class CartRepository implements ICartRepository {
 
 
   }
+
+  async getCartItemsCount(guestId: string): Promise<number> {
+    const cart = await CartModel.findOne(
+      { guestId, isActive: true },
+      { items: 1 }
+    ).lean();
+
+    if (!cart) return 0;
+
+    return cart.items.reduce((sum, item) => sum + item.quantity, 0);
+  }
 }

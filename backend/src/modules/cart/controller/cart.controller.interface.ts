@@ -6,4 +6,5 @@ export interface ICartController {
   removeCartItem(req: Request, res: Response): Promise<void>;
   updateCartCount(req: Request, res: Response): Promise<void>;
   getCheckoutItem(req: Request, res: Response): Promise<void>;
+  getCartItemsCount(req: Request, res: Response): Promise<void>;
 }
