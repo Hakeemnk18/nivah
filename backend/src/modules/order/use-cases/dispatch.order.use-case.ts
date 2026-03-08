@@ -4,7 +4,6 @@ import type { IDispatchOrderUseCase } from "./interfaces/dispatch.order.use-case
 import { CustomError } from "../../../core/errors/custom.error.js";
 import { HttpStatusCode } from "../../../core/constants/http.status.codes.js";
 import { ResponseMessages } from "../../../core/constants/response.message.js";
-import type { INotificationService } from "../../../core/ports/notification.service.interface.js";
 
 @injectable()
 export class DispatchOrderUseCase implements IDispatchOrderUseCase {
@@ -12,8 +11,7 @@ export class DispatchOrderUseCase implements IDispatchOrderUseCase {
         @inject("IOrderRepository")
         private readonly _orderRepository: IOrderRepository,
 
-        @inject("INotificationService")
-        private readonly _notificationService: INotificationService,
+
     ) { }
 
     async execute(orderId: string): Promise<void> {
@@ -32,9 +30,6 @@ export class DispatchOrderUseCase implements IDispatchOrderUseCase {
             )
         }
         await this._orderRepository.dispatchOrder(orderId);
-        await this._notificationService.sendBookingConfirmation(
-            order.userSnapshot.phone,
-            `✅ Your order has been dispatched.\nOrder ID: ${order.orderNumber}\nThank you for shopping with us!`
-        );
+
     }
 }
