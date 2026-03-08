@@ -22,14 +22,14 @@ const CheckoutPage = () => {
     const checkoutSummary = checkoutData?.data;
     const checkoutItems = checkoutSummary?.items || [];
     const [formData, setFormData] = useState<OrderFormData>({
-        name: "lalu",
-        email: "lalu@gmail.com",
-        phone: "9856256545",
-        addressLine1: "iruvallur, iruvallur po",
-        addressLine2: "chellannur",
-        city: "kannur",
-        state: "kerala",
-        pincode: "670641",
+        name: "",
+        email: "",
+        phone: "",
+        addressLine1: "",
+        addressLine2: "",
+        city: "",
+        state: "",
+        pincode: "",
         acceptedTerms: false,
     });
     const [errors, setErrors] = useState<OrderFormErrors>({});

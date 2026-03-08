@@ -9,7 +9,6 @@ import { inject, injectable } from "tsyringe";
 import type { IPaymentGateway } from "../../../core/ports/payment.service.interface.js";
 import mongoose from "mongoose";
 import { mapPaymentMode } from "../../../core/utils/get.payment.method.js";
-import type { INotificationService } from "../../../core/ports/notification.service.interface.js";
 
 @injectable()
 export class SyncPaymentUseCase implements ISyncPaymentUseCase {
@@ -22,8 +21,6 @@ export class SyncPaymentUseCase implements ISyncPaymentUseCase {
         private readonly _cartRepository: ICartRepository,
         @inject("IPaymentGateway")
         private readonly _paymentGateway: IPaymentGateway,
-        @inject("INotificationService")
-        private readonly _notificationService: INotificationService
     ) { }
 
     async execute(localOrderId: string): Promise<{ status: string }> {
@@ -80,10 +77,7 @@ export class SyncPaymentUseCase implements ISyncPaymentUseCase {
                 }
 
                 await session.commitTransaction();
-                await this._notificationService.sendBookingConfirmation(
-                    order.userSnapshot.phone,
-                    `✅ Your order has been successfully placed.\nRupees of ${order.totalAmount}\nOrder Number: ${order.orderNumber}\nWe will notify you about further updates soon.\nThank you for choosing Nivah!`
-                );
+
                 return { status: "confirmed" };
 
             } catch (error) {

@@ -47,7 +47,6 @@ export const getCartItemsCountApi = async (
     guestId: string
 ): Promise<GetCartItemsCountResponse> => {
     const response = await api.get<GetCartItemsCountResponse>(`/cart/cart-items-count/${guestId}`);
-    console.log("cart item response ", response.data)
     return response.data;
 };
 
