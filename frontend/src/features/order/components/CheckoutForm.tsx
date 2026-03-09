@@ -52,14 +52,14 @@ const CheckoutForm = ({
                 <h2 className="text-lg font-semibold mb-4">Delivery Address</h2>
                 <div className="grid gap-4">
                     <Input
-                        label="Address Line 1"
+                        label="House / Flat / Building"
                         value={formData.addressLine1}
                         onChange={(v) => onChange("addressLine1", v)}
                         error={errors.addressLine1}
                     />
 
                     <Input
-                        label="Address Line 2"
+                        label="Area / Locality"
                         value={formData.addressLine2}
                         onChange={(v) => onChange("addressLine2", v)}
                     />
