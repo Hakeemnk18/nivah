@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useGetAllUserHero } from "../../hero/hooks/use.get.hero.user";
 import type { UserHeroView } from "../../hero/types/hero.type";
 import { useNavigate } from "react-router-dom";
+import HeroSkeleton from "./HeroSckelton";
 
 const mockHero: UserHeroView = {
   id: "1",
@@ -13,13 +14,20 @@ const mockHero: UserHeroView = {
 };
 
 export default function Hero() {
-  const { data: heroData } = useGetAllUserHero();
-  const hero = heroData || mockHero;
+
+  const { data: heroData, isLoading } = useGetAllUserHero();
   const navigate = useNavigate();
+  if (isLoading) {
+    return <HeroSkeleton />;
+  }
+
+  const hero = heroData ?? mockHero;
+
 
   const words = hero.title.split(" ");
   const highlight = words.slice(0, 2).join(" ");
   const rest = words.slice(2).join(" ");
+
   return (
     <section className="relative w-full h-[60vh] md:h-[85vh] overflow-hidden">
 
