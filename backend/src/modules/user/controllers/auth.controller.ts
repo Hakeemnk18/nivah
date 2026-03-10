@@ -16,7 +16,7 @@ export class AuthController implements IAuthController {
     private readonly _getCurrentUserUseCase: IGetCurrentUserUseCase,
     @inject('IUserRefreshTokenUseCase')
     private readonly _userRefreshTokenUseCase: IUserRefreshTokenUseCase
-  ) {}
+  ) { }
 
   async getCurrentUser(req: AuthRequest, res: Response): Promise<void> {
     try {
@@ -42,7 +42,7 @@ export class AuthController implements IAuthController {
 
       res.cookie("refresh_token", "", {
         ...cookieOptions,
-        maxAge: 0, 
+        maxAge: 0,
       });
 
       res.status(HttpStatusCode.OK).json({
@@ -57,9 +57,7 @@ export class AuthController implements IAuthController {
 
   async getRefreshToken(req: Request, res: Response): Promise<void> {
     try {
-      console.log("inside get refresh controller")
       const refresh_token = req.cookies.refresh_token;
-      //console.log("refresh token ",refresh_token)
       const { userData, accessToken, refreshToken } =
         await this._userRefreshTokenUseCase.execute(refresh_token);
       setAccessTokenCookie(res, accessToken);

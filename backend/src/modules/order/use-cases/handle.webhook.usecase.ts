@@ -85,7 +85,7 @@ export class HandleRazorpayWebhookUseCase
         entity: RazorpayWebhookEvent["payload"]["payment"]["entity"],
         session: mongoose.ClientSession
     ): Promise<void> {
-        console.log("handle captured called")
+
         const order = await this._orderRepository
             .findById(payment.orderId, session);
 
