@@ -182,7 +182,8 @@ const AdminOrderDetailsPage = () => {
             <table className="w-full text-sm min-w-[600px]">
               <thead>
                 <tr className="text-left text-gray-400 border-b border-[#2c2e4a]">
-                  <th className="py-2">Product</th>
+                  {/* Added py-3 for a bit more padding around the image */}
+                  <th className="py-3">Product</th>
                   <th>Size</th>
                   <th>Price</th>
                   <th>Qty</th>
@@ -196,7 +197,17 @@ const AdminOrderDetailsPage = () => {
                     key={item.variantId}
                     className="border-t border-[#2c2e4a]"
                   >
-                    <td className="py-2">{item.name}</td>
+                    <td className="py-3">
+                      {/* Flex container to hold image and text side-by-side */}
+                      <div className="flex items-center gap-4">
+                        <img
+                          src={"/images/signature-offer.png"}
+                          alt={item.name}
+                          className="w-20 aspect-[4/5] object-cover rounded-md border border-[#2c2e4a] bg-[#16182b]"
+                        />
+                        <span className="font-medium">{item.name}</span>
+                      </div>
+                    </td>
                     <td>{item.size}</td>
                     <td>₹{item.price}</td>
                     <td>{item.quantity}</td>

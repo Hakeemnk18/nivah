@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { OrderStatus } from "../types/order.type";
 
 
@@ -25,8 +25,21 @@ const OrderStatusDropdown = ({
     getStatusStyle,
 }: Props) => {
     const [open, setOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     const allowedOptions = STATUS_TRANSITIONS[currentStatus];
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     const handleSelect = (status: OrderStatus) => {
         onChange(status);
@@ -34,7 +47,7 @@ const OrderStatusDropdown = ({
     };
 
     return (
-        <div className="relative inline-block text-left">
+        <div className="relative inline-block text-left" ref={dropdownRef}>
             {/* Current Status Badge */}
             <button
                 onClick={() => {

@@ -200,7 +200,7 @@ const AdminOrdersTable = () => {
             {showFetching && <AdminFetchingBar />}
 
             {/* Table */}
-            <div className="overflow-x-auto no-scrollbar">
+            <div className="overflow-x-auto no-scrollbar pb-15">
                 <table className="w-full text-sm min-w-[900px]">
                     <thead>
                         <tr className="text-left text-gray-400 border-b border-[#2c2e4a]">

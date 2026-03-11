@@ -83,11 +83,11 @@ const CheckoutPage = () => {
     };
 
     return (
-        <section className="bg-[var(--bg)] text-[var(--text)] min-h-screen py-8">
-            <div className="max-w-7xl mx-auto px-4">
+        <section className="bg-[var(--bg)] text-[var(--text)] min-h-screen py-6 lg:py-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full">
                 {/* TITLE */}
-
                 <SectionTitle label="Checkout" />
+
                 {/* LOADING */}
                 {isCheckoutLoading && <CheckoutSkeleton />}
 
@@ -98,18 +98,23 @@ const CheckoutPage = () => {
 
                 {/* SUCCESS */}
                 {!isCheckoutLoading && !isCheckoutError && checkoutItems.length > 0 && checkoutSummary && (
-                    <div className="grid lg:grid-cols-[1fr_380px] gap-8 items-start">
+                    <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 lg:gap-8 items-start w-full">
                         {/* LEFT — FORM */}
-                        <CheckoutForm
-                            formData={formData}
-                            errors={errors}
-                            onChange={handleChange}
-                        />
+                        <div className="w-full min-w-0">
+                            <CheckoutForm
+                                formData={formData}
+                                errors={errors}
+                                onChange={handleChange}
+                            />
+                        </div>
 
                         {/* RIGHT — SUMMARY */}
-                        <CheckoutSummary
-                            onPlaceOrder={handleSubmit}
-                            checkout={checkoutSummary} />
+                        <div className="w-full min-w-0">
+                            <CheckoutSummary
+                                onPlaceOrder={handleSubmit}
+                                checkout={checkoutSummary}
+                            />
+                        </div>
                     </div>
                 )}
             </div>
