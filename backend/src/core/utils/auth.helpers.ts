@@ -11,14 +11,14 @@ export const cookieOptions = {
 export const setAccessTokenCookie = (res: Response, token: string) => {
   res.cookie("access_token", token, {
     ...cookieOptions,
-    maxAge: 1 * 60 * 1000,
+    maxAge: 30 * 60 * 1000,
   });
 };
 
 export const setRefreshTokenCookie = (res: Response, token: string) => {
   res.cookie("refresh_token", token, {
     ...cookieOptions,
-    maxAge: 5 * 60 * 1000,
+    maxAge: 1 * 24 * 60 * 60 * 1000,
   });
 };
 
