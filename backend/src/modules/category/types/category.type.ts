@@ -11,3 +11,9 @@ export type CategorySignature = {
   name: string;
   image: string;
 }
+
+export type SubCategoryForAdmin = {
+  id: string;
+  name: string;
+  parentCategoryName: string;
+}

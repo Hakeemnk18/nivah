@@ -7,6 +7,8 @@ import type { IPaymentGateway } from "../core/ports/payment.service.interface.js
 import { RazorpayService } from "../infrastructure/services/payment.service.js";
 import type { IInvoiceService } from "../core/ports/invoice.service.interface.js";
 import { InvoiceService } from "../infrastructure/services/Invoice.service.js";
+import type { IEmailService } from "../core/ports/email.service.interface.js";
+import { NodemailerService } from "../infrastructure/services/nodemailer.service.js";
 
 
 
@@ -24,6 +26,10 @@ export const registerCommonDependencies = () => {
 
     container.register<IInvoiceService>("IInvoiceService", {
         useClass: InvoiceService,
+    });
+
+    container.register<IEmailService>("IEmailService", {
+        useClass: NodemailerService,
     });
 
 };

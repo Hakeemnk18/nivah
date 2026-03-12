@@ -9,7 +9,7 @@ import { CategoryModel } from "../infrastructure/category.schema.js";
 import type { ICategoryRepository } from "./category.repository.interface.js";
 import { CategoryMapper } from "../mappers/category.mapper.js";
 import type { IdName } from "../../../core/shared/types/id.name.type.js";
-import type { CategorySignature } from "../types/category.type.js";
+import type { CategorySignature, SubCategoryForAdmin } from "../types/category.type.js";
 
 const { ObjectId } = Types;
 
@@ -243,4 +243,35 @@ export class CategoryRepository implements ICategoryRepository {
       }
     ))
   }
+  async findAllSubCategoriesForAdmin(): Promise<SubCategoryForAdmin[]> {
+    const result = await CategoryModel.aggregate([
+      {
+        $match: {
+          parentId: { $ne: null },
+          isActive: true
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "parentId",
+          foreignField: "_id",
+          as: "parent",
+        },
+      },
+      {
+        $unwind: "$parent",
+      },
+      {
+        $project: {
+          _id: 0,
+          id: "$_id",
+          name: 1,
+          parentCategoryName: "$parent.name",
+        },
+      },
+    ]);
+
+    return result;
+  };
 }
