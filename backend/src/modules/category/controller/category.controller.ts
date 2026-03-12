@@ -241,7 +241,6 @@ export class CategoryController implements ICategoryController {
     try {
       const data =
         await this._getAllSubCategoriesForAdminUseCase.execute();
-
       res.status(HttpStatusCode.OK).json({
         success: true,
         message: ResponseMessages.SUCCESS,

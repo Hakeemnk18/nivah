@@ -1,5 +1,5 @@
-import type { IdName } from "../../../../core/shared/types/id.name.type.js"; 
+import type { SubCategoryForAdmin } from "../../types/category.type.js";
 
 export interface IGetAllSubCategoriesForAdminUseCase {
-  execute(): Promise<IdName[]>;
+  execute(): Promise<SubCategoryForAdmin[]>;
 }

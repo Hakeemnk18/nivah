@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-
 import { useCreateProduct } from "../hook/use.create.product";
-import { useAllSubCategoriesForUser } from "../../category/hooks/use.sub.categories";
-
 import ImageCropInput from "../../../shared/components/ImageCropInput";
 import VariantTable from "../component/VariantTable";
 import { handleApiError } from "../../../shared/utils/handle.api.error";
@@ -12,6 +9,7 @@ import type { CreateProductPayload } from "../type/product.type";
 import { uploadToCloudinary } from "../../../shared/utils/cloudinary";
 import AdminLoader from "../../admin/components/AdminLoader";
 import type { ImageItem } from "../../../shared/types/image.type";
+import { useAllSubCategoriesForAdmin } from "../../category/hooks/use.admin.sub.category";
 
 type Variant = {
     size: string;
@@ -38,7 +36,7 @@ type FormErrors = {
 
 const CreateProductForm = () => {
     const navigate = useNavigate();
-    const { data: categories } = useAllSubCategoriesForUser();
+    const { data: categories } = useAllSubCategoriesForAdmin();
     const { mutateAsync: createProduct, isPending } = useCreateProduct();
     const [submitting, setSubmitting] = useState(false);
     const [formData, setFormData] = useState<FormState>({
@@ -198,7 +196,7 @@ const CreateProductForm = () => {
                         >
                             <option value="">Select category</option>
                             {categories?.data?.map((cat: any) => (
-                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                <option key={cat.id} value={cat.id}>{cat.name} ({cat.parentCategoryName})</option>
                             ))}
                         </select>
                         {errors.categoryId && <p className="text-red-400 text-sm">{errors.categoryId}</p>}

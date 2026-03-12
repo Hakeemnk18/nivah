@@ -1,7 +1,7 @@
 import type { IGetAllDocDB } from "../../../core/shared/interfaces/get.all.doc.interface.js";
 import type { IdName } from "../../../core/shared/types/id.name.type.js";
 import { Category } from "../entities/category.entity.js";
-import type { CategorySignature } from "../types/category.type.js";
+import type { CategorySignature, SubCategoryForAdmin } from "../types/category.type.js";
 
 export interface ICategoryRepository {
   create(categoryEntity: Category): Promise<Category>;
@@ -18,4 +18,5 @@ export interface ICategoryRepository {
   findSubCategoriesForAdmin(parentId: string): Promise<Category[]>;
   countDocument(query: Record<string, any>): Promise<number>;
   findSignatureCategories(): Promise<CategorySignature[]>;
+  findAllSubCategoriesForAdmin(): Promise<SubCategoryForAdmin[]>;
 }

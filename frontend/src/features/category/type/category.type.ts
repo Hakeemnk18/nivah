@@ -37,3 +37,9 @@ export type signatureCategories = {
 }
 
 export type GetSignatureCategoriesResponse = ApiResponse<signatureCategories[]>
+export type SubCategoryForAdmin = {
+  id: string;
+  name: string;
+  parentCategoryName: string;
+}
+export type GetAdminSubCategoriesResponse = ApiResponse<SubCategoryForAdmin[]>

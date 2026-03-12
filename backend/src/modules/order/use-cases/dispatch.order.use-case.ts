@@ -4,13 +4,15 @@ import type { IDispatchOrderUseCase } from "./interfaces/dispatch.order.use-case
 import { CustomError } from "../../../core/errors/custom.error.js";
 import { HttpStatusCode } from "../../../core/constants/http.status.codes.js";
 import { ResponseMessages } from "../../../core/constants/response.message.js";
+import type { IEmailService } from "../../../core/ports/email.service.interface.js";
 
 @injectable()
 export class DispatchOrderUseCase implements IDispatchOrderUseCase {
     constructor(
         @inject("IOrderRepository")
         private readonly _orderRepository: IOrderRepository,
-
+        @inject("IEmailService")
+        private readonly _emailService: IEmailService,
 
     ) { }
 
@@ -30,6 +32,13 @@ export class DispatchOrderUseCase implements IDispatchOrderUseCase {
             )
         }
         await this._orderRepository.dispatchOrder(orderId);
+        console.log("dispathced")
+        await this._emailService.sendOrderStatusUpdate(
+            "hakeemnk18@gmail.com",
+            "1234567890",
+            "dispatched",
+            "Hakeem"
+        );
 
     }
 }

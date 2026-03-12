@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import type { IGetAllSubCategoriesForAdminUseCase } from "./interfaces/get.all.sub.categories.for.admin.use-case.interface.js";
 import type { ICategoryRepository } from "../repositories/category.repository.interface.js";
-import type { IdName } from "../../../core/shared/types/id.name.type.js";
+import type { SubCategoryForAdmin } from "../types/category.type.js";
 
 @injectable()
 export class GetAllSubCategoriesForAdminUseCase
@@ -11,7 +11,7 @@ export class GetAllSubCategoriesForAdminUseCase
     private readonly _categoryRepository: ICategoryRepository
   ) { }
 
-  async execute(): Promise<IdName[]> {
-    return this._categoryRepository.findAllSubCategories({ parentId: { $ne: null } })
+  async execute(): Promise<SubCategoryForAdmin[]> {
+    return this._categoryRepository.findAllSubCategoriesForAdmin()
   }
-}
+} 
