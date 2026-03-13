@@ -9,6 +9,7 @@ import { inject, injectable } from "tsyringe";
 import type { IPaymentGateway } from "../../../core/ports/payment.service.interface.js";
 import mongoose from "mongoose";
 import { mapPaymentMode } from "../../../core/utils/get.payment.method.js";
+import type { IEmailService } from "../../../core/ports/email.service.interface.js";
 
 @injectable()
 export class SyncPaymentUseCase implements ISyncPaymentUseCase {
@@ -21,6 +22,8 @@ export class SyncPaymentUseCase implements ISyncPaymentUseCase {
         private readonly _cartRepository: ICartRepository,
         @inject("IPaymentGateway")
         private readonly _paymentGateway: IPaymentGateway,
+        @inject("IEmailService")
+        private readonly _emailService: IEmailService,
     ) { }
 
     async execute(localOrderId: string): Promise<{ status: string }> {
@@ -77,6 +80,14 @@ export class SyncPaymentUseCase implements ISyncPaymentUseCase {
                 }
 
                 await session.commitTransaction();
+
+                await this._emailService.sendOrderStatusUpdate({
+                    to: order.userSnapshot.email,
+                    orderNumber: order.orderNumber,
+                    status: "confirmed",
+                    customerName: order.userSnapshot.name,
+                    title: "Order Confirmed"
+                });
 
                 return { status: "confirmed" };
 

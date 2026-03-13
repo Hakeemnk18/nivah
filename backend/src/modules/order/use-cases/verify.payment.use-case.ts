@@ -14,6 +14,7 @@ import { mapPaymentMode } from "../../../core/utils/get.payment.method.js";
 import mongoose from "mongoose";
 import type { VerifyPaymentRequestDto } from "../dtos/verify.payment.dto.js";
 import type { IVerifyPaymentUseCase } from "./interfaces/verify.payment.use-case.interface.js";
+import type { IEmailService } from "../../../core/ports/email.service.interface.js";
 
 @injectable()
 export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
@@ -32,6 +33,9 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
 
         @inject("IProductRepository")
         private readonly _productRepository: IProductRepository,
+
+        @inject("IEmailService")
+        private readonly _emailService: IEmailService,
 
     ) { }
 
@@ -144,6 +148,13 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
 
             await session.commitTransaction();
 
+            await this._emailService.sendOrderStatusUpdate({
+                to: order.userSnapshot.email,
+                orderNumber: order.orderNumber,
+                status: "confirmed",
+                customerName: order.userSnapshot.name,
+                title: "Order Confirmed"
+            });
 
         } catch (error) {
             await session.abortTransaction();

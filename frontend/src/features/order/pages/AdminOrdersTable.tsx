@@ -16,6 +16,7 @@ import { useAcceptOrder } from "../hooks/use.accept.order";
 import { useCancelOrder } from "../hooks/use.cancel.order";
 import ConfirmModal from "../../../shared/components/ConfirmModal";
 import { Link } from "react-router-dom";
+import AdminLoader from "../../admin/components/AdminLoader";
 
 const sortOptions = [
     { label: "Newest", value: "newest" },
@@ -57,6 +58,7 @@ const AdminOrdersTable = () => {
     const { mutateAsync: cancelOrder } = useCancelOrder();
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [selectedOrderId, setSelectedOrderId] = useState<string>("");
+    const [isOrderStatusChanging, setIsOrderStatusChanging] = useState(false);
 
     const [filters, setFilters] = useState<{
         orderStatus: string;
@@ -121,6 +123,7 @@ const AdminOrdersTable = () => {
     };
 
     const handleStatusChange = async (id: string, newStatus: OrderStatus) => {
+        setIsOrderStatusChanging(true);
         if (!id || !newStatus) return;
         if (newStatus === "dispatched") {
             await dispatchOrder(id);
@@ -132,6 +135,7 @@ const AdminOrdersTable = () => {
             setShowConfirmModal(true);
             setSelectedOrderId(id);
         }
+        setIsOrderStatusChanging(false);
     };
 
     let content
@@ -142,6 +146,7 @@ const AdminOrdersTable = () => {
         content = <AdminErrorState onRetry={refetch} />
     } else {
         content = <>
+            {isOrderStatusChanging && <AdminLoader fullScreen label="Updating order status..." />}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
                 <h2 className="text-xl font-semibold">Orders</h2>
 

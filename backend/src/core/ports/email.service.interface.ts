@@ -1,8 +1,7 @@
+import type { EmailData } from "../shared/types/email.type.js";
+
 export interface IEmailService {
   sendOrderStatusUpdate(
-    to: string,
-    orderNumber: string,
-    status: string,
-    customerName: string
+    data: EmailData
   ): Promise<void>;
 }
