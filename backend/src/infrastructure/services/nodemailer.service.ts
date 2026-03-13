@@ -79,7 +79,7 @@ export class NodemailerService implements IEmailService {
       });
 
     } catch (error) {
-
+      console.error("Failed to send email:", error);
     }
   }
 }
