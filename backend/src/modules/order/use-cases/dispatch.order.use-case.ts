@@ -32,13 +32,14 @@ export class DispatchOrderUseCase implements IDispatchOrderUseCase {
             )
         }
         await this._orderRepository.dispatchOrder(orderId);
-        console.log("dispathced")
-        await this._emailService.sendOrderStatusUpdate(
-            "hakeemnk18@gmail.com",
-            "1234567890",
-            "dispatched",
-            "Hakeem"
-        );
+
+        await this._emailService.sendOrderStatusUpdate({
+            to: order.userSnapshot.email,
+            orderNumber: order.orderNumber,
+            status: "dispatched",
+            customerName: order.userSnapshot.name,
+            title: "Order Dispatched"
+        });
 
     }
 }
