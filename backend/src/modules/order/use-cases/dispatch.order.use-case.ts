@@ -32,7 +32,7 @@ export class DispatchOrderUseCase implements IDispatchOrderUseCase {
             )
         }
         await this._orderRepository.dispatchOrder(orderId);
-
+        console.log("order change status to dispatched")
         await this._emailService.sendOrderStatusUpdate({
             to: order.userSnapshot.email,
             orderNumber: order.orderNumber,
@@ -40,6 +40,7 @@ export class DispatchOrderUseCase implements IDispatchOrderUseCase {
             customerName: order.userSnapshot.name,
             title: "Order Dispatched"
         });
+        console.log("email sent")
 
     }
 }

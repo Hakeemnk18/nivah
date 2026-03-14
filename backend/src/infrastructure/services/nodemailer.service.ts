@@ -10,6 +10,7 @@ export class NodemailerService implements IEmailService {
   async sendOrderStatusUpdate(
     data: EmailData
   ): Promise<void> {
+    console.log("email function called data", data);
     const { to, orderNumber, status, customerName, title } = data;
     const subject = `Order Status Update: ${orderNumber}`;
 
@@ -71,13 +72,14 @@ export class NodemailerService implements IEmailService {
     `;
 
     try {
+      console.log("before sending mail");
       await transporter.sendMail({
         from: `"NIVAH" <${process.env.SMTP_USER}>`, // Using SMTP_USER since you removed SMTP_FROM_EMAIL from .env
         to,
         subject,
         html: htmlContent,
       });
-
+      console.log("after sending mail");
     } catch (error) {
       console.error("Failed to send email:", error);
     }
