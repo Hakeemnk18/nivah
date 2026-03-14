@@ -81,13 +81,13 @@ export class SyncPaymentUseCase implements ISyncPaymentUseCase {
 
                 await session.commitTransaction();
 
-                await this._emailService.sendOrderStatusUpdate({
-                    to: order.userSnapshot.email,
-                    orderNumber: order.orderNumber,
-                    status: "confirmed",
-                    customerName: order.userSnapshot.name,
-                    title: "Order Confirmed"
-                });
+                // await this._emailService.sendOrderStatusUpdate({
+                //     to: order.userSnapshot.email,
+                //     orderNumber: order.orderNumber,
+                //     status: "confirmed",
+                //     customerName: order.userSnapshot.name,
+                //     title: "Order Confirmed"
+                // });
 
                 return { status: "confirmed" };
 

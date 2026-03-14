@@ -148,13 +148,13 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
 
             await session.commitTransaction();
 
-            await this._emailService.sendOrderStatusUpdate({
-                to: order.userSnapshot.email,
-                orderNumber: order.orderNumber,
-                status: "confirmed",
-                customerName: order.userSnapshot.name,
-                title: "Order Confirmed"
-            });
+            // await this._emailService.sendOrderStatusUpdate({
+            //     to: order.userSnapshot.email,
+            //     orderNumber: order.orderNumber,
+            //     status: "confirmed",
+            //     customerName: order.userSnapshot.name,
+            //     title: "Order Confirmed"
+            // });
 
         } catch (error) {
             await session.abortTransaction();
