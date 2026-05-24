@@ -92,7 +92,7 @@ export class OrderController implements IOrderController {
 
   async verifyPayment(req: Request, res: Response): Promise<void> {
     try {
-      console.log("called verify payment controller")
+      
       const validationResult = VerifyPaymentSchema.parse(req.body);
 
       const order = await this._verifyPaymentUseCase.execute(validationResult);

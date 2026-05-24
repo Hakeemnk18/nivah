@@ -11,8 +11,15 @@ import { useGetCheckoutItems } from "../../cart/hooks/use.get.checkout.item";
 import { getGuestId } from "../../../shared/utils/guest";
 import { useCreateOrder } from "../hooks/use.create.order";
 import { handleApiError } from "../../../shared/utils/handle.api.error";
-import { openRazorpayCheckoutFunction } from "../../../shared/utils/razorpay";
+import { openRazorpayCheckoutFunction, openRazorpayCheckoutTestFunction } from "../../../shared/utils/razorpay";
+import { verifyPaymentApi } from "../api/order.api";
 import { useNavigate } from "react-router-dom";
+
+// ─── Flip VITE_PAYMENT_MODE in frontend/.env  ───────────────────────────────
+//   test  → calls verify-payment right after popup (no webhook needed locally)
+//   live  → current production flow (webhook confirms the order)
+// ────────────────────────────────────────────────────────────────────────────
+const IS_TEST_MODE = import.meta.env.VITE_PAYMENT_MODE === "test";
 
 const CheckoutPage = () => {
     const guestId = getGuestId()
@@ -22,14 +29,14 @@ const CheckoutPage = () => {
     const checkoutSummary = checkoutData?.data;
     const checkoutItems = checkoutSummary?.items || [];
     const [formData, setFormData] = useState<OrderFormData>({
-        name: "",
-        email: "",
-        phone: "",
-        addressLine1: "",
-        addressLine2: "",
-        city: "",
-        state: "",
-        pincode: "",
+        name: "Lakshay Kumar",
+        email: "lakshaykumar@example.com",
+        phone: "9555555555",
+        addressLine1: "california street 123",
+        addressLine2: "United States",
+        city: "New York",
+        state: "New York",
+        pincode: "673816",
         acceptedTerms: false,
     });
     const [errors, setErrors] = useState<OrderFormErrors>({});
@@ -71,7 +78,18 @@ const CheckoutPage = () => {
                 acceptedTerms: formData.acceptedTerms,
             });
 
-            openRazorpayCheckoutFunction(res?.data!, handlePaymentSuccess)
+            if (IS_TEST_MODE) {
+                // TEST MODE: verify-payment called immediately after popup
+                // so the order is confirmed without waiting for a webhook
+                openRazorpayCheckoutTestFunction(
+                    res?.data!,
+                    handlePaymentSuccess,
+                    verifyPaymentApi,
+                );
+            } else {
+                // LIVE MODE: current production flow — webhook confirms the order
+                openRazorpayCheckoutFunction(res?.data!, handlePaymentSuccess);
+            }
 
         } catch (error) {
             const validateError = handleApiError(error);

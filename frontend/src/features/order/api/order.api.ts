@@ -109,4 +109,16 @@ export const syncPaymentApi = async (
     return response.data;
 };
 
+/* ---------- VERIFY PAYMENT (test mode only) ----------
+   Confirms the order immediately after the Razorpay popup succeeds —
+   bypasses the need for a webhook. Only used when VITE_PAYMENT_MODE=test.
+-------------------------------------------------------- */
+export const verifyPaymentApi = async (data: {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+}): Promise<void> => {
+    await api.post("/orders/verify-payment", data);
+};
+
 
