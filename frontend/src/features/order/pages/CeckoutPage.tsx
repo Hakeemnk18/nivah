@@ -38,6 +38,7 @@ const CheckoutPage = () => {
         state: "",
         pincode: "",
         acceptedTerms: false,
+        
     });
     const [errors, setErrors] = useState<OrderFormErrors>({});
 
