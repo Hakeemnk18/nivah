@@ -21,10 +21,17 @@ import { validateObjectId } from "../../../core/utils/validate.object.id.helper.
 import { parseReq } from "../../../core/utils/parse.query.helper.js";
 import type { IEditProductUseCase } from "../use-cases/interfaces/edit.product.use-case.interface.js";
 import type { IGetAllProductForAdminUseCase } from "../use-cases/interfaces/get.all.product.admin.use-case.interface.js";
-import { UpdateVariantSchema, VariantArraySchema, VariantSchema } from "../dtos/variant.dto.js";
+import {
+  UpdateVariantSchema,
+  VariantArraySchema,
+  VariantSchema,
+} from "../dtos/variant.dto.js";
 import type { IAddProductVariantUseCase } from "../use-cases/interfaces/add.product.variant.use-case.interface.js";
 import type { IEditProductVariantUseCase } from "../use-cases/interfaces/edit.product.variant.use-case.interface.js";
-import { EditProductSchema, type EditProductRequestDto } from "../dtos/edit.product.dto.js";
+import {
+  EditProductSchema,
+  type EditProductRequestDto,
+} from "../dtos/edit.product.dto.js";
 import type { IGetProductDetailsForAdminUseCase } from "../use-cases/interfaces/get.product.admin.use-case.interface.js";
 import type { IGetProductVariantForAdmin } from "../use-cases/interfaces/get.product.variant.for.admin.interface.js";
 import type { IGetFeaturedProductUseCase } from "../use-cases/interfaces/get.fetured.product.use-case.interface.js";
@@ -78,14 +85,11 @@ export class ProductController implements IProductController {
 
     @inject("IGetProductVariantForUserUseCase")
     private readonly _getProductVariantForUserUseCase: IGetProductVariantForUserUseCase,
-
-  ) { }
+  ) {}
 
   async createProduct(req: Request, res: Response): Promise<void> {
     try {
-
-      const dto: CreateProductRequestDto =
-        CreateProductSchema.parse(req.body);
+      const dto: CreateProductRequestDto = CreateProductSchema.parse(req.body);
 
       await this._createProductUseCase.execute(dto);
 
@@ -117,8 +121,6 @@ export class ProductController implements IProductController {
       handleError(res, error);
     }
   }
-
-
 
   async blockProduct(req: Request, res: Response): Promise<void> {
     try {
@@ -156,7 +158,9 @@ export class ProductController implements IProductController {
 
   async getAllProductForAdmin(req: Request, res: Response): Promise<void> {
     try {
-      const dto = GetAllQuerySchema.parse(parseReq(req, ["isActive", "childCategoryId", "parentCategoryId"]));
+      const dto = GetAllQuerySchema.parse(
+        parseReq(req, ["isActive", "childCategoryId", "parentCategoryId"]),
+      );
 
       const { data, total } =
         await this._getAllProductForAdminUseCase.execute(dto);
@@ -175,63 +179,69 @@ export class ProductController implements IProductController {
 
   async addVariant(req: Request, res: Response): Promise<void> {
     try {
-      const { productId } = req.params
-      validateObjectId(productId)
-      const dto = VariantArraySchema.parse(req.body)
+      const { productId } = req.params;
+      validateObjectId(productId);
+      const dto = VariantArraySchema.parse(req.body);
 
-      await this._addProductVariantUseCase.execute(productId!, dto)
+      await this._addProductVariantUseCase.execute(productId!, dto);
 
       res.status(HttpStatusCode.OK).json({
         success: true,
-        message: ResponseMessages.VARIANT_ADD_SUCCESS
+        message: ResponseMessages.VARIANT_ADD_SUCCESS,
       });
     } catch (error) {
-      handleError(res, error)
-      console.log("error in add variant controller ", error)
+      handleError(res, error);
+      console.log("error in add variant controller ", error);
     }
   }
 
   async editVariant(req: Request, res: Response): Promise<void> {
     try {
-      const { productId, variantId } = req.params
-      validateObjectId(variantId)
-      validateObjectId(productId)
-      const dto = UpdateVariantSchema.parse(req.body)
-      await this._editProductVariantUseCase.execute(productId!, variantId!, dto)
+      const { productId, variantId } = req.params;
+      validateObjectId(variantId);
+      validateObjectId(productId);
+      const dto = UpdateVariantSchema.parse(req.body);
+      await this._editProductVariantUseCase.execute(
+        productId!,
+        variantId!,
+        dto,
+      );
 
       res.status(HttpStatusCode.OK).json({
         success: true,
-        message: ResponseMessages.VARIANT_EDIT_SUCCESS
+        message: ResponseMessages.VARIANT_EDIT_SUCCESS,
       });
     } catch (error) {
-      handleError(res, error)
-      console.log("error in variant controller ", error)
+      handleError(res, error);
+      console.log("error in variant controller ", error);
     }
   }
 
   async getProductDetailsForAdmin(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params
-      validateObjectId(id)
-      const data = await this._getProductDetailsForAdminUseCase.execute(id!)
+      const { id } = req.params;
+      validateObjectId(id);
+      const data = await this._getProductDetailsForAdminUseCase.execute(id!);
       res.status(HttpStatusCode.OK).json({
         success: true,
         message: ResponseMessages.SUCCESS,
         data,
       });
     } catch (error) {
-      handleError(res, error)
-      console.log("error in get product details for admin controller ", error)
+      handleError(res, error);
+      console.log("error in get product details for admin controller ", error);
     }
   }
 
   async getAdminProductVariant(req: Request, res: Response): Promise<void> {
     try {
-
-      const { productId, variantId } = req.params
-      validateObjectId(variantId)
-      validateObjectId(productId)
-      const data = await this._getProductVariantForAdminUseCase.execute(productId!, variantId!)
+      const { productId, variantId } = req.params;
+      validateObjectId(variantId);
+      validateObjectId(productId);
+      const data = await this._getProductVariantForAdminUseCase.execute(
+        productId!,
+        variantId!,
+      );
 
       res.status(HttpStatusCode.OK).json({
         success: true,
@@ -239,35 +249,33 @@ export class ProductController implements IProductController {
         data,
       });
     } catch (error) {
-      handleError(res, error)
-      console.log("error in get product variant for admin controller ", error)
+      handleError(res, error);
+      console.log("error in get product variant for admin controller ", error);
     }
   }
 
   async getFeaturedProducts(req: Request, res: Response): Promise<void> {
     try {
-      const data = await this._getFeaturedProductUseCase.execute()
+      const data = await this._getFeaturedProductUseCase.execute();
       res.status(HttpStatusCode.OK).json({
         success: true,
         message: ResponseMessages.SUCCESS,
         data,
       });
     } catch (error) {
-      handleError(res, error)
-      console.log("error in get featured products controller ", error)
+      handleError(res, error);
+      console.log("error in get featured products controller ", error);
     }
   }
 
   async getAllProductForUser(req: Request, res: Response): Promise<void> {
     try {
-
       const dto = GetAllQuerySchema.parse(
         parseReq(req, ["childCategoryId", "parentCategoryId"]),
       );
 
-      const result =
-        await this._getAllProductForUserUseCase.execute(dto);
-
+      const result = await this._getAllProductForUserUseCase.execute(dto);
+   
       res.status(HttpStatusCode.OK).json({
         success: true,
         message: ResponseMessages.SUCCESS,
@@ -281,44 +289,46 @@ export class ProductController implements IProductController {
 
   async getProductDetailsForUser(req: Request, res: Response): Promise<void> {
     try {
-
-      const { id } = req.params
-      validateObjectId(id)
-      const data = await this._getProductForUserUseCase.execute(id!)
+      const { id } = req.params;
+      validateObjectId(id);
+      const data = await this._getProductForUserUseCase.execute(id!);
       res.status(HttpStatusCode.OK).json({
         success: true,
         message: ResponseMessages.SUCCESS,
         data,
       });
     } catch (error) {
-      handleError(res, error)
-      console.log("error in get product details for user controller ", error)
+      handleError(res, error);
+      console.log("error in get product details for user controller ", error);
     }
   }
 
   async getRelatedProducts(req: Request, res: Response): Promise<void> {
     try {
-      const { categoryId } = req.params
-      validateObjectId(categoryId)
-      const data = await this._getRelatedProductUseCase.execute(categoryId!)
+      const { categoryId } = req.params;
+      validateObjectId(categoryId);
+      const data = await this._getRelatedProductUseCase.execute(categoryId!);
       res.status(HttpStatusCode.OK).json({
         success: true,
         message: ResponseMessages.SUCCESS,
         data,
       });
     } catch (error) {
-      handleError(res, error)
-      console.log("error in get related products controller ", error)
+      handleError(res, error);
+      console.log("error in get related products controller ", error);
     }
   }
 
   async getProductVariantForUser(req: Request, res: Response): Promise<void> {
     try {
-      const { productId, variantId } = req.params
-      validateObjectId(variantId)
-      validateObjectId(productId)
+      const { productId, variantId } = req.params;
+      validateObjectId(variantId);
+      validateObjectId(productId);
 
-      const data = await this._getProductVariantForUserUseCase.execute(productId!, variantId!)
+      const data = await this._getProductVariantForUserUseCase.execute(
+        productId!,
+        variantId!,
+      );
 
       res.status(HttpStatusCode.OK).json({
         success: true,
@@ -326,9 +336,8 @@ export class ProductController implements IProductController {
         data,
       });
     } catch (error) {
-      handleError(res, error)
-      console.log("error in get product variant for user controller ", error)
+      handleError(res, error);
+      console.log("error in get product variant for user controller ", error);
     }
   }
-
 }

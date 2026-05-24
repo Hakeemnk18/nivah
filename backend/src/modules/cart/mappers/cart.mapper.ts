@@ -77,6 +77,8 @@ export class CartMapper {
 
       totalItems: raw.totalItems,
       totalPrice: raw.totalPrice,
+      deliveryCharge: raw.deliveryCharge,
+      total: raw.total,
     };
   }
 

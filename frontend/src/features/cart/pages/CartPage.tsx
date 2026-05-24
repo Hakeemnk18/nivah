@@ -85,6 +85,8 @@ const CartPage: React.FC = () => {
                                 onCheckout={() => navigate("/checkout")}
                                 totalItems={cart.totalItems}
                                 totalPrice={cart.totalPrice}
+                                deliveryCharge={cart.deliveryCharge}
+                                total={cart.total}
                             />
                         </div>
                     </div>

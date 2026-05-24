@@ -2,12 +2,16 @@
 type CheckoutSummaryProps = {
     totalItems: number;
     totalPrice: number;
+    deliveryCharge: number;
+    total: number;
     onCheckout: () => void;
 };
 
 const CheckoutSummary = ({
     totalItems,
     totalPrice,
+    deliveryCharge,
+    total,
     onCheckout,
 }: CheckoutSummaryProps) => {
     return (
@@ -22,15 +26,22 @@ const CheckoutSummary = ({
                     </div>
 
                     <div className="flex justify-between text-[var(--muted)]">
+                        <span>Subtotal</span>
+                        <span>₹{totalPrice}</span>
+                    </div>
+
+                    <div className="flex justify-between text-[var(--muted)]">
                         <span>Shipping</span>
-                        <span>Free</span>
+                        <span>
+                            {deliveryCharge === 0 ? "Free" : `₹${deliveryCharge}`}
+                        </span>
                     </div>
 
                     <div className="h-px bg-[var(--bg-secondary)] my-2" />
 
                     <div className="flex justify-between text-base font-semibold">
                         <span>Total</span>
-                        <span className="text-[var(--accent)]">₹{totalPrice}</span>
+                        <span className="text-[var(--accent)]">₹{total}</span>
                     </div>
                 </div>
 

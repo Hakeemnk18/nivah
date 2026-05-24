@@ -266,7 +266,15 @@ export class CartRepository implements ICartRepository {
 
     if (!result.length) return null;
 
-    return CartMapper.toView(result[0]);
+    const raw = result[0];
+    const subTotal = raw.totalPrice;
+    const total = subTotal + DELIVERY_CHARGE;
+
+    return CartMapper.toView({
+      ...raw,
+      deliveryCharge: DELIVERY_CHARGE,
+      total,
+    });
 
   }
 
