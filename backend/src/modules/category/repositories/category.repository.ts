@@ -102,7 +102,7 @@ export class CategoryRepository implements ICategoryRepository {
       parentId: null,
       isActive: true,
     })
-      .sort({ name: 1 })
+      .sort({ createdAt: 1 })
       .lean();
 
     return documents
