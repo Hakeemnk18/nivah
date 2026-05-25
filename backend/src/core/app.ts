@@ -10,7 +10,8 @@ app.use(cors({
     "http://localhost:5173",
     "https://nivah-rho.vercel.app",
     "https://www.nivahfashions.com",
-    "https://nivahfashions.com"
+    "https://nivahfashions.com",
+    "https://nivah.onrender.com"
   ],
   credentials: true,
 }));
