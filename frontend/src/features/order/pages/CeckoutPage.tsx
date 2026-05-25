@@ -29,15 +29,16 @@ const CheckoutPage = () => {
     const checkoutSummary = checkoutData?.data;
     const checkoutItems = checkoutSummary?.items || [];
     const [formData, setFormData] = useState<OrderFormData>({
-        name: "Lakshay Kumar",
-        email: "lakshaykumar@example.com",
-        phone: "9555555555",
-        addressLine1: "california street 123",
-        addressLine2: "United States",
-        city: "New York",
-        state: "New York",
-        pincode: "673816",
+        name: "",
+        email: "",
+        phone: "",
+        addressLine1: "",
+        addressLine2: "",
+        city: "",
+        state: "",
+        pincode: "",
         acceptedTerms: false,
+        
     });
     const [errors, setErrors] = useState<OrderFormErrors>({});
 
