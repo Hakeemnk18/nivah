@@ -18,7 +18,9 @@ export class GetCartUseCase implements IGetCartUseCase {
                 guestId: '',
                 items: [],
                 totalItems: 0,
-                totalPrice: 0
+                totalPrice: 0,
+                deliveryCharge: 0,
+                total: 0,
             }
         }
 
