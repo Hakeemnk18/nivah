@@ -4,6 +4,7 @@ import FeaturedProductSkeleton from "./FeaturedProductSkeleton";
 import { useFeaturedProducts } from "../../products/hook/use.featured.product";
 import type { UserProductListItem } from "../../products/type/product.type";
 import { getGridClass } from "../../../shared/utils/grid.style";
+import { getOptimizedImageUrl } from "../../../shared/utils/cloudinary";
 import { useNavigate } from "react-router-dom";
 
 
@@ -69,7 +70,7 @@ export default function FeaturedProducts() {
                                     key={product.id} className="text-center cursor-pointer">
                                     <figure>
                                         <img
-                                            src={product.image}
+                                            src={getOptimizedImageUrl(product.image, 440)}
                                             alt={product.name}
                                             className="mx-auto w-full max-w-[220px] rounded-xl object-cover"
                                             loading="lazy"

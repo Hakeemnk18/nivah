@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import EditVariantModal from "./EditVariantModal";
 import AddVariantModal from "./addVariantModal";
+import { getOptimizedImageUrl } from "../../../shared/utils/cloudinary";
 type Props = {
   productId: string;
   onClose: () => void;
@@ -43,7 +44,7 @@ const ProductDetailsModal = ({ productId, onClose }: Props) => {
         <div className="grid grid-cols-3 gap-3 mb-6">
           {product.images.map((img, idx) => (
             <div key={idx} className="relative group rounded overflow-hidden">
-              <img src={img.url} className="w-full h-28 object-cover" />
+              <img src={getOptimizedImageUrl(img.url, 300, 112)} loading="lazy" className="w-full h-28 object-cover" />
               <button
 
                 className="absolute top-2 right-2 hidden group-hover:block">

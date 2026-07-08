@@ -1,12 +1,14 @@
 import type { CheckoutItemView } from "../../cart/type/cart.type";
+import { getOptimizedImageUrl } from "../../../shared/utils/cloudinary";
 
 
 const CheckoutItem = ({ item }: { item: CheckoutItemView }) => {
     return (
         <div className="flex items-center gap-3 bg-[var(--bg-secondary)] rounded-xl p-2">
             <img
-                src={item.image}
+                src={getOptimizedImageUrl(item.image, 120)}
                 alt={item.name}
+                loading="lazy"
                 className="w-14 h-14 rounded-lg object-cover"
             />
 
