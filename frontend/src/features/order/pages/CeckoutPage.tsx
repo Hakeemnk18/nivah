@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import SectionTitle from "../../../shared/components/SectionTitle";
 import CheckoutError from "../components/CheckooutError";
 import CheckoutForm from "../components/CheckoutForm";
@@ -22,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 const IS_TEST_MODE = import.meta.env.VITE_PAYMENT_MODE === "test";
 
 const CheckoutPage = () => {
+    const queryClient = useQueryClient();
     const guestId = getGuestId()
     const { data: checkoutData, isLoading: isCheckoutLoading, isError: isCheckoutError } = useGetCheckoutItems(guestId);
     const { mutateAsync: createOrder } = useCreateOrder();
@@ -42,6 +44,21 @@ const CheckoutPage = () => {
     });
     const [errors, setErrors] = useState<OrderFormErrors>({});
 
+    const handleFillTestData = () => {
+        setFormData({
+            name: "Test User",
+            email: "normsoutofthe@gmail.com",
+            phone: "9999999999",
+            addressLine1: "123 Test Street",
+            addressLine2: "Near Test Landmark",
+            city: "Kochi",
+            state: "Kerala",
+            pincode: "682001",
+            acceptedTerms: true,
+        });
+        setErrors({});
+    };
+
     const handleChange = (
         field: keyof OrderFormData,
         value: string | boolean
@@ -53,6 +70,8 @@ const CheckoutPage = () => {
 
     const handlePaymentSuccess = async (orderId: string) => {
         console.log("handled payment called")
+        queryClient.invalidateQueries({ queryKey: ["cart"] });
+        queryClient.invalidateQueries({ queryKey: ["cart-items-count"] });
         navigate(`/order-status/${orderId}`)
     }
 
@@ -120,6 +139,15 @@ const CheckoutPage = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 lg:gap-8 items-start w-full">
                         {/* LEFT — FORM */}
                         <div className="w-full min-w-0">
+                            {IS_TEST_MODE && (
+                                <button
+                                    type="button"
+                                    onClick={handleFillTestData}
+                                    className="mb-4 w-full rounded-xl border border-dashed border-[var(--accent)] px-4 py-2 text-sm font-medium text-[var(--accent)] hover:bg-[var(--accent)]/10 transition"
+                                >
+                                    ⚡ Fill Test Data (TEST_MODE only)
+                                </button>
+                            )}
                             <CheckoutForm
                                 formData={formData}
                                 errors={errors}

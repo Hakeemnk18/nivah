@@ -5,6 +5,7 @@ export function notifyOrderConfirmed(
   emailService: IEmailService,
   order: Order
 ): void {
+  console.log(`Sending order confirmation email for #${order.orderNumber} to ${order.userSnapshot.email}`);
   emailService
     .sendOrderConfirmation({
       to: order.userSnapshot.email,

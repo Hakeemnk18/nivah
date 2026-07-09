@@ -63,8 +63,15 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
 
         const body = `${dto.razorpay_order_id}|${dto.razorpay_payment_id}`;
 
+        // Mirrors backend/src/config/razorpay.ts — must use the same key pair
+        // (test vs live) that created the order, or the signature never matches.
+        const isTestMode = process.env.PAYMENT_MODE === "test";
+        const signingSecret = isTestMode
+            ? process.env.RAZORPAY_TEST_KEY_SECRET!
+            : process.env.RAZORPAY_KEY_SECRET!;
+
         const expectedSignature = crypto
-            .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
+            .createHmac("sha256", signingSecret)
             .update(body)
             .digest("hex");
 
