@@ -1,7 +1,19 @@
-import type { EmailData } from "../shared/types/email.type.js";
+import type {
+  AdminOrderNotificationEmailData,
+  EmailData,
+  OrderConfirmationEmailData,
+} from "../shared/types/email.type.js";
 
 export interface IEmailService {
   sendOrderStatusUpdate(
     data: EmailData
+  ): Promise<void>;
+
+  sendOrderConfirmation(
+    data: OrderConfirmationEmailData
+  ): Promise<void>;
+
+  sendAdminOrderNotification(
+    data: AdminOrderNotificationEmailData
   ): Promise<void>;
 }

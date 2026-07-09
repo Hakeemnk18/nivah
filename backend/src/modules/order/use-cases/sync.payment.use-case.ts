@@ -10,6 +10,7 @@ import type { IPaymentGateway } from "../../../core/ports/payment.service.interf
 import mongoose from "mongoose";
 import { mapPaymentMode } from "../../../core/utils/get.payment.method.js";
 import type { IEmailService } from "../../../core/ports/email.service.interface.js";
+import { notifyOrderConfirmed } from "../utils/notify.order.confirmed.js";
 
 @injectable()
 export class SyncPaymentUseCase implements ISyncPaymentUseCase {
@@ -81,13 +82,7 @@ export class SyncPaymentUseCase implements ISyncPaymentUseCase {
 
                 await session.commitTransaction();
 
-                // await this._emailService.sendOrderStatusUpdate({
-                //     to: order.userSnapshot.email,
-                //     orderNumber: order.orderNumber,
-                //     status: "confirmed",
-                //     customerName: order.userSnapshot.name,
-                //     title: "Order Confirmed"
-                // });
+                notifyOrderConfirmed(this._emailService, order);
 
                 return { status: "confirmed" };
 

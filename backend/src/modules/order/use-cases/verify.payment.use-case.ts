@@ -15,6 +15,7 @@ import mongoose from "mongoose";
 import type { VerifyPaymentRequestDto } from "../dtos/verify.payment.dto.js";
 import type { IVerifyPaymentUseCase } from "./interfaces/verify.payment.use-case.interface.js";
 import type { IEmailService } from "../../../core/ports/email.service.interface.js";
+import { notifyOrderConfirmed } from "../utils/notify.order.confirmed.js";
 
 @injectable()
 export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
@@ -148,13 +149,7 @@ export class VerifyPaymentUseCase implements IVerifyPaymentUseCase {
 
             await session.commitTransaction();
 
-            // await this._emailService.sendOrderStatusUpdate({
-            //     to: order.userSnapshot.email,
-            //     orderNumber: order.orderNumber,
-            //     status: "confirmed",
-            //     customerName: order.userSnapshot.name,
-            //     title: "Order Confirmed"
-            // });
+            notifyOrderConfirmed(this._emailService, order);
 
         } catch (error) {
             await session.abortTransaction();
