@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { getOptimizedImageUrl } from "../../../../shared/utils/cloudinary";
+
 type Props = {
   product: {
     id: string;
@@ -8,6 +11,8 @@ type Props = {
 };
 
 export default function ProductCard({ product }: Props) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   return (
     <div
       className="
@@ -23,15 +28,20 @@ export default function ProductCard({ product }: Props) {
     >
       {/* Image Wrapper */}
       <div className="relative aspect-square overflow-hidden">
+        {!isLoaded && (
+          <div className="absolute inset-0 animate-pulse bg-[var(--muted)]/20" />
+        )}
         <img
-          src={product.image}
+          src={getOptimizedImageUrl(product.image, 500)}
           alt={product.name}
           loading="lazy"
-          className="
+          onLoad={() => setIsLoaded(true)}
+          className={`
             w-full h-full object-cover
-            transition-transform duration-500
+            transition-all duration-500
             group-hover:scale-105
-          "
+            ${isLoaded ? "opacity-100" : "opacity-0"}
+          `}
         />
       </div>
 

@@ -16,6 +16,7 @@ import { useAddItemToCart } from "../../cart/hooks/use.add.item.to.cart";
 import toast from "react-hot-toast";
 import { getGuestId } from "../../../shared/utils/guest";
 import { handleApiError } from "../../../shared/utils/handle.api.error";
+import { getOptimizedImageUrl } from "../../../shared/utils/cloudinary";
 
 
 export default function ProductDetailsPage() {
@@ -132,8 +133,9 @@ export default function ProductDetailsPage() {
                     className="w-20 h-20 rounded-lg overflow-hidden border border-[var(--muted)]"
                   >
                     <img
-                      src={img.url}
+                      src={getOptimizedImageUrl(img.url, 160)}
                       alt=""
+                      loading="lazy"
                       className="w-full h-full object-cover"
                     />
                   </button>

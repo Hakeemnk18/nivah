@@ -282,14 +282,14 @@ export class OrderRepository implements IOrderRepository {
     const documents = await OrderModel.find(
       {
         createdAt: { $gte: startDate, $lte: endDate },
-        orderStatus: { $in: ["confirmed", "accepted", "dispatched"] },
+        orderStatus: { $in: ["confirmed", "accepted", "dispatched", "delivered"] },
       },
-      { createdAt: 1, totalAmount: 1, _id: 0 },
-    ).lean<{ createdAt: Date; totalAmount: number }[]>();
+      { createdAt: 1, subtotal: 1, _id: 0 },
+    ).lean<{ createdAt: Date; subtotal: number }[]>();
 
     return documents.map((doc) => ({
       createdAt: doc.createdAt!,
-      totalAmount: doc.totalAmount,
+      totalAmount: doc.subtotal,
     }));
   }
 
@@ -301,14 +301,14 @@ export class OrderRepository implements IOrderRepository {
       {
         $match: {
           createdAt: { $gte: startDate, $lte: endDate },
-          orderStatus: { $in: ["confirmed", "accepted", "dispatched"] }, // Only valid orders
+          orderStatus: { $in: ["confirmed", "accepted", "dispatched", "delivered"] }, // Only paid orders
         },
       },
       {
         $group: {
           _id: null,
           totalOrders: { $sum: 1 },
-          totalRevenue: { $sum: "$totalAmount" },
+          totalRevenue: { $sum: "$subtotal" },
         },
       },
     ]);
@@ -323,14 +323,14 @@ export class OrderRepository implements IOrderRepository {
       {
         $match: {
           createdAt: { $gte: startDate, $lte: endDate },
-          orderStatus: { $in: ["confirmed", "accepted", "dispatched"] },
+          orderStatus: { $in: ["confirmed", "accepted", "dispatched", "delivered"] },
         },
       },
       {
         $group: {
           _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
           orders: { $sum: 1 },
-          revenue: { $sum: "$totalAmount" },
+          revenue: { $sum: "$subtotal" },
         },
       },
       { $sort: { _id: 1 } }, // Sort by date ascending
@@ -562,9 +562,9 @@ export class OrderRepository implements IOrderRepository {
 
   async getRevenueReport(payload: GetRevenueReportPayload) : Promise<RevenueReportSummary> {
     const { startDate, endDate, limit, page } = payload
-    // 1. Filter out cancelled orders and apply date ranges
+    // 1. Only count orders where payment was actually captured, and apply date ranges
     const matchStage: any = {
-      orderStatus: { $ne: "cancelled" }, // Only count successful/pending orders
+      orderStatus: { $in: ["confirmed", "accepted", "dispatched", "delivered"] },
     };
 
     if (startDate || endDate) {
@@ -583,7 +583,7 @@ export class OrderRepository implements IOrderRepository {
             {
               $group: {
                 _id: null,
-                totalRevenue: { $sum: "$totalAmount" },
+                totalRevenue: { $sum: "$subtotal" },
                 totalOrders: { $sum: 1 },
               },
             },
@@ -602,7 +602,7 @@ export class OrderRepository implements IOrderRepository {
             {
               $group: {
                 _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-                revenue: { $sum: "$totalAmount" },
+                revenue: { $sum: "$subtotal" },
                 orders: { $sum: 1 },
               },
             },

@@ -1,5 +1,6 @@
 import { Minus, Plus, Trash2 } from "lucide-react";
 import type { ActionType, CartItemView } from "../type/cart.type";
+import { getOptimizedImageUrl } from "../../../shared/utils/cloudinary";
 
 type CartItemCardProps = {
     item: CartItemView;
@@ -17,8 +18,9 @@ const CartItemCard = ({ item, handleUpdateCartItem, handleRemoveCartItem }: Cart
                 {/* Image: fixed size, shrink-0 prevents it from squishing */}
                 <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shrink-0 bg-[var(--bg-secondary)]">
                     <img
-                        src={item.product.image}
+                        src={getOptimizedImageUrl(item.product.image, 200)}
                         alt={item.product.name}
+                        loading="lazy"
                         className="w-full h-full object-cover"
                     />
                 </div>

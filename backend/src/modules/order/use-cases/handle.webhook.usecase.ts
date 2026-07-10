@@ -9,6 +9,9 @@ import type { ICartRepository } from "../../cart/repositories/cart.repository.in
 import type { RazorpayWebhookEvent } from "../types/order.type.js";
 import { Payment } from "../../payment/entities/payment.entity.js";
 import { mapPaymentMode } from "../../../core/utils/get.payment.method.js";
+import type { Order } from "../entities/order.entity.js";
+import type { IEmailService } from "../../../core/ports/email.service.interface.js";
+import { notifyOrderConfirmed } from "../utils/notify.order.confirmed.js";
 
 @injectable()
 export class HandleRazorpayWebhookUseCase
@@ -26,6 +29,9 @@ export class HandleRazorpayWebhookUseCase
 
         @inject("ICartRepository")
         private readonly _cartRepository: ICartRepository,
+
+        @inject("IEmailService")
+        private readonly _emailService: IEmailService,
     ) { }
 
     async execute(event: RazorpayWebhookEvent): Promise<void> {
@@ -37,6 +43,7 @@ export class HandleRazorpayWebhookUseCase
         const paymentEntity = event.payload.payment.entity;
 
         const session = await mongoose.startSession();
+        let confirmedOrder: Order | null = null;
         try {
             const payment = await this._paymentRepository
                 .findByProviderOrderId(paymentEntity.order_id, session);
@@ -61,7 +68,7 @@ export class HandleRazorpayWebhookUseCase
             switch (event.event) {
 
                 case "payment.captured":
-                    await this.handleCaptured(
+                    confirmedOrder = await this.handleCaptured(
                         payment,
                         paymentEntity,
                         session
@@ -71,6 +78,10 @@ export class HandleRazorpayWebhookUseCase
                     break;
             }
             await session.commitTransaction();
+
+            if (confirmedOrder) {
+                notifyOrderConfirmed(this._emailService, confirmedOrder);
+            }
 
         } catch (error) {
             await session.abortTransaction();
@@ -84,19 +95,19 @@ export class HandleRazorpayWebhookUseCase
         payment: Payment,
         entity: RazorpayWebhookEvent["payload"]["payment"]["entity"],
         session: mongoose.ClientSession
-    ): Promise<void> {
+    ): Promise<Order | null> {
 
         const order = await this._orderRepository
             .findById(payment.orderId, session);
 
-        if (!order) return;
+        if (!order) return null;
 
-        if (order.orderStatus === "confirmed") return;
+        if (order.orderStatus === "confirmed") return null;
 
         const expectedAmount = order.totalAmount * 100;
 
         if (entity.amount !== expectedAmount) {
-            return;
+            return null;
         }
 
         const newPayment = new Payment({
@@ -127,5 +138,7 @@ export class HandleRazorpayWebhookUseCase
                 session
             );
         }
+
+        return order;
     }
 }

@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { getOptimizedImageUrl } from "../../../shared/utils/cloudinary";
 
 type Props = {
     selectedImage: string | undefined;
@@ -40,7 +41,7 @@ export function ProductImageGallery({ selectedImage, productName }: Props) {
         with no empty space (ugly bars) at top/bottom.
       */}
             <img
-                src={selectedImage}
+                src={getOptimizedImageUrl(selectedImage, 900)}
                 alt={productName}
                 className="h-full w-full object-cover transition-opacity duration-300"
             />
@@ -56,7 +57,7 @@ export function ProductImageGallery({ selectedImage, productName }: Props) {
           ${isHovering ? "opacity-100" : "opacity-0"}
         `}
                 style={{
-                    backgroundImage: `url(${selectedImage})`,
+                    backgroundImage: `url(${getOptimizedImageUrl(selectedImage, 1600)})`,
                     backgroundRepeat: "no-repeat",
                     // 'cover' might result in whitespace for zoom, so we use a fixed large scale (e.g. 200%)
                     // or you can use '250%' for a stronger zoom.
