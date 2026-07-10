@@ -14,7 +14,7 @@ export class ResendEmailService implements IEmailService {
   private readonly adminEmail: string;
 
   constructor() {
-    this.resend = new Resend(process.env.MYRESEND_API_KEY);
+    this.resend = new Resend(process.env.RESEND_API_KEY);
     this.fromAddress = process.env.RESEND_FROM_EMAIL || "NIVAH <onboarding@resend.dev>";
     this.adminEmail = process.env.ADMIN_EMAIL || "";
   }
