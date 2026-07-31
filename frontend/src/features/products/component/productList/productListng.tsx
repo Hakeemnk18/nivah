@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import SectionTitle from "../../../../shared/components/SectionTitle";
 import SortSelect from "./SortSelect";
 import SearchInput from "./SearchInput";
@@ -57,25 +57,72 @@ export default function ProductListing() {
     childCategoryId: childId,
   });
 
-  const observerRef = useRef<HTMLDivElement | null>(null);
+  /* ---------- Infinite Scroll ----------
+     The sentinel is observed by a single IntersectionObserver that lives for
+     the whole session (created once via a callback ref, not recreated on
+     every page load). Latest fetchNextPage/hasNextPage/isFetchingNextPage are
+     read from refs inside the callback so the observer never needs to be torn
+     down and reattached — closing that gap removes a window where a fast
+     scroll could slip past undetected.
+     threshold: 0 + a rootMargin prefetch buffer means the fetch starts before
+     the sentinel is actually visible, so the network round-trip has time to
+     finish before the user scrolls into the gap, regardless of scroll speed.
 
-  /* ---------- Infinite Scroll ---------- */
-  useEffect(() => {
-    if (!observerRef.current || !hasNextPage) return;
+     IntersectionObserver only fires on enter/exit crossings, not continuously.
+     If one page's worth of new items doesn't add enough height to push the
+     sentinel back outside the rootMargin zone, it never "re-crosses" and the
+     callback goes silent — even though more pages exist. The effect below
+     covers that: whenever a fetch finishes, if the sentinel is still
+     intersecting, it immediately fetches the next page too, draining every
+     page that's within view before waiting for the next real scroll.
+  */
+  const hasNextPageRef = useRef(hasNextPage);
+  hasNextPageRef.current = hasNextPage;
+
+  const isFetchingNextPageRef = useRef(isFetchingNextPage);
+  isFetchingNextPageRef.current = isFetchingNextPage;
+
+  const fetchNextPageRef = useRef(fetchNextPage);
+  fetchNextPageRef.current = fetchNextPage;
+
+  const isSentinelIntersectingRef = useRef(false);
+  const scrollObserverRef = useRef<IntersectionObserver | null>(null);
+
+  const sentinelRef = useCallback((node: HTMLDivElement | null) => {
+    scrollObserverRef.current?.disconnect();
+    scrollObserverRef.current = null;
+
+    if (!node) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
+        isSentinelIntersectingRef.current = entry.isIntersecting;
+        if (
+          entry.isIntersecting &&
+          hasNextPageRef.current &&
+          !isFetchingNextPageRef.current
+        ) {
+          fetchNextPageRef.current();
         }
       },
-      { threshold: 1 },
+      { threshold: 0, rootMargin: "400px 0px" },
     );
 
-    observer.observe(observerRef.current);
+    observer.observe(node);
+    scrollObserverRef.current = observer;
+  }, []);
 
-    return () => observer.disconnect();
-  }, [fetchNextPage, hasNextPage]);
+  useEffect(() => {
+    return () => scrollObserverRef.current?.disconnect();
+  }, []);
+
+  // Drain every page still within the prefetch zone after each fetch settles,
+  // instead of waiting for a fresh IntersectionObserver crossing event.
+  useEffect(() => {
+    if (!isFetchingNextPage && hasNextPage && isSentinelIntersectingRef.current) {
+      fetchNextPage();
+    }
+  }, [isFetchingNextPage, hasNextPage, fetchNextPage]);
 
   const products =
     data?.pages.flatMap((page) => page.data) || [];
@@ -166,7 +213,7 @@ export default function ProductListing() {
             </ul>
 
             {/* Infinite Scroll Trigger */}
-            <div ref={observerRef} className="h-10 mt-8" />
+            <div ref={sentinelRef} className="h-10 mt-8" />
 
             {isFetchingNextPage && (
               <p className="text-center text-[var(--muted)] mt-4">
