@@ -41,14 +41,34 @@ export class EditProductVariantUseCase
       );
     }
 
+    // 🔒 Business invariant — same rule as add-variant, but comparing the new
+    // size against sibling variants only (excluding the one being edited).
+    const siblingVariants = product.variants.filter(
+      (v) => v?.id!.toString() !== variantId
+    );
 
+    const isValid = assertUniqueVariantSizes([
+      { size: dto.size, stock: dto.stock, price: dto.price },
+      ...siblingVariants.map((v) => ({
+        size: v.size,
+        stock: v.stock,
+        price: v.price,
+      })),
+    ]);
 
+    if (!isValid) {
+      throw new CustomError(
+        ResponseMessages.PRODUCT_DUPLICATE_VARIANT_SIZE,
+        HttpStatusCode.BAD_REQUEST
+      );
+    }
 
 
     const updated = await this._productRepository.updateVariantById({
       productId,
       variantId,
       data: {
+        size: dto.size,
         stock: dto.stock,
         price: dto.price,
         isActive: dto.isActive,

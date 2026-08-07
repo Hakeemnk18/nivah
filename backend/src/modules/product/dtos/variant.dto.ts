@@ -38,6 +38,12 @@ export type AddVariantRequestDto = z.infer<
 >;
 
 export const UpdateVariantSchema = z.object({
+  size: z
+    .string()
+    .trim()
+    .min(1, "Variant size is required")
+    .max(9, "Variant size must be at most 9 characters"),
+
   stock: z
     .number()
     .int("Variant stock must be an integer")
