@@ -163,6 +163,7 @@ export class ProductRepository implements IProductRepository {
       { _id: productId },
       {
         $set: {
+          "variants.$[variant].size": data.size,
           "variants.$[variant].stock": data.stock,
           "variants.$[variant].price": data.price,
           "variants.$[variant].isActive": data.isActive,

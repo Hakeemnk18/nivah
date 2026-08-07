@@ -30,6 +30,7 @@ export type UserVariantView = {
 };
 
 export type EditVariantProps = {
+  size: string;
   stock: number;
   price: number;
   isActive: boolean;

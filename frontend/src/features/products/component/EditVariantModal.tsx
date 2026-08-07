@@ -13,12 +13,14 @@ interface Props {
 }
 
 type FormData = {
+  size: string;
   price: string;
   stock: string;
   isActive: boolean;
 };
 
 type FormErrors = {
+  size?: string;
   price?: string;
   stock?: string;
   isActive?: string;
@@ -30,6 +32,7 @@ const EditVariantModal = ({ productId, variantId, onClose }: Props) => {
   const { mutateAsync: updateMutation, isPending: submitting } = useUpdateVariant();
 
   const [formData, setFormData] = useState<FormData>({
+    size: "",
     price: "",
     stock: "",
     isActive: true,
@@ -41,6 +44,7 @@ const EditVariantModal = ({ productId, variantId, onClose }: Props) => {
   useEffect(() => {
     if (variant) {
       setFormData({
+        size: variant.size,
         price: String(variant.price),
         stock: String(variant.stock),
         isActive: variant.isActive!,
@@ -50,6 +54,12 @@ const EditVariantModal = ({ productId, variantId, onClose }: Props) => {
 
   const handleSubmit = async () => {
     const newErrors: FormErrors = {};
+
+    if (!formData.size.trim()) {
+      newErrors.size = "Size is required";
+    } else if (formData.size.trim().length > 9) {
+      newErrors.size = "Size must be at most 9 characters";
+    }
 
     if (!formData.price || Number(formData.price) <= 0) {
       newErrors.price = "Price must be greater than 0";
@@ -69,7 +79,7 @@ const EditVariantModal = ({ productId, variantId, onClose }: Props) => {
         productId,
         variantId,
         data: {
-          size: variant?.size!,
+          size: formData.size.trim(),
           price: Number(formData.price),
           stock: Number(formData.stock),
           isActive: formData.isActive,
@@ -112,10 +122,16 @@ const EditVariantModal = ({ productId, variantId, onClose }: Props) => {
             <div>
               <label className="text-sm text-gray-300">Size</label>
               <input
-                value={variant.size}
-                disabled
-                className="w-full mt-1 px-3 py-2 rounded bg-[#232447] text-gray-400"
+                value={formData.size}
+                onChange={(e) =>
+                  setFormData({ ...formData, size: e.target.value })
+                }
+                maxLength={9}
+                className="w-full mt-1 px-3 py-2 rounded bg-[#232447]"
               />
+              {errors.size && (
+                <p className="text-sm text-red-400">{errors.size}</p>
+              )}
             </div>
 
             {/* Price */}
