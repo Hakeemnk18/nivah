@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useGetCampaignBySlug } from "../hooks/use.get.campaign.by.slug";
 import { useParentCategories } from "../../category/hooks/use.parent.categories";
-import { getOptimizedImageUrl } from "../../../shared/utils/cloudinary";
 import CampaignCategoryRow from "../components/CampaignCategoryRow";
+import CampaignHero from "../components/CampaignHero";
 import EmptyState from "../../../shared/components/EmptyState";
 
 export default function CampaignPage() {
@@ -35,21 +35,11 @@ export default function CampaignPage() {
     return (
         <section className="bg-[var(--bg)] text-[var(--text)] pb-16">
             {/* Hero */}
-            <div className="relative w-full aspect-[21/9] max-h-[420px] overflow-hidden">
-                <img
-                    src={getOptimizedImageUrl(campaign.image.url, 1600, 700)}
-                    alt={campaign.title}
-                    className="absolute inset-0 h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black/35 flex flex-col items-center justify-center text-center px-4">
-                    <h1 className="text-3xl sm:text-5xl font-bold text-white tracking-wide">
-                        {campaign.title}
-                    </h1>
-                    <p className="text-white/90 mt-3 max-w-xl text-sm sm:text-base">
-                        {campaign.subtitle}
-                    </p>
-                </div>
-            </div>
+            <CampaignHero
+                title={campaign.title}
+                subtitle={campaign.subtitle}
+                imageUrl={campaign.image.url}
+            />
 
             {/* Category sections */}
             <div className="max-w-7xl mx-auto mt-8">
