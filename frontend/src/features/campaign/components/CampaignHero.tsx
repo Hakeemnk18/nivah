@@ -26,7 +26,7 @@ export default function CampaignHero({ title, subtitle, imageUrl }: Props) {
     const { highlighted, rest } = splitSubtitle(subtitle);
 
     return (
-        <div className="relative w-full min-h-[380px] sm:min-h-[440px] lg:min-h-[520px] max-h-[620px] overflow-hidden bg-[#171310]">
+        <div className="relative w-full min-h-[300px] sm:min-h-[340px] lg:min-h-[400px] max-h-[440px] overflow-hidden bg-[#171310]">
             {/* Background image — slow Ken Burns drift, biased right so the
           jewelry stays clear of the text panel */}
             <motion.img
@@ -71,14 +71,17 @@ export default function CampaignHero({ title, subtitle, imageUrl }: Props) {
             )}
 
             {/* Editorial headline — left-aligned, vertically centered, capped
-          to roughly the left 45% on larger screens */}
-            <div className="relative h-full max-w-7xl mx-auto flex items-center">
-                <div className="w-full sm:w-1/2 lg:w-[45%] px-6 sm:px-8 lg:px-4 py-10">
+          to roughly the left 45% on larger screens. Absolutely positioned
+          (like the image/scrim layers above) so its height reliably fills
+          the hero regardless of content, letting items-center actually
+          center it instead of collapsing to content height. */}
+            <div className="absolute inset-0 max-w-7xl mx-auto flex items-center">
+                <div className="w-full sm:w-1/2 lg:w-[45%] px-6 sm:px-8 lg:px-4">
                     <motion.h1
                         className="
               font-black uppercase text-[#FBF3E3]
               leading-[0.92] tracking-tight
-              text-[clamp(2.4rem,10vw,3.5rem)] sm:text-6xl lg:text-7xl xl:text-[5.5rem]
+              text-[clamp(2.2rem,9vw,3rem)] sm:text-5xl lg:text-6xl xl:text-[4.5rem]
             "
                         initial={{ opacity: 0, y: 26 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -87,9 +90,9 @@ export default function CampaignHero({ title, subtitle, imageUrl }: Props) {
                         {title}
                     </motion.h1>
 
-                    <div className="mt-5 sm:mt-7">
+                    <div className="mt-3 sm:mt-4">
                         <motion.span
-                            className="inline-block text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[var(--accent)] tracking-tight"
+                            className="inline-block text-xl sm:text-2xl lg:text-3xl font-extrabold text-[var(--accent)] tracking-tight"
                             initial={{ opacity: 0, scale: 0.86 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.7, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
