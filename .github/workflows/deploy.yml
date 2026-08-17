@@ -1,0 +1,80 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Build (runs tsc on GitHub's machine, not yours)
+        working-directory: ./backend
+        run: npm run build
+
+      - name: Copy package files into dist for deploy
+        working-directory: ./backend
+        run: cp package.json package-lock.json dist/
+
+      - name: Upload dist folder to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "backend/dist/*"
+          target: "/home/ubuntu/nivah/backend/dist_incoming"
+          strip_components: 2
+
+      - name: Swap in new build, restart, and verify health (auto-rollback on failure)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            cd /home/ubuntu/nivah/backend
+
+            # Keep the last known-good build so a bad deploy can always be undone
+            rm -rf dist_backup
+            if [ -d dist ]; then
+              mv dist dist_backup
+            fi
+
+            mv dist_incoming dist
+            cd dist
+            npm install --production
+            cd ..
+
+            pm2 restart nivah-backend --update-env
+
+            # Give the app a few seconds to boot, then confirm it's actually healthy
+            sleep 5
+            if curl -fs http://localhost:4005/api/v1/products/list > /dev/null; then
+              echo "Health check passed — deploy successful"
+              rm -rf dist_backup
+            else
+              echo "Health check FAILED — rolling back to previous build"
+              rm -rf dist
+              mv dist_backup dist
+              pm2 restart nivah-backend --update-env
+              echo "Rolled back. Investigate the new build before retrying."
+              exit 1
+            fi
