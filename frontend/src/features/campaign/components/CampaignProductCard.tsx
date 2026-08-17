@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { getOptimizedImageUrl } from "../../../shared/utils/cloudinary";
+import { getMockDiscountDisplay } from "../../../shared/utils/mockDiscount";
 import type { UserProductListItem } from "../../products/type/product.type";
-
-const MOCK_DISCOUNT_PERCENT = 30;
 
 type Props = {
     product: UserProductListItem;
@@ -15,10 +14,11 @@ export default function CampaignProductCard({ product, onClick }: Props) {
     // Display-only markup: shows the real price as the "now" price, and an
     // inflated "was" price so the badge reads as N% off. No discount is ever
     // applied anywhere else (cart, checkout) — this is a marketing display
-    // computed purely on the frontend from the existing real price.
-    const wasPrice = Math.ceil(
-        product.price / (1 - MOCK_DISCOUNT_PERCENT / 100) / 10
-    ) * 10;
+    // computed purely on the frontend from the existing real price. Same
+    // per-product-id logic as the regular product cards, so "UP TO 30%" in
+    // the campaign copy stays literally true rather than every card
+    // flatly claiming the maximum.
+    const { percent, wasPrice, savedAmount } = getMockDiscountDisplay(product.price, product.id);
 
     return (
         <div
@@ -49,7 +49,7 @@ export default function CampaignProductCard({ product, onClick }: Props) {
           `}
                 />
                 <span className="absolute top-2 left-2 bg-[var(--accent)] text-black text-[11px] font-semibold px-2 py-0.5 rounded-full">
-                    {MOCK_DISCOUNT_PERCENT}% OFF
+                    {percent}% OFF
                 </span>
             </div>
 
@@ -66,6 +66,9 @@ export default function CampaignProductCard({ product, onClick }: Props) {
                         ₹{wasPrice}
                     </span>
                 </div>
+                <p className="text-[var(--accent)]/80 text-[11px] mt-0.5">
+                    You save ₹{savedAmount}
+                </p>
             </div>
         </div>
     );
