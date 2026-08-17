@@ -140,9 +140,10 @@ const CreateBannerForm = () => {
                             <input
                                 type="text"
                                 value={formData.link}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, link: e.target.value })
-                                }
+                                onChange={(e) => {
+                                    setFormData({ ...formData, link: e.target.value });
+                                    setErrors({ ...errors, link: "" });
+                                }}
                                 placeholder="/collections/onam"
                                 className="w-full px-4 py-2 rounded-lg bg-[#232447] focus:outline-none focus:ring-1 focus:ring-blue-500"
                             />
