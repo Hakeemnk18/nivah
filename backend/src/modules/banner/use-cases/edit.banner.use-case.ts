@@ -34,6 +34,7 @@ export class EditBannerUseCase implements IEditBannerUseCase {
 
         const updatedBanner = banner.updateDetails({
             image: dto.image,
+            link: dto.link,
         });
 
         const saved = await this._bannerRepository.save(updatedBanner);

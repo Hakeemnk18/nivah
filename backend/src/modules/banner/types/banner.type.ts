@@ -6,12 +6,14 @@ export type IImage = {
 export type BannerProps = {
     id?: string | null;
     image: IImage;
+    link?: string | undefined;
     isActive?: boolean;
 };
 
 export type BannerView = {
     id: string;
     image: IImage;
+    link?: string | undefined;
     isActive: boolean;
 };
 
@@ -20,4 +22,5 @@ export type UserBannerView = {
     image: {
         url: string;
     };
+    link?: string | undefined;
 };

@@ -7,6 +7,14 @@ export const BannerImageSchema = z.object({
 
 export const CreateBannerSchema = z.object({
     image: BannerImageSchema,
+    link: z
+        .string()
+        .trim()
+        .refine(
+            (val) => val === "" || val.startsWith("/") || /^https?:\/\//.test(val),
+            "Link must be a relative path (e.g. /collections/onam) or a full URL"
+        )
+        .optional(),
 });
 
 export type CreateBannerRequestDto = z.infer<typeof CreateBannerSchema>;

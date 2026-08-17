@@ -270,6 +270,23 @@ export const ResponseMessages = {
   BANNER_ACTIVATED_SUCCESSFULLY: "Banner activated successfully",
   BANNER_DEACTIVATED_SUCCESSFULLY: "Banner deactivated successfully",
 
+  /* ================= CAMPAIGN ================= */
+  CAMPAIGN_NOT_FOUND: "Campaign not found",
+  CAMPAIGN_CREATE_FAILED: "Failed to create campaign",
+  CAMPAIGN_UPDATE_FAILED: "Failed to update campaign",
+  CAMPAIGN_DELETE_FAILED: "Failed to delete campaign",
+  CAMPAIGN_DEACTIVATE_FAILED: "Failed to deactivate campaign",
+  CAMPAIGN_ALREADY_DEACTIVATED: "Campaign already deactivated",
+  CAMPAIGN_ALREADY_ACTIVATED: "Campaign already activated",
+  CAMPAIGN_SLUG_ALREADY_EXISTS: "A campaign with this slug already exists",
+  CAMPAIGN_ACTIVATE_FAILED: "Failed to activate campaign",
+  CAMPAIGN_CREATED: "Campaign created successfully",
+  CAMPAIGN_UPDATED: "Campaign updated successfully",
+  CAMPAIGN_FETCHED_SUCCESSFULLY: "Campaign fetched successfully",
+  CAMPAIGN_DELETED_SUCCESSFULLY: "Campaign deleted successfully",
+  CAMPAIGN_ACTIVATED_SUCCESSFULLY: "Campaign activated successfully",
+  CAMPAIGN_DEACTIVATED_SUCCESSFULLY: "Campaign deactivated successfully",
+
   /* ================= TESTIMONIAL ================= */
   TESTIMONIAL_NOT_FOUND: "Testimonial not found",
   TESTIMONIAL_CREATE_FAILED: "Failed to create testimonial",

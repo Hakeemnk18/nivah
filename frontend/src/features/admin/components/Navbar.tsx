@@ -11,6 +11,7 @@ import {
   FaUsers,
   FaShoppingCart,
   FaTachometerAlt,
+  FaBullhorn,
 } from "react-icons/fa";
 
 import { logout } from "../../../shared/utils/logout";
@@ -25,6 +26,7 @@ const navItems = [
   { label: "Testimonials", path: "/admin/testimonialManagement", icon: FaUsers },
   { label: "Heroes", path: "/admin/heroManagement", icon: FaUsers },
   { label: "Banners", path: "/admin/bannerManagement", icon: FaUsers },
+  { label: "Campaigns", path: "/admin/campaignManagement", icon: FaBullhorn },
 ];
 
 const AdminNavbar = () => {

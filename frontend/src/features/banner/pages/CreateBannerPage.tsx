@@ -13,10 +13,12 @@ import type { CreateBannerPayload } from "../types/banner.type";
 
 type FormState = {
     images: ImageItem[];
+    link: string;
 };
 
 type FormErrors = {
     images?: string;
+    link?: string;
 };
 
 const CreateBannerForm = () => {
@@ -30,6 +32,7 @@ const CreateBannerForm = () => {
 
     const [formData, setFormData] = useState<FormState>({
         images: [],
+        link: "",
     });
 
     const [errors, setErrors] = useState<FormErrors>({});
@@ -42,6 +45,7 @@ const CreateBannerForm = () => {
                     publicId: banner.data.image.publicId,
                     type: "existing",
                 }],
+                link: banner.data.link || "",
             });
         }
     }, [banner]);
@@ -57,6 +61,9 @@ const CreateBannerForm = () => {
         // Validation
         if (formData.images.length === 0)
             newErrors.images = "A hero image is required";
+
+        if (formData.link.trim() && !formData.link.startsWith("/") && !/^https?:\/\//.test(formData.link.trim()))
+            newErrors.link = "Link must start with / (e.g. /collections/onam) or be a full URL";
 
         if (Object.keys(newErrors).length) {
             setErrors(newErrors);
@@ -86,6 +93,7 @@ const CreateBannerForm = () => {
                     url: uploadedImages[0].url,
                     publicId: uploadedImages[0].publicId,
                 },
+                link: formData.link.trim() || undefined,
             };
             if (bannerId) {
                 await updateBanner({ id: bannerId, data: payload });
@@ -124,6 +132,26 @@ const CreateBannerForm = () => {
                                 }
                                 error={errors.images}
                             />
+                        </div>
+
+                        {/* Link */}
+                        <div>
+                            <h3 className="text-sm text-gray-300 mb-2">Link (optional)</h3>
+                            <input
+                                type="text"
+                                value={formData.link}
+                                onChange={(e) =>
+                                    setFormData({ ...formData, link: e.target.value })
+                                }
+                                placeholder="/collections/onam"
+                                className="w-full px-4 py-2 rounded-lg bg-[#232447] focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                            <p className="text-xs text-gray-400 mt-1">
+                                Where clicking the banner takes the customer. Leave blank to link to the shop page.
+                            </p>
+                            {errors.link && (
+                                <p className="text-red-400 text-sm mt-1">{errors.link}</p>
+                            )}
                         </div>
 
                         {/* Actions */}

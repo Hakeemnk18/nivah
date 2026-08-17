@@ -30,6 +30,8 @@ const BannerTable = lazy(() => import("../features/banner/pages/BannerList"))
 const CreateBannerPage = lazy(() => import("../features/banner/pages/CreateBannerPage"))
 const TestimonialTable = lazy(() => import("../features/testimonial/pages/TestimonialList"))
 const CreateTestimonialPage = lazy(() => import("../features/testimonial/pages/CreateTestimonialPage"))
+const CampaignTable = lazy(() => import("../features/campaign/pages/CampaignList"))
+const CreateCampaignPage = lazy(() => import("../features/campaign/pages/CreateCampaignPage"))
 
 
 
@@ -289,6 +291,36 @@ const adminRoutes = [
         </AdminBootstrap>
 
 
+      </Suspense>
+    ),
+  },
+  {
+    path: "campaignManagement",
+    element: (
+      <Suspense >
+        <AdminBootstrap>
+          <CampaignTable />
+        </AdminBootstrap>
+      </Suspense>
+    ),
+  },
+  {
+    path: "createCampaign",
+    element: (
+      <Suspense >
+        <AdminBootstrap>
+          <CreateCampaignPage />
+        </AdminBootstrap>
+      </Suspense>
+    ),
+  },
+  {
+    path: "editCampaign",
+    element: (
+      <Suspense >
+        <AdminBootstrap>
+          <CreateCampaignPage />
+        </AdminBootstrap>
       </Suspense>
     ),
   },
