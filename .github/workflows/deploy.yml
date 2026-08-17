@@ -18,7 +18,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Install dependencies
         working-directory: ./backend
@@ -51,6 +51,33 @@ jobs:
           script: |
             set -e
             cd /home/ubuntu/nivah/backend
+            BASE_DIR="$(pwd)"
+
+            # Non-interactive SSH sessions (like this one) don't load ~/.bashrc,
+            # so nvm-installed npm/node/pm2 aren't on PATH by default. Load nvm
+            # explicitly so the commands below can actually find them.
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+            # Roll back to the last known-good build if ANY step below fails
+            # (not just the final health check) — covers npm install failing,
+            # pm2 not restarting cleanly, etc. Always return to BASE_DIR first,
+            # since a failure could happen while we're still inside dist/.
+            rollback() {
+              trap - ERR
+              cd "$BASE_DIR"
+              echo "Deploy step failed — rolling back to previous build"
+              if [ -d dist_backup ]; then
+                rm -rf dist
+                mv dist_backup dist
+                pm2 restart nivah-backend --update-env || true
+                echo "Rolled back. Investigate the new build before retrying."
+              else
+                echo "No backup available to roll back to — manual investigation needed."
+              fi
+              exit 1
+            }
+            trap rollback ERR
 
             # Keep the last known-good build so a bad deploy can always be undone
             rm -rf dist_backup
@@ -69,12 +96,8 @@ jobs:
             sleep 5
             if curl -fs http://localhost:4005/api/v1/products/list > /dev/null; then
               echo "Health check passed — deploy successful"
+              trap - ERR
               rm -rf dist_backup
             else
-              echo "Health check FAILED — rolling back to previous build"
-              rm -rf dist
-              mv dist_backup dist
-              pm2 restart nivah-backend --update-env
-              echo "Rolled back. Investigate the new build before retrying."
-              exit 1
+              rollback
             fi
