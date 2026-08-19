@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getOptimizedImageUrl } from "../../../../shared/utils/cloudinary";
+import { getMockDiscountDisplay } from "../../../../shared/utils/mockDiscount";
 
 type Props = {
   product: {
@@ -12,6 +13,7 @@ type Props = {
 
 export default function ProductCard({ product }: Props) {
   const [isLoaded, setIsLoaded] = useState(false);
+  const { percent, wasPrice, savedAmount } = getMockDiscountDisplay(product.price, product.id);
 
   return (
     <div
@@ -43,10 +45,13 @@ export default function ProductCard({ product }: Props) {
             ${isLoaded ? "opacity-100" : "opacity-0"}
           `}
         />
+        <span className="absolute top-2 left-2 bg-[var(--accent)] text-black text-[11px] font-semibold px-2 py-0.5 rounded-full">
+          {percent}% OFF
+        </span>
       </div>
 
       {/* Content */}
-      <div className="p-4 flex flex-col h-[110px]">
+      <div className="p-4 flex flex-col h-[124px]">
         {/* Product Name (Fixed height, 2 lines max) */}
         <h3
           className="
@@ -63,8 +68,16 @@ export default function ProductCard({ product }: Props) {
         <div className="flex-grow" />
 
         {/* Price */}
-        <p className="text-[var(--accent)] font-semibold text-sm">
-          ₹{product.price}
+        <div className="flex items-center gap-2">
+          <p className="text-[var(--accent)] font-semibold text-sm">
+            ₹{product.price}
+          </p>
+          <p className="text-[var(--muted)] text-xs line-through">
+            ₹{wasPrice}
+          </p>
+        </div>
+        <p className="text-[var(--accent)]/80 text-[11px] mt-0.5">
+          You save ₹{savedAmount}
         </p>
       </div>
     </div>

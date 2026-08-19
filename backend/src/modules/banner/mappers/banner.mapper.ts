@@ -21,6 +21,7 @@ export class BannerMapper {
                 url: bannerModelData.image?.url,
                 publicId: bannerModelData.image?.publicId,
             },
+            link: bannerModelData.link,
             isActive: bannerModelData.isActive,
         });
     }
@@ -31,6 +32,7 @@ export class BannerMapper {
                 url: bannerEntity.image.url,
                 publicId: bannerEntity.image.publicId,
             },
+            link: bannerEntity.link,
             isActive: bannerEntity.isActive,
         };
     }
@@ -52,6 +54,7 @@ export class BannerMapper {
                 publicId: bannerModelData.image?.publicId,
                 url: bannerModelData.image?.url,
             },
+            link: bannerModelData.link,
             isActive: bannerModelData.isActive,
         };
     }
@@ -72,6 +75,7 @@ export class BannerMapper {
             image: {
                 url: bannerModelData.image?.url,
             },
+            link: bannerModelData.link,
         };
     }
 }

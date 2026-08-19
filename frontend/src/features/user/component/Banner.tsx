@@ -14,7 +14,7 @@ export default function SignatureOfferBanner() {
 
   return (
     <section className="relative w-full overflow-hidden ">
-      <Link to={"/products"}>
+      <Link to={banner.link || "/products"}>
 
         <div className="relative w-full aspect-[5/2]">
           {/* Background image */}

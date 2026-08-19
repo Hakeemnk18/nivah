@@ -8,6 +8,7 @@ export type IImage = {
 export type BannerView = {
     id: string;
     image: IImage;
+    link?: string;
     isActive: boolean;
 };
 
@@ -16,6 +17,7 @@ export type UserBannerView = {
     image: {
         url: string;
     };
+    link?: string;
 };
 
 export type CreateBannerPayload = {
@@ -23,6 +25,7 @@ export type CreateBannerPayload = {
         url: string;
         publicId: string;
     };
+    link?: string;
 };
 
 export type UpdateBannerParams = {

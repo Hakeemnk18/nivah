@@ -14,6 +14,7 @@ const PrivacyPolicy = lazy(() => import("../features/user/component/PrivacyAndPo
 const About = lazy(() => import("../features/user/component/About"));
 const TermsAndConditions = lazy(() => import("../features/user/component/T&C"));
 const OrderCancelledPage = lazy(() => import("../features/order/pages/OrderCancelPage"));
+const CampaignPage = lazy(() => import("../features/campaign/pages/CampaignPage"));
 const userRoutes = [
     {
         element: <LandingLayout />,
@@ -66,6 +67,10 @@ const userRoutes = [
             {
                 path: "order-cancelled",
                 element: <OrderCancelledPage />,
+            },
+            {
+                path: "collections/:slug",
+                element: <CampaignPage />,
             }
         ],
     },

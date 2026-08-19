@@ -10,6 +10,7 @@ import { registerReportDependencies } from "./report.container.js";
 import { registerHeroDependencies } from "./hero.container.js";
 import { registerBannerDependencies } from "./banner.container.js";
 import { registerTestimonialDependencies } from "./testimonial.container.js";
+import { registerCampaignDependencies } from "./campaign.container.js";
 
 registerCommonDependencies()
 registerUserDependencies();
@@ -23,6 +24,7 @@ registerReportDependencies()
 registerHeroDependencies()
 registerBannerDependencies()
 registerTestimonialDependencies()
+registerCampaignDependencies()
 
 
 export { container } from "tsyringe";

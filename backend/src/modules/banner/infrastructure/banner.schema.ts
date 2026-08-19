@@ -5,6 +5,7 @@ export interface IBanner extends Document {
         url: string;
         publicId: string;
     };
+    link?: string;
     isActive: boolean;
 }
 
@@ -19,6 +20,10 @@ const bannerSchema = new Schema<IBanner>(
                 type: String,
                 required: true,
             },
+        },
+        link: {
+            type: String,
+            trim: true,
         },
         isActive: {
             type: Boolean,
