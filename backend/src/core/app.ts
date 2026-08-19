@@ -8,6 +8,7 @@ app.use(cookieParser())
 app.use(cors({
   origin: [
     "http://localhost:5173",
+    "http://localhost:5174",
     "https://nivah-rho.vercel.app",
     "https://www.nivahfashions.com",
     "https://nivahfashions.com",
